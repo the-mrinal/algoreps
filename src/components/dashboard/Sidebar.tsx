@@ -212,7 +212,7 @@ export default function Sidebar({ email }: { email: string }) {
       <aside
         className={`fixed inset-y-0 left-0 z-40 w-64 bg-[var(--surface)] border-r border-[var(--surface-border)] flex flex-col transition-transform duration-200 ${
           mobileOpen ? "translate-x-0" : "-translate-x-full"
-        } md:translate-x-0 md:static md:z-auto`}
+        } md:translate-x-0 md:static md:z-auto md:h-screen md:sticky md:top-0`}
       >
         {navContent}
       </aside>
