@@ -1,0 +1,137 @@
+import { createClient } from "@/lib/supabase/server";
+import { calculateNextRevisionDate } from "@/lib/srs";
+import { NextRequest, NextResponse } from "next/server";
+
+export async function POST(request: NextRequest) {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
+  let body: Record<string, unknown>;
+  try {
+    body = await request.json();
+  } catch {
+    return NextResponse.json({ error: "Invalid JSON body" }, { status: 400 });
+  }
+
+  const { problem_id, performance_score } = body as {
+    problem_id?: string;
+    performance_score?: number;
+  };
+
+  if (!problem_id || typeof problem_id !== "string") {
+    return NextResponse.json(
+      { error: "problem_id is required" },
+      { status: 400 }
+    );
+  }
+
+  if (
+    performance_score == null ||
+    typeof performance_score !== "number" ||
+    performance_score < 1 ||
+    performance_score > 5 ||
+    !Number.isInteger(performance_score)
+  ) {
+    return NextResponse.json(
+      { error: "performance_score must be an integer between 1 and 5" },
+      { status: 400 }
+    );
+  }
+
+  const { next_revision_date } = calculateNextRevisionDate(performance_score);
+
+  const insertData: Record<string, unknown> = {
+    user_id: user.id,
+    problem_id,
+    performance_score,
+    next_revision_date: next_revision_date.toISOString(),
+  };
+
+  // Optional fields
+  const optionalFields = [
+    "code",
+    "is_self_reported",
+    "source_url",
+    "topics",
+    "approach",
+    "remarks",
+    "time_taken_mins",
+    "time_complexity",
+    "space_complexity",
+    "ai_review",
+  ] as const;
+
+  for (const field of optionalFields) {
+    if (body[field] !== undefined) {
+      insertData[field] = body[field];
+    }
+  }
+
+  const { data, error } = await supabase
+    .from("user_progress")
+    .insert(insertData)
+    .select()
+    .single();
+
+  if (error) {
+    return NextResponse.json({ error: error.message }, { status: 500 });
+  }
+
+  return NextResponse.json(data, { status: 201 });
+}
+
+export async function GET(request: NextRequest) {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
+  const { searchParams } = new URL(request.url);
+  const limit = Math.min(
+    Math.max(parseInt(searchParams.get("limit") || "20", 10) || 20, 1),
+    100
+  );
+  const offset = Math.max(
+    parseInt(searchParams.get("offset") || "0", 10) || 0,
+    0
+  );
+  const problemId = searchParams.get("problem_id");
+  const isSelfReported = searchParams.get("is_self_reported");
+
+  let query = supabase
+    .from("user_progress")
+    .select("*")
+    .eq("user_id", user.id)
+    .order("created_at", { ascending: false })
+    .range(offset, offset + limit - 1);
+
+  if (problemId) {
+    query = query.eq("problem_id", problemId);
+  }
+
+  if (isSelfReported !== null) {
+    if (isSelfReported === "true") {
+      query = query.eq("is_self_reported", true);
+    } else if (isSelfReported === "false") {
+      query = query.eq("is_self_reported", false);
+    }
+  }
+
+  const { data, error } = await query;
+
+  if (error) {
+    return NextResponse.json({ error: error.message }, { status: 500 });
+  }
+
+  return NextResponse.json(data, { status: 200 });
+}
