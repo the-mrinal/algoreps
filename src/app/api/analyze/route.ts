@@ -1,11 +1,36 @@
 import { NextResponse } from "next/server";
 import { buildReviewPrompt } from "@/lib/ai-review";
+import { createClient } from "@/lib/supabase/server";
 
 const GEMINI_API_URL =
   "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent";
 
 export async function POST(req: Request) {
   try {
+    // Auth + premium guard
+    const supabase = await createClient();
+    const { data: { user } } = await supabase.auth.getUser();
+
+    if (!user) {
+      return NextResponse.json(
+        { error: "Authentication required" },
+        { status: 401 }
+      );
+    }
+
+    const { data: profile } = await supabase
+      .from("profiles")
+      .select("is_premium")
+      .eq("id", user.id)
+      .single();
+
+    if (!profile?.is_premium) {
+      return NextResponse.json(
+        { error: "Premium feature — upgrade to use AI analysis" },
+        { status: 403 }
+      );
+    }
+
     const body = await req.json();
     const { code, language, problemTitle, problemDescription } = body;
 

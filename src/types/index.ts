@@ -59,6 +59,14 @@ export interface AIReviewResponse {
   };
 }
 
+// User profile matching profiles Supabase table
+export interface UserProfile {
+  id: string;
+  email: string;
+  display_name: string | null;
+  is_premium: boolean;
+}
+
 // SRS calculation result
 export interface SRSResult {
   next_revision_date: Date;
