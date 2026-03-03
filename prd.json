@@ -433,7 +433,7 @@
         "Typecheck passes"
       ],
       "priority": 23,
-      "passes": false,
+      "passes": true,
       "notes": "This is primarily documentation and ops scripts. CRON_SECRET must match between .env.local and crontab curl commands."
     }
   ]
