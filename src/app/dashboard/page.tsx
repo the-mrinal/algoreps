@@ -23,7 +23,7 @@ export default async function DashboardHome() {
     .lte("next_revision_date", new Date().toISOString())
     .order("created_at", { ascending: false });
 
-  const problems = getAllProblems();
+  const problems = await getAllProblems();
   const problemMap = new Map(problems.map((p) => [p.slug, p]));
 
   const dueRevisions: DueRevision[] = (submissions ?? []).map((sub) => {

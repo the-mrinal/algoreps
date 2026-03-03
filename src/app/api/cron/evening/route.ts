@@ -109,7 +109,7 @@ export async function GET(request: NextRequest) {
     .order("created_at", { ascending: false });
 
   // Build slug → category map
-  const problems = getAllProblems();
+  const problems = await getAllProblems(supabase);
   const slugToCategory = new Map(problems.map((p) => [p.slug, p.category]));
 
   // Group today's submissions by user

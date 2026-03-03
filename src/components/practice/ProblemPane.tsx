@@ -76,6 +76,14 @@ export default function ProblemPane({
               {topic}
             </span>
           ))}
+          {problem.sheets?.map((sheet) => (
+            <span
+              key={sheet}
+              className="text-xs px-2 py-0.5 rounded-full bg-purple-100 text-purple-700 dark:bg-purple-900 dark:text-purple-200 font-medium"
+            >
+              {sheet}
+            </span>
+          ))}
         </div>
       </div>
 

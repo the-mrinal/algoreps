@@ -1,8 +1,8 @@
 import { getAllProblems } from "@/lib/problems";
 import TrustModeForm from "@/components/logger/TrustModeForm";
 
-export default function LogPage() {
-  const problems = getAllProblems();
+export default async function LogPage() {
+  const problems = await getAllProblems();
 
   return (
     <div className="mx-auto max-w-2xl px-4 py-8">

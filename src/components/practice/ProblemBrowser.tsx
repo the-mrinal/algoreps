@@ -16,12 +16,15 @@ const difficultyColors: Record<string, string> = {
 export default function ProblemBrowser({
   problems,
   categories,
+  sheets,
 }: {
   problems: Problem[];
   categories: string[];
+  sheets: string[];
 }) {
   const searchParams = useSearchParams();
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+  const [selectedSheet, setSelectedSheet] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedProblem, setSelectedProblem] = useState<Problem | null>(null);
 
@@ -45,6 +48,9 @@ export default function ProblemBrowser({
 
   const filteredProblems = useMemo(() => {
     let result = problems;
+    if (selectedSheet) {
+      result = result.filter((p) => p.sheets?.includes(selectedSheet));
+    }
     if (selectedCategory) {
       result = result.filter((p) => p.category === selectedCategory);
     }
@@ -53,7 +59,7 @@ export default function ProblemBrowser({
       result = result.filter((p) => p.title.toLowerCase().includes(query));
     }
     return result;
-  }, [problems, selectedCategory, searchQuery]);
+  }, [problems, selectedSheet, selectedCategory, searchQuery]);
 
   return (
     <div className="flex h-full gap-2">
@@ -103,6 +109,24 @@ export default function ProblemBrowser({
 
       {/* Problem List */}
       <div className="w-64 flex-shrink-0 flex flex-col overflow-hidden rounded-lg border border-gray-200 bg-white dark:border-gray-700 dark:bg-gray-800">
+        {/* Sheet Filter */}
+        {sheets.length > 0 && (
+          <div className="p-2 border-b border-gray-200 dark:border-gray-700">
+            <select
+              value={selectedSheet || ""}
+              onChange={(e) => setSelectedSheet(e.target.value || null)}
+              className="w-full rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 px-2.5 py-1.5 text-xs text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+            >
+              <option value="">All Sheets</option>
+              {sheets.map((s) => (
+                <option key={s} value={s}>
+                  {s}
+                </option>
+              ))}
+            </select>
+          </div>
+        )}
+
         {/* Search */}
         <div className="p-2 border-b border-gray-200 dark:border-gray-700">
           <input
@@ -137,11 +161,6 @@ export default function ProblemBrowser({
                 <span className="text-xs font-medium text-gray-900 dark:text-white flex-1 truncate">
                   {problem.title}
                 </span>
-                {problem.is_blind75 && (
-                  <span className="text-[10px] px-1 py-0.5 rounded bg-purple-100 text-purple-700 dark:bg-purple-900 dark:text-purple-200 font-medium">
-                    B75
-                  </span>
-                )}
                 <span
                   className={`text-[10px] px-1.5 py-0.5 rounded-full font-medium ${difficultyColors[problem.difficulty]}`}
                 >

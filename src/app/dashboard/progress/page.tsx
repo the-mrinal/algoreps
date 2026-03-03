@@ -117,7 +117,7 @@ export default async function ProgressPage() {
   };
 
   // Topic mastery: compute avg score per NeetCode category
-  const problems = getAllProblems();
+  const problems = await getAllProblems();
   const slugToCategory = new Map(problems.map((p) => [p.slug, p.category]));
 
   const categoryAgg = new Map<string, { total: number; count: number }>();
@@ -164,7 +164,7 @@ export default async function ProgressPage() {
     };
   });
 
-  const allCategories = getCategories();
+  const allCategories = await getCategories();
 
   return (
     <div>

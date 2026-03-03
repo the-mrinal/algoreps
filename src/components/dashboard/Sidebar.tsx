@@ -10,6 +10,7 @@ const navItems = [
   { href: "/dashboard/practice", label: "Practice" },
   { href: "/dashboard/log", label: "Log" },
   { href: "/dashboard/progress", label: "Progress" },
+  { href: "/dashboard/import", label: "Import" },
 ];
 
 export default function Sidebar({ email }: { email: string }) {

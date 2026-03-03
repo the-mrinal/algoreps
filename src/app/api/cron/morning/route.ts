@@ -45,8 +45,8 @@ export async function GET(request: NextRequest) {
     });
   }
 
-  // Build slug → title map from problems.json
-  const problems = getAllProblems();
+  // Build slug → title map from problems table
+  const problems = await getAllProblems(supabase);
   const slugToTitle = new Map(problems.map((p) => [p.slug, p.title]));
 
   // Group revisions by user

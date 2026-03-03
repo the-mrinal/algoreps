@@ -13,6 +13,7 @@ export interface Problem {
   category: string;
   is_neetcode150: boolean;
   is_blind75: boolean;
+  sheets: string[];
   topics: string[];
   description: string;
   examples: ProblemExample[];
