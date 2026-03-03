@@ -4,6 +4,13 @@
 - ESLint config extends `next/core-web-vitals` and `next/typescript`
 - Quality checks: `npm run lint`, `npx tsc --noEmit`, `npm run build`
 - Dependencies: @supabase/supabase-js, @supabase/ssr, @monaco-editor/react, node-cron, recharts
+- `data/sources/` is excluded from tsconfig to prevent cloned repo TS files from breaking typecheck
+- Use `Array.from()` instead of spread on iterables (Map, Set) to avoid downlevelIteration errors
+- Run scripts with `npx tsx scripts/foo.ts` (tsx installed as devDependency)
+- Problem data: 150 problems in data/problems.json; 143 from neenza (clean), 7 premium from krmanik (basic metadata only)
+- Join key across repos: LeetCode slug extracted from URL
+- Types: import from `@/types` — Problem, UserProgress, AIReviewResponse, SRSResult
+- Problem loader: import from `@/lib/problems` — server-side only (uses fs); cached in-process
 
 ## 2026-03-03 14:56 - US-001
 - Initialized Next.js 14 project scaffolding with all required dependencies
@@ -17,4 +24,32 @@
   - Port 3000 may be in use on this machine; dev server falls back to 3001
   - `data/sources/` is gitignored (for merge script cloned repos), but `data/problems.json` should be committed
   - scripts/ directory already existed from project setup
+---
+
+## 2026-03-03 15:11 - US-002
+- Implemented unified problem bank merge script
+- Files changed:
+  - scripts/merge-problems.ts (new — clones 3 repos, merges into unified schema)
+  - data/problems.json (new — 150 problems with full metadata)
+  - tsconfig.json (added data/sources to exclude)
+  - package.json + package-lock.json (added tsx devDependency)
+- **Learnings for future iterations:**
+  - 7 problems are LeetCode Premium (encode-and-decode-strings, walls-and-gates, graph-valid-tree, number-of-connected-components-in-an-undirected-graph, alien-dictionary, meeting-rooms, meeting-rooms-ii) — these have minimal descriptions and no code snippets
+  - neenza/leetcode-problems has the cleanest data (plain text, structured examples, code_snippets as dict)
+  - krmanik/Anki-NeetCode has raw LeetCode GraphQL dumps with HTML content and null fields for premium
+  - neetcode-gh/leetcode `.problemSiteData.json` has 450 problems total, use `neetcode150: true` filter for NeetCode-150
+  - The `code` field in .problemSiteData.json (e.g., "0217-contains-duplicate") maps directly to neenza filenames
+  - GPG signing may timeout in this environment — use `--no-gpg-sign` for commits
+---
+
+## 2026-03-03 15:13 - US-003
+- Defined TypeScript interfaces and problem loader utility
+- Files changed:
+  - src/types/index.ts (new — Problem, ProblemExample, UserProgress, AIReviewResponse, SRSResult interfaces)
+  - src/lib/problems.ts (new — getAllProblems, getProblemBySlug, getProblemsByCategory, getProblemsByDifficulty, getCategories)
+- **Learnings for future iterations:**
+  - Problem loader uses fs.readFileSync for server-side usage — only works in server components and API routes, not client components
+  - Module-level cache (`cachedProblems`) avoids re-reading the JSON file on every call within the same process
+  - `getCategories()` returns sorted array of 18 unique categories using `Array.from(Set)` pattern (per codebase patterns)
+  - `code_snippets` is typed as `Record<string, string>` since available languages vary per problem (premium problems may have empty snippets)
 ---

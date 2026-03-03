@@ -39,7 +39,7 @@
         "Typecheck passes"
       ],
       "priority": 2,
-      "passes": false,
+      "passes": true,
       "notes": "Source repos: krmanik/Anki-NeetCode for NeetCode-150 index, neenza/leetcode-problems for problem details, neetcode-gh/leetcode for Blind75 flags and video IDs. See IMPLEMENTATION_PLAN.md for unified schema."
     },
     {
@@ -53,7 +53,7 @@
         "Typecheck passes"
       ],
       "priority": 3,
-      "passes": false,
+      "passes": true,
       "notes": ""
     },
     {
