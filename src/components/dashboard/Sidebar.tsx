@@ -5,6 +5,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { useState } from "react";
 import ThemeToggle from "@/components/theme/ThemeToggle";
+import { useAttemptPending } from "@/contexts/AttemptContext";
 
 const navItems = [
   {
@@ -52,6 +53,7 @@ const navItems = [
 export default function Sidebar({ email }: { email: string }) {
   const pathname = usePathname();
   const router = useRouter();
+  const { isAttemptPending } = useAttemptPending();
   const [mobileOpen, setMobileOpen] = useState(false);
   const [collapsed, setCollapsed] = useState(false);
   const [loggingOut, setLoggingOut] = useState(false);
@@ -142,7 +144,17 @@ export default function Sidebar({ email }: { email: string }) {
             )}
             <Link
               href={item.href}
-              onClick={() => setMobileOpen(false)}
+              onClick={(e) => {
+                if (isAttemptPending) {
+                  e.preventDefault();
+                  if (window.confirm("You have an unsolved problem. Leave anyway?")) {
+                    setMobileOpen(false);
+                    router.push(item.href);
+                  }
+                } else {
+                  setMobileOpen(false);
+                }
+              }}
               title={collapsed ? item.label : undefined}
               className={`${item.desktopOnly ? "hidden md:flex" : "flex"} items-center ${collapsed ? "justify-center" : "gap-2.5"} px-3 py-2 rounded-md text-sm font-medium transition-all ${
                 isActive(item.href)

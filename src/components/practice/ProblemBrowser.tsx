@@ -1,10 +1,12 @@
 "use client";
 
-import { useState, useMemo, useEffect, useCallback } from "react";
+import { useState, useMemo, useEffect, useCallback, useRef } from "react";
 import { useSearchParams } from "next/navigation";
 import type { Problem } from "@/types";
 import ProblemPane from "./ProblemPane";
 import EditorPane from "./EditorPane";
+import NavigationGuard from "./NavigationGuard";
+import { useAttemptPending } from "@/contexts/AttemptContext";
 
 export interface AttemptState {
   timerStarted: boolean;
@@ -85,6 +87,67 @@ export default function ProblemBrowser({
     setAttemptState((prev) => ({ ...prev, manuallySolved: !prev.manuallySolved }));
   }, []);
 
+  // Navigation guard logic
+  const { setIsAttemptPending } = useAttemptPending();
+  const pendingActionRef = useRef<(() => void) | null>(null);
+  const [showGuardModal, setShowGuardModal] = useState(false);
+
+  const isAttemptPending =
+    attemptState.timerStarted &&
+    attemptState.successfulRunNumber === null &&
+    !attemptState.manuallySolved;
+
+  // Sync to context so Sidebar can read it
+  useEffect(() => {
+    setIsAttemptPending(isAttemptPending);
+  }, [isAttemptPending, setIsAttemptPending]);
+
+  // Warn on browser tab close
+  useEffect(() => {
+    if (!isAttemptPending) return;
+    const handler = (e: BeforeUnloadEvent) => {
+      e.preventDefault();
+    };
+    window.addEventListener("beforeunload", handler);
+    return () => window.removeEventListener("beforeunload", handler);
+  }, [isAttemptPending]);
+
+  const guardedAction = useCallback(
+    (action: () => void) => {
+      if (isAttemptPending) {
+        pendingActionRef.current = action;
+        setShowGuardModal(true);
+      } else {
+        action();
+      }
+    },
+    [isAttemptPending]
+  );
+
+  const handleGuardMarkSolved = useCallback(() => {
+    setAttemptState((prev) => ({ ...prev, manuallySolved: true }));
+    setShowGuardModal(false);
+    pendingActionRef.current?.();
+    pendingActionRef.current = null;
+  }, []);
+
+  const handleGuardLeave = useCallback(() => {
+    setShowGuardModal(false);
+    pendingActionRef.current?.();
+    pendingActionRef.current = null;
+  }, []);
+
+  const handleGuardStay = useCallback(() => {
+    setShowGuardModal(false);
+    pendingActionRef.current = null;
+  }, []);
+
+  // Derive last run success for the modal
+  const lastRunSuccess =
+    attemptState.runCount > 0
+      ? attemptState.successfulRunNumber !== null
+      : null;
+
   useEffect(() => {
     const problemSlug = searchParams.get("problem");
     if (problemSlug) {
@@ -137,7 +200,7 @@ export default function ProblemBrowser({
           </div>
           <div className="p-1.5 space-y-0.5">
             <button
-              onClick={() => setSelectedCategory(null)}
+              onClick={() => guardedAction(() => setSelectedCategory(null))}
               className={`w-full text-left px-2.5 py-1.5 rounded-md text-xs transition-colors ${
                 selectedCategory === null
                   ? "bg-neon-cyan/10 text-neon-cyan font-medium"
@@ -154,7 +217,7 @@ export default function ProblemBrowser({
             {categories.map((cat) => (
               <button
                 key={cat}
-                onClick={() => setSelectedCategory(cat)}
+                onClick={() => guardedAction(() => setSelectedCategory(cat))}
                 className={`w-full text-left px-2.5 py-1.5 rounded-md text-xs transition-colors ${
                   selectedCategory === cat
                     ? "bg-neon-cyan/10 text-neon-cyan font-medium"
@@ -190,7 +253,10 @@ export default function ProblemBrowser({
             <div className="p-2 border-b border-[var(--surface-border)]">
               <select
                 value={selectedSheet || ""}
-                onChange={(e) => setSelectedSheet(e.target.value || null)}
+                onChange={(e) => {
+                  const val = e.target.value || null;
+                  guardedAction(() => setSelectedSheet(val));
+                }}
                 className="w-full rounded-md border border-[var(--surface-border)] bg-[var(--background)] px-2.5 py-1.5 text-xs text-foreground focus:outline-none focus:ring-1 focus:ring-neon-cyan/50"
               >
                 <option value="">All Sheets</option>
@@ -209,7 +275,10 @@ export default function ProblemBrowser({
               type="text"
               placeholder="Search problems..."
               value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
+              onChange={(e) => {
+                const val = e.target.value;
+                guardedAction(() => setSearchQuery(val));
+              }}
               className="w-full rounded-md border border-[var(--surface-border)] bg-[var(--background)] px-2.5 py-1.5 text-xs text-foreground placeholder-gray-500 focus:outline-none focus:ring-1 focus:ring-neon-cyan/50"
             />
           </div>
@@ -235,7 +304,7 @@ export default function ProblemBrowser({
             {filteredProblems.map((problem) => (
               <button
                 key={problem.id}
-                onClick={() => setSelectedProblem(problem)}
+                onClick={() => guardedAction(() => setSelectedProblem(problem))}
                 className={`w-full text-left px-3 py-2 border-b border-[var(--surface-border)] transition-colors ${
                   selectedProblem?.id === problem.id
                     ? "bg-neon-cyan/5"
@@ -317,6 +386,14 @@ export default function ProblemBrowser({
           onToggleManuallySolved={toggleManuallySolved}
         />
       </div>
+
+      <NavigationGuard
+        open={showGuardModal}
+        lastRunSuccess={lastRunSuccess}
+        onMarkSolved={handleGuardMarkSolved}
+        onLeave={handleGuardLeave}
+        onStay={handleGuardStay}
+      />
     </div>
   );
 }
