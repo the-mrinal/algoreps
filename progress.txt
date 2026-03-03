@@ -1,0 +1,20 @@
+## Codebase Patterns
+- Next.js 14 with App Router, TypeScript, Tailwind CSS, src/ directory structure
+- Path alias: `@/*` maps to `./src/*` in tsconfig
+- ESLint config extends `next/core-web-vitals` and `next/typescript`
+- Quality checks: `npm run lint`, `npx tsc --noEmit`, `npm run build`
+- Dependencies: @supabase/supabase-js, @supabase/ssr, @monaco-editor/react, node-cron, recharts
+
+## 2026-03-03 14:56 - US-001
+- Initialized Next.js 14 project scaffolding with all required dependencies
+- Files changed:
+  - package.json (added @supabase/supabase-js, @supabase/ssr, @monaco-editor/react, node-cron, recharts, @types/node-cron)
+  - .env.local.example (created with all placeholder env vars)
+  - .gitignore (added data/sources/ exclusion)
+  - Created directory skeleton: src/app/dashboard/, src/app/api/, src/lib/supabase/, src/components/practice/, src/components/logger/, src/components/srs/, src/components/progress/, src/types/, data/, supabase/
+- **Learnings for future iterations:**
+  - Project uses Next.js 14.2.35 specifically (not 15.x)
+  - Port 3000 may be in use on this machine; dev server falls back to 3001
+  - `data/sources/` is gitignored (for merge script cloned repos), but `data/problems.json` should be committed
+  - scripts/ directory already existed from project setup
+---
