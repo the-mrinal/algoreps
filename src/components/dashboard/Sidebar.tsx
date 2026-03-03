@@ -28,16 +28,6 @@ const navItems = [
     ),
   },
   {
-    href: "/dashboard/log",
-    label: "Log",
-    desktopOnly: false,
-    icon: (
-      <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-        <path strokeLinecap="round" strokeLinejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-      </svg>
-    ),
-  },
-  {
     href: "/dashboard/progress",
     label: "Progress",
     desktopOnly: true,
@@ -66,6 +56,8 @@ export default function Sidebar({ email }: { email: string }) {
   const [loggingOut, setLoggingOut] = useState(false);
   const [clearing, setClearing] = useState(false);
   const [showClearConfirm, setShowClearConfirm] = useState(false);
+  const [notifying, setNotifying] = useState(false);
+  const [notifyResult, setNotifyResult] = useState<"success" | "error" | null>(null);
 
   async function handleLogout() {
     setLoggingOut(true);
@@ -84,6 +76,20 @@ export default function Sidebar({ email }: { email: string }) {
       }
     } finally {
       setClearing(false);
+    }
+  }
+
+  async function handleDiscordNotify() {
+    setNotifying(true);
+    setNotifyResult(null);
+    try {
+      const res = await fetch("/api/discord-notify", { method: "POST" });
+      setNotifyResult(res.ok ? "success" : "error");
+    } catch {
+      setNotifyResult("error");
+    } finally {
+      setNotifying(false);
+      setTimeout(() => setNotifyResult(null), 3000);
     }
   }
 
@@ -137,6 +143,25 @@ export default function Sidebar({ email }: { email: string }) {
           {email}
         </p>
         <ThemeToggle />
+        <button
+          onClick={handleDiscordNotify}
+          disabled={notifying}
+          className={`w-full rounded-md border px-3 py-2 text-sm font-medium transition-colors disabled:opacity-50 ${
+            notifyResult === "success"
+              ? "border-green-500/30 text-green-400 bg-green-500/10"
+              : notifyResult === "error"
+                ? "border-red-500/30 text-red-400 bg-red-500/10"
+                : "border-[var(--surface-border)] text-gray-400 hover:text-foreground hover:bg-white/5"
+          }`}
+        >
+          {notifying
+            ? "Sending..."
+            : notifyResult === "success"
+              ? "Sent!"
+              : notifyResult === "error"
+                ? "Failed"
+                : "Send Discord Status"}
+        </button>
         {showClearConfirm ? (
           <div className="rounded-md border border-red-500/30 bg-red-500/10 p-3 space-y-2">
             <p className="text-xs text-red-400">
