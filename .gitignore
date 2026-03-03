@@ -45,3 +45,4 @@ prd.json
 tasks/
 scripts/ralph/
 supabase/.temp/
+supabase/migrations/
