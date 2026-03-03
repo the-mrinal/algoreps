@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import type { Problem } from "@/types";
+import type { AttemptState } from "./ProblemBrowser";
 
 const difficultyColors: Record<string, string> = {
   Easy: "bg-neon-green/20 text-neon-green",
@@ -14,6 +15,10 @@ interface SubmissionRecord {
   performance_score: number;
   created_at: string;
   time_taken_mins: number | null;
+  time_taken_seconds: number | null;
+  run_count: number | null;
+  successful_run_number: number | null;
+  manually_solved: boolean | null;
   time_complexity: string | null;
   space_complexity: string | null;
   is_self_reported: boolean;
@@ -27,14 +32,33 @@ const scoreLabels: Record<number, { label: string; color: string }> = {
   5: { label: "Optimal", color: "text-neon-cyan" },
 };
 
+function formatTime(seconds: number): string {
+  const m = Math.floor(seconds / 60);
+  const s = seconds % 60;
+  return `${String(m).padStart(2, "0")}:${String(s).padStart(2, "0")}`;
+}
+
 export default function ProblemPane({
   problem,
+  attemptState,
+  onStartTimer,
+  onTick,
 }: {
   problem: Problem | null;
+  attemptState: AttemptState;
+  onStartTimer: () => void;
+  onTick: () => void;
 }) {
   const [revealedHints, setRevealedHints] = useState<Set<number>>(new Set());
   const [submissions, setSubmissions] = useState<SubmissionRecord[]>([]);
   const [loadingHistory, setLoadingHistory] = useState(false);
+
+  // Timer tick effect
+  useEffect(() => {
+    if (!attemptState.timerStarted) return;
+    const interval = setInterval(onTick, 1000);
+    return () => clearInterval(interval);
+  }, [attemptState.timerStarted, onTick]);
 
   useEffect(() => {
     if (!problem) {
@@ -99,6 +123,18 @@ export default function ProblemPane({
 
   return (
     <div className="h-full overflow-y-auto p-4 space-y-4">
+      {/* Timer display */}
+      {attemptState.timerStarted && (
+        <div className="flex items-center gap-2 rounded-md bg-neon-cyan/10 border border-neon-cyan/20 px-3 py-2">
+          <svg className="h-4 w-4 text-neon-cyan" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+            <path strokeLinecap="round" strokeLinejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+          <span className="text-sm font-mono font-bold text-neon-cyan">
+            {formatTime(attemptState.timerSeconds)}
+          </span>
+        </div>
+      )}
+
       {/* Title and badges */}
       <div>
         <h2 className="text-xl font-bold text-foreground">
@@ -132,95 +168,116 @@ export default function ProblemPane({
         </div>
       </div>
 
-      {/* Description */}
-      <div className="prose prose-sm dark:prose-invert max-w-none">
-        <div className="text-sm text-gray-600 dark:text-gray-300 whitespace-pre-wrap">
-          {problem.description}
+      {/* Start Timer button — shown when timer hasn't started */}
+      {!attemptState.timerStarted && (
+        <div className="flex flex-col items-center gap-3 py-8">
+          <p className="text-sm text-gray-500">Click below to reveal the problem and start the timer.</p>
+          <button
+            onClick={onStartTimer}
+            className="inline-flex items-center gap-2 rounded-lg bg-neon-cyan/20 border border-neon-cyan/30 px-5 py-2.5 text-sm font-semibold text-neon-cyan hover:bg-neon-cyan/30 transition-colors"
+          >
+            <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
+            </svg>
+            Start Timer
+          </button>
         </div>
-      </div>
+      )}
 
-      {/* Examples */}
-      {problem.examples.length > 0 && (
-        <div className="space-y-3">
-          <h3 className="text-sm font-semibold text-foreground">
-            Examples
-          </h3>
-          {problem.examples.map((example) => (
-            <div
-              key={example.example_num}
-              className="rounded-md border border-[var(--surface-border)] bg-[var(--background)] p-3"
-            >
-              <div className="text-xs font-medium text-gray-500 dark:text-gray-400 mb-1">
-                Example {example.example_num}
-              </div>
-              <pre className="text-sm text-gray-600 dark:text-gray-300 whitespace-pre-wrap font-mono">
-                {example.example_text}
-              </pre>
+      {/* Problem content — only shown when timer is running */}
+      {attemptState.timerStarted && (
+        <>
+          {/* Description */}
+          <div className="prose prose-sm dark:prose-invert max-w-none">
+            <div className="text-sm text-gray-600 dark:text-gray-300 whitespace-pre-wrap">
+              {problem.description}
             </div>
-          ))}
-        </div>
-      )}
-
-      {/* Constraints */}
-      {problem.constraints.length > 0 && (
-        <div>
-          <h3 className="text-sm font-semibold text-foreground mb-2">
-            Constraints
-          </h3>
-          <ul className="list-disc list-inside space-y-1">
-            {problem.constraints.map((constraint, i) => (
-              <li
-                key={i}
-                className="text-sm text-gray-600 dark:text-gray-300 font-mono"
-              >
-                {constraint}
-              </li>
-            ))}
-          </ul>
-        </div>
-      )}
-
-      {/* Hints (collapsible) */}
-      {problem.hints.length > 0 && (
-        <div>
-          <h3 className="text-sm font-semibold text-foreground mb-2">
-            Hints
-          </h3>
-          <div className="space-y-2">
-            {problem.hints.map((hint, i) => (
-              <div
-                key={i}
-                className="rounded-md border border-[var(--surface-border)]"
-              >
-                <button
-                  onClick={() => toggleHint(i)}
-                  className="w-full text-left px-3 py-2 text-sm font-medium text-gray-500 dark:text-gray-400 hover:bg-white/5 flex items-center justify-between"
-                >
-                  <span>Hint {i + 1}</span>
-                  <svg
-                    className={`h-4 w-4 transition-transform ${revealedHints.has(i) ? "rotate-180" : ""}`}
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M19 9l-7 7-7-7"
-                    />
-                  </svg>
-                </button>
-                {revealedHints.has(i) && (
-                  <div
-                    className="px-3 pb-3 text-sm text-gray-500 dark:text-gray-400"
-                    dangerouslySetInnerHTML={{ __html: hint }}
-                  />
-                )}
-              </div>
-            ))}
           </div>
-        </div>
+
+          {/* Examples */}
+          {problem.examples.length > 0 && (
+            <div className="space-y-3">
+              <h3 className="text-sm font-semibold text-foreground">
+                Examples
+              </h3>
+              {problem.examples.map((example) => (
+                <div
+                  key={example.example_num}
+                  className="rounded-md border border-[var(--surface-border)] bg-[var(--background)] p-3"
+                >
+                  <div className="text-xs font-medium text-gray-500 dark:text-gray-400 mb-1">
+                    Example {example.example_num}
+                  </div>
+                  <pre className="text-sm text-gray-600 dark:text-gray-300 whitespace-pre-wrap font-mono">
+                    {example.example_text}
+                  </pre>
+                </div>
+              ))}
+            </div>
+          )}
+
+          {/* Constraints */}
+          {problem.constraints.length > 0 && (
+            <div>
+              <h3 className="text-sm font-semibold text-foreground mb-2">
+                Constraints
+              </h3>
+              <ul className="list-disc list-inside space-y-1">
+                {problem.constraints.map((constraint, i) => (
+                  <li
+                    key={i}
+                    className="text-sm text-gray-600 dark:text-gray-300 font-mono"
+                  >
+                    {constraint}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+
+          {/* Hints (collapsible) */}
+          {problem.hints.length > 0 && (
+            <div>
+              <h3 className="text-sm font-semibold text-foreground mb-2">
+                Hints
+              </h3>
+              <div className="space-y-2">
+                {problem.hints.map((hint, i) => (
+                  <div
+                    key={i}
+                    className="rounded-md border border-[var(--surface-border)]"
+                  >
+                    <button
+                      onClick={() => toggleHint(i)}
+                      className="w-full text-left px-3 py-2 text-sm font-medium text-gray-500 dark:text-gray-400 hover:bg-white/5 flex items-center justify-between"
+                    >
+                      <span>Hint {i + 1}</span>
+                      <svg
+                        className={`h-4 w-4 transition-transform ${revealedHints.has(i) ? "rotate-180" : ""}`}
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M19 9l-7 7-7-7"
+                        />
+                      </svg>
+                    </button>
+                    {revealedHints.has(i) && (
+                      <div
+                        className="px-3 pb-3 text-sm text-gray-500 dark:text-gray-400"
+                        dangerouslySetInnerHTML={{ __html: hint }}
+                      />
+                    )}
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+        </>
       )}
 
       {/* External links */}
@@ -308,6 +365,13 @@ export default function ProblemPane({
                 const timeLabel = daysAgo === 0 ? "Today" : daysAgo === 1 ? "Yesterday" : `${daysAgo}d ago`;
                 const score = scoreLabels[sub.performance_score];
 
+                // Format time: prefer time_taken_seconds, fall back to time_taken_mins
+                const timeDisplay = sub.time_taken_seconds != null
+                  ? formatTime(sub.time_taken_seconds)
+                  : sub.time_taken_mins
+                    ? `${sub.time_taken_mins}min`
+                    : null;
+
                 return (
                   <div
                     key={sub.id}
@@ -321,8 +385,21 @@ export default function ProblemPane({
                       <span className="text-gray-600">({timeLabel})</span>
                     </div>
                     <div className="flex items-center gap-3">
-                      {sub.time_taken_mins && (
-                        <span className="text-gray-500">{sub.time_taken_mins}min</span>
+                      {timeDisplay && (
+                        <span className="text-gray-500 font-mono">{timeDisplay}</span>
+                      )}
+                      {sub.run_count != null && sub.run_count > 0 && (
+                        <span className="text-gray-500" title={sub.successful_run_number ? `Solved on run #${sub.successful_run_number}` : "No successful run"}>
+                          {sub.run_count} run{sub.run_count !== 1 ? "s" : ""}
+                          {sub.successful_run_number && (
+                            <span className="text-neon-green ml-0.5">(#{sub.successful_run_number})</span>
+                          )}
+                        </span>
+                      )}
+                      {sub.manually_solved && (
+                        <span className="px-1.5 py-0.5 rounded text-[10px] bg-yellow-500/20 text-yellow-400">
+                          Manual
+                        </span>
                       )}
                       {sub.time_complexity && (
                         <span className="text-gray-500 font-mono">{sub.time_complexity}</span>

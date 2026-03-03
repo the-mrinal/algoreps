@@ -1,10 +1,18 @@
 "use client";
 
-import { useState, useMemo, useEffect } from "react";
+import { useState, useMemo, useEffect, useCallback } from "react";
 import { useSearchParams } from "next/navigation";
 import type { Problem } from "@/types";
 import ProblemPane from "./ProblemPane";
 import EditorPane from "./EditorPane";
+
+export interface AttemptState {
+  timerStarted: boolean;
+  timerSeconds: number;
+  runCount: number;
+  successfulRunNumber: number | null;
+  manuallySolved: boolean;
+}
 
 const difficultyColors: Record<string, string> = {
   Easy: "bg-neon-green/20 text-neon-green",
@@ -29,6 +37,53 @@ export default function ProblemBrowser({
   const [showCategories, setShowCategories] = useState(true);
   const [showProblemList, setShowProblemList] = useState(true);
   const [showProblemPane, setShowProblemPane] = useState(true);
+
+  // Shared attempt state
+  const [attemptState, setAttemptState] = useState<AttemptState>({
+    timerStarted: false,
+    timerSeconds: 0,
+    runCount: 0,
+    successfulRunNumber: null,
+    manuallySolved: false,
+  });
+
+  const resetAttemptState = useCallback(() => {
+    setAttemptState({
+      timerStarted: false,
+      timerSeconds: 0,
+      runCount: 0,
+      successfulRunNumber: null,
+      manuallySolved: false,
+    });
+  }, []);
+
+  // Reset attempt state when problem changes
+  useEffect(() => {
+    resetAttemptState();
+  }, [selectedProblem, resetAttemptState]);
+
+  const startTimer = useCallback(() => {
+    setAttemptState((prev) => ({ ...prev, timerStarted: true }));
+  }, []);
+
+  const tickTimer = useCallback(() => {
+    setAttemptState((prev) => ({ ...prev, timerSeconds: prev.timerSeconds + 1 }));
+  }, []);
+
+  const incrementRunCount = useCallback(() => {
+    setAttemptState((prev) => ({ ...prev, runCount: prev.runCount + 1 }));
+  }, []);
+
+  const recordSuccessfulRun = useCallback(() => {
+    setAttemptState((prev) => {
+      if (prev.successfulRunNumber !== null) return prev;
+      return { ...prev, successfulRunNumber: prev.runCount };
+    });
+  }, []);
+
+  const toggleManuallySolved = useCallback(() => {
+    setAttemptState((prev) => ({ ...prev, manuallySolved: !prev.manuallySolved }));
+  }, []);
 
   useEffect(() => {
     const problemSlug = searchParams.get("problem");
@@ -233,7 +288,12 @@ export default function ProblemBrowser({
             </button>
           </div>
           <div className="flex-1 overflow-y-auto">
-            <ProblemPane problem={selectedProblem} />
+            <ProblemPane
+              problem={selectedProblem}
+              attemptState={attemptState}
+              onStartTimer={startTimer}
+              onTick={tickTimer}
+            />
           </div>
         </div>
       ) : (
@@ -249,7 +309,13 @@ export default function ProblemBrowser({
 
       {/* Editor + Output Pane */}
       <div className="flex-1 min-w-0 overflow-hidden rounded-lg border border-[var(--surface-border)] bg-gray-900">
-        <EditorPane problem={selectedProblem} />
+        <EditorPane
+          problem={selectedProblem}
+          attemptState={attemptState}
+          onIncrementRunCount={incrementRunCount}
+          onRecordSuccessfulRun={recordSuccessfulRun}
+          onToggleManuallySolved={toggleManuallySolved}
+        />
       </div>
     </div>
   );

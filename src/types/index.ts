@@ -37,6 +37,10 @@ export interface UserProgress {
   remarks: string | null;
   code: string | null;
   time_taken_mins: number | null;
+  time_taken_seconds: number | null;
+  run_count: number;
+  successful_run_number: number | null;
+  manually_solved: boolean;
   performance_score: number;
   time_complexity: string | null;
   space_complexity: string | null;

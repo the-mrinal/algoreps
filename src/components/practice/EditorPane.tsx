@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import dynamic from "next/dynamic";
 import type { Problem, AIReviewResponse } from "@/types";
+import type { AttemptState } from "./ProblemBrowser";
 import { useUser } from "@/contexts/UserContext";
 import AIReview from "./AIReview";
 
@@ -24,8 +25,16 @@ interface ExecutionResult {
 
 export default function EditorPane({
   problem,
+  attemptState,
+  onIncrementRunCount,
+  onRecordSuccessfulRun,
+  onToggleManuallySolved,
 }: {
   problem: Problem | null;
+  attemptState: AttemptState;
+  onIncrementRunCount: () => void;
+  onRecordSuccessfulRun: () => void;
+  onToggleManuallySolved: () => void;
 }) {
   const { isPremium } = useUser();
   const [language, setLanguage] = useState<"python3" | "golang">("python3");
@@ -68,6 +77,7 @@ export default function EditorPane({
   }, [problem, language]);
 
   const handleRunCode = async () => {
+    onIncrementRunCount();
     setIsRunning(true);
     setResult(null);
     try {
@@ -78,6 +88,9 @@ export default function EditorPane({
       });
       const data: ExecutionResult = await res.json();
       setResult(data);
+      if (data.success) {
+        onRecordSuccessfulRun();
+      }
     } catch {
       setResult({
         stdout: "",
@@ -143,6 +156,10 @@ export default function EditorPane({
           space_complexity: aiReview.space_complexity,
           ai_review: aiReview,
           is_self_reported: false,
+          time_taken_seconds: attemptState.timerSeconds,
+          run_count: attemptState.runCount,
+          successful_run_number: attemptState.successfulRunNumber,
+          manually_solved: attemptState.manuallySolved,
         }),
       });
 
@@ -218,11 +235,29 @@ export default function EditorPane({
           <label className="text-xs font-medium text-gray-400">
             Input (stdin)
           </label>
-          <div className="flex gap-2">
+          <div className="flex gap-2 items-center">
+            {/* Mark Solved toggle */}
+            <button
+              onClick={onToggleManuallySolved}
+              disabled={!attemptState.timerStarted}
+              className={`inline-flex items-center gap-1.5 rounded-md px-3 py-1.5 text-xs font-medium transition-colors ${
+                attemptState.manuallySolved
+                  ? "bg-yellow-500/20 text-yellow-400 border border-yellow-500/30"
+                  : "bg-gray-700 text-gray-400 hover:bg-gray-600 border border-gray-600"
+              } ${!attemptState.timerStarted ? "opacity-50 cursor-not-allowed" : ""}`}
+              title="Manually mark this problem as solved"
+            >
+              <svg className="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+              </svg>
+              {attemptState.manuallySolved ? "Solved" : "Mark Solved"}
+            </button>
+
+            {/* Run Code button with run count */}
             <button
               onClick={handleRunCode}
-              disabled={isRunning}
-              className="inline-flex items-center gap-1.5 rounded-md bg-green-600 px-3 py-1.5 text-xs font-medium text-white hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+              disabled={isRunning || !attemptState.timerStarted}
+              className={`inline-flex items-center gap-1.5 rounded-md bg-green-600 px-3 py-1.5 text-xs font-medium text-white hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors`}
             >
               {isRunning ? (
                 <>
@@ -263,6 +298,11 @@ export default function EditorPane({
                     />
                   </svg>
                   Run Code
+                  {attemptState.runCount > 0 && (
+                    <span className="rounded-full bg-green-500/30 px-1.5 py-0.5 text-[10px] font-bold leading-none">
+                      {attemptState.runCount}
+                    </span>
+                  )}
                 </>
               )}
             </button>
