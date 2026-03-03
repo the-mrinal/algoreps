@@ -3,6 +3,7 @@
 import { useState, useMemo } from "react";
 import type { Problem } from "@/types";
 import ProblemPane from "./ProblemPane";
+import EditorPane from "./EditorPane";
 
 const difficultyColors: Record<string, string> = {
   Easy: "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200",
@@ -42,19 +43,24 @@ export default function ProblemBrowser({
     return result;
   }, [problems, selectedCategory, searchQuery]);
 
+  const handleAnalyze = (code: string) => {
+    // Placeholder for AI review integration (US-014)
+    console.log("Analyze & Score requested for code:", code.slice(0, 50));
+  };
+
   return (
-    <div className="flex h-full gap-4">
+    <div className="flex h-full gap-2">
       {/* Category Sidebar */}
-      <div className="w-52 flex-shrink-0 overflow-y-auto rounded-lg border border-gray-200 bg-white dark:border-gray-700 dark:bg-gray-800">
+      <div className="w-48 flex-shrink-0 overflow-y-auto rounded-lg border border-gray-200 bg-white dark:border-gray-700 dark:bg-gray-800">
         <div className="p-3 border-b border-gray-200 dark:border-gray-700">
           <h3 className="text-sm font-semibold text-gray-900 dark:text-white">
             Categories
           </h3>
         </div>
-        <div className="p-2 space-y-0.5">
+        <div className="p-1.5 space-y-0.5">
           <button
             onClick={() => setSelectedCategory(null)}
-            className={`w-full text-left px-3 py-2 rounded-md text-sm transition-colors ${
+            className={`w-full text-left px-2.5 py-1.5 rounded-md text-xs transition-colors ${
               selectedCategory === null
                 ? "bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-200 font-medium"
                 : "text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700"
@@ -71,7 +77,7 @@ export default function ProblemBrowser({
             <button
               key={cat}
               onClick={() => setSelectedCategory(cat)}
-              className={`w-full text-left px-3 py-2 rounded-md text-sm transition-colors ${
+              className={`w-full text-left px-2.5 py-1.5 rounded-md text-xs transition-colors ${
                 selectedCategory === cat
                   ? "bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-200 font-medium"
                   : "text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700"
@@ -79,7 +85,7 @@ export default function ProblemBrowser({
             >
               <span className="flex justify-between items-center">
                 <span className="truncate">{cat}</span>
-                <span className="text-xs text-gray-500 dark:text-gray-400 ml-2">
+                <span className="text-xs text-gray-500 dark:text-gray-400 ml-1">
                   {categoryCounts[cat] || 0}
                 </span>
               </span>
@@ -89,20 +95,20 @@ export default function ProblemBrowser({
       </div>
 
       {/* Problem List */}
-      <div className="w-80 flex-shrink-0 flex flex-col overflow-hidden rounded-lg border border-gray-200 bg-white dark:border-gray-700 dark:bg-gray-800">
+      <div className="w-64 flex-shrink-0 flex flex-col overflow-hidden rounded-lg border border-gray-200 bg-white dark:border-gray-700 dark:bg-gray-800">
         {/* Search */}
-        <div className="p-3 border-b border-gray-200 dark:border-gray-700">
+        <div className="p-2 border-b border-gray-200 dark:border-gray-700">
           <input
             type="text"
-            placeholder="Search problems by title..."
+            placeholder="Search problems..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 px-3 py-2 text-sm text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 px-2.5 py-1.5 text-xs text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
         </div>
 
         {/* Header */}
-        <div className="px-4 py-2 border-b border-gray-200 dark:border-gray-700 text-xs font-medium text-gray-500 dark:text-gray-400">
+        <div className="px-3 py-1.5 border-b border-gray-200 dark:border-gray-700 text-xs font-medium text-gray-500 dark:text-gray-400">
           {filteredProblems.length} problem
           {filteredProblems.length !== 1 ? "s" : ""}
           {selectedCategory ? ` in ${selectedCategory}` : ""}
@@ -114,43 +120,48 @@ export default function ProblemBrowser({
             <button
               key={problem.id}
               onClick={() => setSelectedProblem(problem)}
-              className={`w-full text-left px-4 py-3 border-b border-gray-100 dark:border-gray-700 transition-colors ${
+              className={`w-full text-left px-3 py-2 border-b border-gray-100 dark:border-gray-700 transition-colors ${
                 selectedProblem?.id === problem.id
                   ? "bg-blue-50 dark:bg-blue-900/30"
                   : "hover:bg-gray-50 dark:hover:bg-gray-700/50"
               }`}
             >
-              <div className="flex items-center gap-2">
-                <span className="text-sm font-medium text-gray-900 dark:text-white flex-1 truncate">
+              <div className="flex items-center gap-1.5">
+                <span className="text-xs font-medium text-gray-900 dark:text-white flex-1 truncate">
                   {problem.title}
                 </span>
                 {problem.is_blind75 && (
-                  <span className="text-xs px-1.5 py-0.5 rounded bg-purple-100 text-purple-700 dark:bg-purple-900 dark:text-purple-200 font-medium">
+                  <span className="text-[10px] px-1 py-0.5 rounded bg-purple-100 text-purple-700 dark:bg-purple-900 dark:text-purple-200 font-medium">
                     B75
                   </span>
                 )}
                 <span
-                  className={`text-xs px-2 py-0.5 rounded-full font-medium ${difficultyColors[problem.difficulty]}`}
+                  className={`text-[10px] px-1.5 py-0.5 rounded-full font-medium ${difficultyColors[problem.difficulty]}`}
                 >
                   {problem.difficulty}
                 </span>
               </div>
-              <div className="mt-1 text-xs text-gray-500 dark:text-gray-400">
+              <div className="mt-0.5 text-[10px] text-gray-500 dark:text-gray-400">
                 {problem.category}
               </div>
             </button>
           ))}
           {filteredProblems.length === 0 && (
-            <div className="p-8 text-center text-sm text-gray-500 dark:text-gray-400">
-              No problems found matching your criteria.
+            <div className="p-6 text-center text-xs text-gray-500 dark:text-gray-400">
+              No problems found.
             </div>
           )}
         </div>
       </div>
 
       {/* Problem Description Pane */}
-      <div className="flex-1 overflow-hidden rounded-lg border border-gray-200 bg-white dark:border-gray-700 dark:bg-gray-800">
+      <div className="flex-1 min-w-0 overflow-hidden rounded-lg border border-gray-200 bg-white dark:border-gray-700 dark:bg-gray-800">
         <ProblemPane problem={selectedProblem} />
+      </div>
+
+      {/* Editor + Output Pane */}
+      <div className="flex-1 min-w-0 overflow-hidden rounded-lg border border-gray-200 dark:border-gray-700 bg-gray-900">
+        <EditorPane problem={selectedProblem} onAnalyze={handleAnalyze} />
       </div>
     </div>
   );

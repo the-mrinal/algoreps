@@ -16,6 +16,16 @@
 - Middleware refreshes auth session on every request; matcher excludes static files
 - Dashboard layout: server component checks auth in layout.tsx, client Sidebar component handles navigation/logout/mobile menu
 - Dashboard routes: /dashboard, /dashboard/practice, /dashboard/log, /dashboard/progress
+- API route auth pattern: `const supabase = await createClient(); const { data: { user } } = await supabase.auth.getUser();` — return 401 if !user
+- SRS scheduling: import `calculateNextRevisionDate(score)` from `@/lib/srs` — returns `{ next_revision_date, days_to_add }`
+- Submissions API: POST /api/submissions (create), GET /api/submissions (list with ?limit, ?offset, ?problem_id, ?is_self_reported)
+- Problem data must be loaded server-side and passed as props to client components (fs-based loader)
+- Practice page pattern: server component loads data → client component handles interactivity (state, filtering, search)
+- Code execution API: POST /api/run-code accepts { code, input } and returns { stdout, stderr, executionTime, success }
+- Use `ChildProcess` type from `child_process` and optional chaining on stdio streams (`child.stdout?.on`) to satisfy TypeScript
+- Monaco editor: lazy-load with `dynamic(() => import("@monaco-editor/react"), { ssr: false })` — must disable SSR
+- EditorPane receives `problem` and `onAnalyze` callback; pre-populates code from `problem.code_snippets["javascript"]`
+- Practice page 4-column layout: categories (w-48) | problem list (w-64) | description pane (flex-1) | editor pane (flex-1)
 
 ## 2026-03-03 14:56 - US-001
 - Initialized Next.js 14 project scaffolding with all required dependencies
@@ -113,4 +123,70 @@
   - Mobile responsiveness: sidebar slides in/out with translate-x transition, overlay backdrop, hamburger button fixed at top-left
   - Extra top padding (pt-16) on mobile main content to avoid overlap with fixed hamburger button
   - The /dashboard route is now dynamic (ƒ) due to server-side auth check in layout
+---
+
+## 2026-03-03 15:26 - US-008
+- Implemented SRS calculation library and submissions CRUD API
+- Files changed:
+  - src/lib/srs.ts (new — calculateNextRevisionDate function: score 1-2 → +1 day, score 3 → +4 days, score 4-5 → +14 days)
+  - src/app/api/submissions/route.ts (new — POST creates submission with SRS scheduling, GET lists with pagination/filters)
+- **Learnings for future iterations:**
+  - API routes use `await createClient()` from `@/lib/supabase/server` and `supabase.auth.getUser()` for auth
+  - Supabase `.insert().select().single()` returns the created record directly
+  - Use `query.range(offset, offset + limit - 1)` for pagination (inclusive range)
+  - Query filters can be chained conditionally: `if (filter) query = query.eq(...)`
+  - The submissions API accepts optional fields by checking `body[field] !== undefined` to allow falsy values
+---
+
+## 2026-03-03 15:28 - US-009
+- Built practice page with problem browser and category sidebar
+- Files changed:
+  - src/app/dashboard/practice/page.tsx (new — server component, loads problems/categories from lib, passes to client component)
+  - src/components/practice/ProblemBrowser.tsx (new — client component with category sidebar, search input, problem list with difficulty badges and Blind75 indicator)
+- **Learnings for future iterations:**
+  - Problem data is loaded server-side via `getAllProblems()`/`getCategories()` and passed as props to client components (since `@/lib/problems` uses `fs`)
+  - ProblemBrowser maintains `selectedProblem` state — US-010 will need to lift this or access it to render the ProblemPane alongside
+  - Category counts are computed via `useMemo` from the problems array; categoryCounts map used for sidebar badges
+  - The practice page renders at `/dashboard/practice` as a dynamic route (ƒ) due to the dashboard layout auth check
+  - Difficulty colors: Easy=green, Medium=yellow, Hard=red using Tailwind utility classes with dark mode variants
+---
+
+## 2026-03-03 15:31 - US-010
+- Built ProblemPane component and integrated it into the practice page as a right panel
+- Files changed:
+  - src/components/practice/ProblemPane.tsx (new — displays problem title, badges, description, examples, constraints, collapsible hints, external links)
+  - src/components/practice/ProblemBrowser.tsx (modified — added ProblemPane import, changed to 3-column layout: categories sidebar w-52, problem list w-80, description pane flex-1)
+- **Learnings for future iterations:**
+  - Hints from problems.json contain HTML (e.g., `<code>` tags) — rendered with `dangerouslySetInnerHTML` in the hints section only
+  - ProblemPane resets `revealedHints` state when a new problem is selected (no effect cleanup needed since it's managed per-component re-render)
+  - The 3-column layout uses flex with fixed widths for sidebar (w-52) and problem list (w-80), with the description pane taking remaining space (flex-1)
+  - NeetCode video link constructed from `neetcode_video_id` field: `https://www.youtube.com/watch?v={id}`
+  - Problem title text uses `truncate` class in the list to prevent overflow in the narrower panel
+---
+
+## 2026-03-03 15:33 - US-011
+- Implemented code execution API route at /api/run-code
+- Files changed:
+  - src/app/api/run-code/route.ts (new — POST endpoint that executes JavaScript code in isolated temp dir via Node.js child process)
+- **Learnings for future iterations:**
+  - `spawn` from `child_process` needs explicit `ChildProcess` type annotation when using TypeScript strict mode — the overload inference fails with certain option combinations
+  - Use optional chaining on `child.stdout?.on` / `child.stderr?.on` / `child.stdin?.write` since they can be null when stdio isn't piped
+  - Don't restrict `env` in spawn options (e.g., `env: { PATH: ... }`) — TypeScript ProcessEnv requires NODE_ENV and other fields; just omit `env` to inherit parent
+  - `spawn` `timeout` option sends SIGTERM but doesn't guarantee process death — add a manual setTimeout with SIGKILL as fallback
+  - Temp file cleanup goes in `finally` block of the POST handler, not in the executeCode function
+---
+
+## 2026-03-03 15:38 - US-012
+- Built Monaco editor pane with custom input/output execution and integrated into practice page
+- Files changed:
+  - src/components/practice/EditorPane.tsx (new — Monaco editor with lazy loading, stdin input, run code button, output panel with success/error states, Analyze & Score button)
+  - src/components/practice/ProblemBrowser.tsx (modified — added EditorPane as 4th column, tightened widths for categories w-48 and problem list w-64 to make room)
+  - prd.json (US-012 passes: true)
+- **Learnings for future iterations:**
+  - Monaco editor MUST be dynamically imported with `ssr: false` — it uses browser APIs that crash server-side rendering
+  - The `loading` prop of `dynamic()` provides a placeholder while the Monaco chunk downloads (~1MB)
+  - Use `automaticLayout: true` in Monaco options so it auto-resizes when the container changes dimensions
+  - The practice page now has 4 visible columns; category sidebar and problem list were compressed from w-52/w-80 to w-48/w-64 with smaller text (text-xs) to fit the editor pane
+  - `onAnalyze` callback is a placeholder for US-014 AI review integration — currently logs to console
+  - Output panel border uses green (success) / red (error) to provide instant visual feedback
 ---
