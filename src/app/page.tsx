@@ -15,7 +15,7 @@ export default async function Home() {
   return (
     <div className="min-h-screen bg-[var(--background)] px-4">
       {/* Hero Section */}
-      <section className="flex flex-col items-center justify-center min-h-[70vh] text-center">
+      <section className="flex flex-col items-center justify-center pt-20 pb-12 text-center">
         <h1 className="text-5xl md:text-6xl font-bold tracking-tight">
           <span className="text-foreground">Algo</span>
           <span className="text-neon-cyan text-glow-cyan">Reps</span>
@@ -98,7 +98,7 @@ export default async function Home() {
             {
               step: "01",
               title: "Import your problem set",
-              desc: "Load problems from the curated NeetCode 150 / Blind 75 sheets, or add your own.",
+              desc: "NeetCode 150 and Blind 75 are already loaded. Import additional sheets or add your own problems anytime.",
             },
             {
               step: "02",
