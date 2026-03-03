@@ -36,6 +36,7 @@ export default function TrustModeForm({
   const [customUrl, setCustomUrl] = useState("");
   const [customTitle, setCustomTitle] = useState("");
   const [customDifficulty, setCustomDifficulty] = useState("");
+  const [customTopics, setCustomTopics] = useState("");
   const [isAddingProblem, setIsAddingProblem] = useState(false);
   const [customError, setCustomError] = useState("");
   const [code, setCode] = useState("");
@@ -136,12 +137,19 @@ export default function TrustModeForm({
 
     setIsAddingProblem(true);
     try {
-      const payload: Record<string, string> = { difficulty: customDifficulty };
+      const payload: Record<string, unknown> = { difficulty: customDifficulty };
       if (customUrl.trim()) {
         payload.leetcode_url = customUrl.trim();
       }
       if (customTitle.trim()) {
         payload.title = customTitle.trim();
+      }
+      const parsedTopics = customTopics
+        .split(",")
+        .map((t) => t.trim())
+        .filter(Boolean);
+      if (parsedTopics.length > 0) {
+        payload.topics = parsedTopics;
       }
       // Derive slug from title if no URL provided
       if (!customUrl.trim() && customTitle.trim()) {
@@ -188,6 +196,7 @@ export default function TrustModeForm({
       setCustomUrl("");
       setCustomTitle("");
       setCustomDifficulty("");
+      setCustomTopics("");
       setErrors((prev) => {
         const next = { ...prev };
         delete next.problem;
@@ -263,6 +272,7 @@ export default function TrustModeForm({
       setCustomUrl("");
       setCustomTitle("");
       setCustomDifficulty("");
+      setCustomTopics("");
       setCustomError("");
       setSourceUrl("");
       setCode("");
@@ -391,6 +401,7 @@ export default function TrustModeForm({
                     setCustomUrl("");
                     setCustomTitle("");
                     setCustomDifficulty("");
+                    setCustomTopics("");
                     setCustomError("");
                   }}
                   className="text-gray-500 hover:text-gray-300 text-sm"
@@ -439,6 +450,19 @@ export default function TrustModeForm({
                   <option value="Medium">Medium</option>
                   <option value="Hard">Hard</option>
                 </select>
+              </div>
+
+              <div>
+                <label className="block text-xs text-gray-400 mb-1">
+                  Topics (comma-separated)
+                </label>
+                <input
+                  type="text"
+                  value={customTopics}
+                  onChange={(e) => setCustomTopics(e.target.value)}
+                  placeholder="e.g. Array, Binary Search, Bit Manipulation"
+                  className="w-full rounded-md border border-gray-600 bg-gray-800 px-3 py-2 text-sm text-gray-200 placeholder-gray-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                />
               </div>
 
               {customError && (
