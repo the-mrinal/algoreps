@@ -324,8 +324,8 @@
         "Verify progressive disclosure and re-scoring in browser using dev-browser skill"
       ],
       "priority": 17,
-      "passes": false,
-      "notes": "Re-scoring needs a PATCH/PUT endpoint or can reuse POST /api/submissions with an update flag. May need to add a PATCH handler to submissions route."
+      "passes": true,
+      "notes": "Re-scoring uses PATCH /api/submissions with { id, performance_score }. RevisionCard component with progressive disclosure replaces simple list items."
     },
     {
       "id": "US-018",

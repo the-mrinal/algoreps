@@ -34,6 +34,10 @@
 - Trust Mode (self-reported) submissions: POST to /api/submissions with is_self_reported=true, problem slug as problem_id
 - Searchable dropdown: input + absolute dropdown list + useRef + mousedown listener for outside-click close
 - SRS queue query: `.lte("next_revision_date", new Date().toISOString())` to get due revisions; enrich with problems.json via slug→Problem Map
+- PATCH /api/submissions: accepts { id, performance_score } to re-score and recalculate next_revision_date; scoped to auth user
+- RevisionCard data: extends DueRevision with topics, approach, remarks, code for progressive disclosure
+- Practice page URL query param: `?problem=slug` pre-selects a problem via useSearchParams + useEffect; requires Suspense boundary
+- Use `type X = Y` instead of `interface X extends Y {}` to avoid @typescript-eslint/no-empty-object-type lint error
 
 ## 2026-03-03 14:56 - US-001
 - Initialized Next.js 14 project scaffolding with all required dependencies
@@ -256,4 +260,23 @@
   - Grouping is by *performance_score* (not problem difficulty): Hard=1-2, Medium=3, Easy=4-5
   - The DueRevision interface is exported from RevisionQueue.tsx for reuse by the page component
   - RevisionQueue is a client component (no server-side data fetching) — all data passed as props
+---
+
+## 2026-03-03 15:55 - US-017
+- Implemented revision card with progressive disclosure and re-scoring
+- Files changed:
+  - src/components/srs/RevisionCard.tsx (new — progressive disclosure card with reveal approach/remarks/code buttons, quick re-score 1-5 buttons, practice again link)
+  - src/components/srs/RevisionQueue.tsx (modified — uses RevisionCard instead of simple RevisionItem; tracks rescored IDs with Set for reviewed state; DueRevision is now a type alias of RevisionCardData)
+  - src/app/dashboard/page.tsx (modified — fetches additional fields: topics, approach, remarks, code for progressive disclosure)
+  - src/app/api/submissions/route.ts (modified — added PATCH handler for re-scoring: validates id + performance_score, recalculates next_revision_date via SRS, updates user_progress scoped to auth user)
+  - src/components/practice/ProblemBrowser.tsx (modified — added useSearchParams + useEffect to pre-select problem from ?problem=slug URL query param)
+  - src/app/dashboard/practice/page.tsx (modified — wrapped ProblemBrowser in Suspense boundary for useSearchParams)
+  - prd.json (US-017 passes: true)
+- **Learnings for future iterations:**
+  - PATCH handler on submissions API validates both id and user_id to prevent unauthorized updates
+  - RevisionCard uses `onRescored` callback to inform parent RevisionQueue; parent tracks Set of rescored IDs to update count display
+  - After re-scoring, card fades to an opacity-60 "Reviewed" state instead of being removed (avoids layout shift; full removal on page refresh)
+  - `useSearchParams()` in Next.js App Router requires the component tree to have a `<Suspense>` boundary above it for static rendering compatibility
+  - Use `type X = Y` (type alias) instead of `interface X extends Y {}` to avoid the @typescript-eslint/no-empty-object-type lint error
+  - Practice Again link uses `?problem=slug` encoded with `encodeURIComponent`
 ---

@@ -16,7 +16,9 @@ export default async function DashboardHome() {
 
   const { data: submissions } = await supabase
     .from("user_progress")
-    .select("id, problem_id, performance_score, created_at")
+    .select(
+      "id, problem_id, performance_score, created_at, topics, approach, remarks, code"
+    )
     .eq("user_id", user.id)
     .lte("next_revision_date", new Date().toISOString())
     .order("created_at", { ascending: false });
@@ -34,6 +36,10 @@ export default async function DashboardHome() {
       problem_title: problem?.title ?? sub.problem_id,
       category: problem?.category ?? "Unknown",
       difficulty: problem?.difficulty ?? "Medium",
+      topics: sub.topics ?? [],
+      approach: sub.approach ?? null,
+      remarks: sub.remarks ?? null,
+      code: sub.code ?? null,
     };
   });
 

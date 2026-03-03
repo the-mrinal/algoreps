@@ -1,6 +1,7 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
+import { useSearchParams } from "next/navigation";
 import type { Problem } from "@/types";
 import ProblemPane from "./ProblemPane";
 import EditorPane from "./EditorPane";
@@ -19,9 +20,20 @@ export default function ProblemBrowser({
   problems: Problem[];
   categories: string[];
 }) {
+  const searchParams = useSearchParams();
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedProblem, setSelectedProblem] = useState<Problem | null>(null);
+
+  useEffect(() => {
+    const problemSlug = searchParams.get("problem");
+    if (problemSlug) {
+      const problem = problems.find((p) => p.slug === problemSlug);
+      if (problem) {
+        setSelectedProblem(problem);
+      }
+    }
+  }, [searchParams, problems]);
 
   const categoryCounts = useMemo(() => {
     const counts: Record<string, number> = {};

@@ -135,3 +135,66 @@ export async function GET(request: NextRequest) {
 
   return NextResponse.json(data, { status: 200 });
 }
+
+export async function PATCH(request: NextRequest) {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
+  let body: Record<string, unknown>;
+  try {
+    body = await request.json();
+  } catch {
+    return NextResponse.json({ error: "Invalid JSON body" }, { status: 400 });
+  }
+
+  const { id, performance_score } = body as {
+    id?: string;
+    performance_score?: number;
+  };
+
+  if (!id || typeof id !== "string") {
+    return NextResponse.json(
+      { error: "id is required" },
+      { status: 400 }
+    );
+  }
+
+  if (
+    performance_score == null ||
+    typeof performance_score !== "number" ||
+    performance_score < 1 ||
+    performance_score > 5 ||
+    !Number.isInteger(performance_score)
+  ) {
+    return NextResponse.json(
+      { error: "performance_score must be an integer between 1 and 5" },
+      { status: 400 }
+    );
+  }
+
+  const { next_revision_date } = calculateNextRevisionDate(performance_score);
+
+  const { data, error } = await supabase
+    .from("user_progress")
+    .update({
+      performance_score,
+      next_revision_date: next_revision_date.toISOString(),
+      updated_at: new Date().toISOString(),
+    })
+    .eq("id", id)
+    .eq("user_id", user.id)
+    .select()
+    .single();
+
+  if (error) {
+    return NextResponse.json({ error: error.message }, { status: 500 });
+  }
+
+  return NextResponse.json(data, { status: 200 });
+}

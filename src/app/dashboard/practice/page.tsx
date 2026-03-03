@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import { getAllProblems, getCategories } from "@/lib/problems";
 import ProblemBrowser from "@/components/practice/ProblemBrowser";
 
@@ -7,7 +8,9 @@ export default function PracticePage() {
 
   return (
     <div className="h-[calc(100vh-4rem)]">
-      <ProblemBrowser problems={problems} categories={categories} />
+      <Suspense>
+        <ProblemBrowser problems={problems} categories={categories} />
+      </Suspense>
     </div>
   );
 }
