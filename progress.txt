@@ -11,6 +11,11 @@
 - Join key across repos: LeetCode slug extracted from URL
 - Types: import from `@/types` — Problem, UserProgress, AIReviewResponse, SRSResult
 - Problem loader: import from `@/lib/problems` — server-side only (uses fs); cached in-process
+- Supabase browser client: import `createClient` from `@/lib/supabase/client` (for client components)
+- Supabase server client: import `createClient` from `@/lib/supabase/server` (async, for server components/API routes)
+- Middleware refreshes auth session on every request; matcher excludes static files
+- Dashboard layout: server component checks auth in layout.tsx, client Sidebar component handles navigation/logout/mobile menu
+- Dashboard routes: /dashboard, /dashboard/practice, /dashboard/log, /dashboard/progress
 
 ## 2026-03-03 14:56 - US-001
 - Initialized Next.js 14 project scaffolding with all required dependencies
@@ -52,4 +57,60 @@
   - Module-level cache (`cachedProblems`) avoids re-reading the JSON file on every call within the same process
   - `getCategories()` returns sorted array of 18 unique categories using `Array.from(Set)` pattern (per codebase patterns)
   - `code_snippets` is typed as `Record<string, string>` since available languages vary per problem (premium problems may have empty snippets)
+---
+
+## 2026-03-03 15:15 - US-004
+- Created Supabase SQL schema file with full database definition
+- Files changed:
+  - supabase/schema.sql (new — profiles table, user_progress table, trigger, indexes, RLS policies)
+- **Learnings for future iterations:**
+  - Schema is a standalone SQL file for manual application in Supabase SQL Editor — no migration tooling
+  - The `handle_new_user()` trigger function uses `SECURITY DEFINER` to bypass RLS when auto-creating profiles
+  - profiles table has an INSERT policy for completeness but profile creation is handled by the trigger (which runs as definer)
+  - Two composite indexes: `idx_user_progress_revision` (partial, for SRS queue queries) and `idx_user_progress_user_problem` (for history lookups)
+  - RLS policies cover SELECT, INSERT, UPDATE for both tables — no DELETE policies needed per requirements
+---
+
+## 2026-03-03 15:18 - US-005
+- Set up Supabase client libraries and auth middleware
+- Files changed:
+  - src/lib/supabase/client.ts (new — browser client using @supabase/ssr createBrowserClient)
+  - src/lib/supabase/server.ts (new — server client using @supabase/ssr createServerClient with Next.js cookie handling)
+  - src/middleware.ts (new — auth session refresh middleware with matcher config)
+- **Learnings for future iterations:**
+  - @supabase/ssr v0.9.0 uses `getAll`/`setAll` cookie methods (not the deprecated get/set/remove)
+  - Server client `createClient()` is async because `cookies()` from next/headers is used
+  - `setAll` in server components will throw (read-only cookies) — the try/catch is expected; middleware handles the actual refresh
+  - Middleware matcher regex excludes static files (_next/static, _next/image, favicon.ico, image extensions)
+  - GPG signing disabled for commits in this environment (use `--no-gpg-sign`)
+---
+
+## 2026-03-03 15:20 - US-006
+- Built login page, auth callback route, and root page redirect
+- Files changed:
+  - src/app/login/page.tsx (new — email input form with magic link via signInWithOtp)
+  - src/app/auth/callback/route.ts (new — exchanges auth code for session, redirects to /dashboard)
+  - src/app/page.tsx (replaced — server component that redirects auth users to /dashboard, shows sign-in link for unauth)
+- **Learnings for future iterations:**
+  - Login page is a client component ("use client") since it needs useState and form interaction
+  - Auth callback uses server-side createClient and redirects via NextResponse.redirect
+  - Root page uses server component with `redirect()` from next/navigation for auth redirect
+  - emailRedirectTo in signInWithOtp must point to /auth/callback for the code exchange flow
+  - The root page (/) is now dynamic (ƒ) due to server-side auth check
+---
+
+## 2026-03-03 15:23 - US-007
+- Created authenticated dashboard layout with sidebar navigation
+- Files changed:
+  - src/app/dashboard/layout.tsx (new — server component, auth check with redirect, renders Sidebar + children)
+  - src/components/dashboard/Sidebar.tsx (new — client component with nav links, active state, logout, responsive mobile menu)
+  - src/app/dashboard/page.tsx (new — placeholder "Dashboard Home" page)
+  - src/app/dashboard/.gitkeep (removed — no longer needed)
+- **Learnings for future iterations:**
+  - Dashboard layout uses server component for auth check and passes user email to client Sidebar
+  - Sidebar is a client component ("use client") for interactivity (logout, mobile menu toggle, active link highlighting via usePathname)
+  - Active link detection: exact match for /dashboard, startsWith for sub-routes (/dashboard/practice, etc.)
+  - Mobile responsiveness: sidebar slides in/out with translate-x transition, overlay backdrop, hamburger button fixed at top-left
+  - Extra top padding (pt-16) on mobile main content to avoid overlap with fixed hamburger button
+  - The /dashboard route is now dynamic (ƒ) due to server-side auth check in layout
 ---

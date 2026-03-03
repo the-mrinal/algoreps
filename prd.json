@@ -71,7 +71,7 @@
         "Typecheck passes"
       ],
       "priority": 4,
-      "passes": false,
+      "passes": true,
       "notes": "This file is for reference and manual application to Supabase SQL editor. Schema from IMPLEMENTATION_PLAN.md."
     },
     {
@@ -87,7 +87,7 @@
         "Typecheck passes"
       ],
       "priority": 5,
-      "passes": false,
+      "passes": true,
       "notes": "Uses @supabase/ssr package (already in @supabase/supabase-js deps or install separately). Follow Supabase Next.js App Router guide."
     },
     {
@@ -107,7 +107,7 @@
         "Verify login page in browser using dev-browser skill"
       ],
       "priority": 6,
-      "passes": false,
+      "passes": true,
       "notes": ""
     },
     {
@@ -128,7 +128,7 @@
         "Verify dashboard layout and navigation in browser using dev-browser skill"
       ],
       "priority": 7,
-      "passes": false,
+      "passes": true,
       "notes": ""
     },
     {
