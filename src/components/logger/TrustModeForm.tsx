@@ -30,6 +30,14 @@ export default function TrustModeForm({
   const [problemSearch, setProblemSearch] = useState("");
   const [showDropdown, setShowDropdown] = useState(false);
   const [sourceUrl, setSourceUrl] = useState("");
+
+  // Custom problem state
+  const [showCustomPanel, setShowCustomPanel] = useState(false);
+  const [customUrl, setCustomUrl] = useState("");
+  const [customTitle, setCustomTitle] = useState("");
+  const [customDifficulty, setCustomDifficulty] = useState("");
+  const [isAddingProblem, setIsAddingProblem] = useState(false);
+  const [customError, setCustomError] = useState("");
   const [code, setCode] = useState("");
   const [selectedTopics, setSelectedTopics] = useState<string[]>([]);
   const [showTopicsDropdown, setShowTopicsDropdown] = useState(false);
@@ -91,6 +99,107 @@ export default function TrustModeForm({
     return () => document.removeEventListener("mousedown", handleClick);
   }, []);
 
+  // Helper: extract slug from LeetCode URL
+  const extractSlugFromUrl = (url: string): string | null => {
+    const match = url.match(/\/problems\/([a-z0-9-]+)/);
+    return match ? match[1] : null;
+  };
+
+  // Helper: slug to title
+  const slugToTitle = (slug: string): string =>
+    slug
+      .split("-")
+      .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
+      .join(" ");
+
+  // Auto-fill title when URL is pasted
+  const handleCustomUrlChange = (url: string) => {
+    setCustomUrl(url);
+    const slug = extractSlugFromUrl(url);
+    if (slug) {
+      setCustomTitle(slugToTitle(slug));
+    }
+  };
+
+  // Add custom problem via API
+  const handleAddCustomProblem = async () => {
+    setCustomError("");
+
+    if (!customTitle.trim() && !customUrl.trim()) {
+      setCustomError("Please enter a title or LeetCode URL");
+      return;
+    }
+    if (!customDifficulty) {
+      setCustomError("Please select a difficulty");
+      return;
+    }
+
+    setIsAddingProblem(true);
+    try {
+      const payload: Record<string, string> = { difficulty: customDifficulty };
+      if (customUrl.trim()) {
+        payload.leetcode_url = customUrl.trim();
+      }
+      if (customTitle.trim()) {
+        payload.title = customTitle.trim();
+      }
+      // Derive slug from title if no URL provided
+      if (!customUrl.trim() && customTitle.trim()) {
+        payload.slug = customTitle.trim().toLowerCase().replace(/\s+/g, "-").replace(/[^a-z0-9-]/g, "");
+      }
+
+      const res = await fetch("/api/problems", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+
+      if (!res.ok) {
+        const errData = await res.json().catch(() => null);
+        throw new Error(errData?.error || `Failed to add problem (${res.status})`);
+      }
+
+      const data = await res.json();
+
+      // Map DB row to Problem type with sensible defaults
+      const problem: Problem = {
+        id: data.id,
+        title: data.title,
+        slug: data.slug,
+        difficulty: data.difficulty,
+        category: data.category || "",
+        is_neetcode150: false,
+        is_blind75: false,
+        sheets: data.sheets || ["user-added"],
+        topics: data.topics || [],
+        description: "",
+        examples: [],
+        constraints: [],
+        hints: [],
+        code_snippets: {},
+        neetcode_video_id: null,
+        neetcode_url: "",
+        leetcode_url: data.leetcode_url || "",
+      };
+
+      setSelectedProblem(problem);
+      setProblemSearch("");
+      setShowCustomPanel(false);
+      setCustomUrl("");
+      setCustomTitle("");
+      setCustomDifficulty("");
+      setErrors((prev) => {
+        const next = { ...prev };
+        delete next.problem;
+        return next;
+      });
+    } catch (err) {
+      setCustomError(err instanceof Error ? err.message : "Failed to add problem");
+    } finally {
+      setIsAddingProblem(false);
+    }
+  };
+
   const validate = (): boolean => {
     const newErrors: Record<string, string> = {};
     if (!selectedProblem) {
@@ -150,6 +259,11 @@ export default function TrustModeForm({
       // Reset form
       setSelectedProblem(null);
       setProblemSearch("");
+      setShowCustomPanel(false);
+      setCustomUrl("");
+      setCustomTitle("");
+      setCustomDifficulty("");
+      setCustomError("");
       setSourceUrl("");
       setCode("");
       setSelectedTopics([]);
@@ -252,6 +366,97 @@ export default function TrustModeForm({
           </div>
         )}
       </div>
+
+      {/* Problem not listed? */}
+      {!selectedProblem && (
+        <div>
+          {!showCustomPanel ? (
+            <button
+              type="button"
+              onClick={() => setShowCustomPanel(true)}
+              className="text-sm text-blue-400 hover:text-blue-300 underline"
+            >
+              Problem not listed?
+            </button>
+          ) : (
+            <div className="rounded-lg border border-gray-600 bg-gray-800/50 p-4 space-y-3">
+              <div className="flex items-center justify-between">
+                <span className="text-sm font-medium text-gray-300">
+                  Add a new problem
+                </span>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setShowCustomPanel(false);
+                    setCustomUrl("");
+                    setCustomTitle("");
+                    setCustomDifficulty("");
+                    setCustomError("");
+                  }}
+                  className="text-gray-500 hover:text-gray-300 text-sm"
+                >
+                  &times;
+                </button>
+              </div>
+
+              <div>
+                <label className="block text-xs text-gray-400 mb-1">
+                  LeetCode URL
+                </label>
+                <input
+                  type="text"
+                  value={customUrl}
+                  onChange={(e) => handleCustomUrlChange(e.target.value)}
+                  placeholder="https://leetcode.com/problems/..."
+                  className="w-full rounded-md border border-gray-600 bg-gray-800 px-3 py-2 text-sm text-gray-200 placeholder-gray-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                />
+              </div>
+
+              <div>
+                <label className="block text-xs text-gray-400 mb-1">
+                  Title
+                </label>
+                <input
+                  type="text"
+                  value={customTitle}
+                  onChange={(e) => setCustomTitle(e.target.value)}
+                  placeholder="e.g. Count Vowels Permutation"
+                  className="w-full rounded-md border border-gray-600 bg-gray-800 px-3 py-2 text-sm text-gray-200 placeholder-gray-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                />
+              </div>
+
+              <div>
+                <label className="block text-xs text-gray-400 mb-1">
+                  Difficulty <span className="text-red-400">*</span>
+                </label>
+                <select
+                  value={customDifficulty}
+                  onChange={(e) => setCustomDifficulty(e.target.value)}
+                  className="w-full rounded-md border border-gray-600 bg-gray-800 px-3 py-2 text-sm text-gray-200 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                >
+                  <option value="">Select difficulty...</option>
+                  <option value="Easy">Easy</option>
+                  <option value="Medium">Medium</option>
+                  <option value="Hard">Hard</option>
+                </select>
+              </div>
+
+              {customError && (
+                <p className="text-xs text-red-400">{customError}</p>
+              )}
+
+              <button
+                type="button"
+                onClick={handleAddCustomProblem}
+                disabled={isAddingProblem}
+                className="w-full rounded-md bg-gray-700 px-3 py-2 text-sm font-medium text-gray-200 hover:bg-gray-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+              >
+                {isAddingProblem ? "Adding..." : "Add Problem"}
+              </button>
+            </div>
+          )}
+        </div>
+      )}
 
       {/* LeetCode URL */}
       <div>
