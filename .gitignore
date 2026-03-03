@@ -28,8 +28,8 @@ yarn-error.log*
 # local env files
 .env*.local
 
-# problem source repos (cloned by merge script)
-data/sources/
+# data
+data/
 
 # vercel
 .vercel
@@ -43,7 +43,7 @@ DEPLOYMENT.md
 IMPLEMENTATION_PLAN.md
 progress.txt
 prd.json
+prd.json.example
 tasks/
-scripts/ralph/
-supabase/.temp/
-supabase/migrations/
+scripts/
+supabase/
