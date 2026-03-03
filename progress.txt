@@ -40,6 +40,9 @@
 - Use `type X = Y` instead of `interface X extends Y {}` to avoid @typescript-eslint/no-empty-object-type lint error
 - recharts Tooltip: use custom `content={<CustomTooltip />}` component instead of `formatter` prop to avoid complex TypeScript union types
 - HistoryTable: client-side sort/filter/pagination; data enriched server-side from problems.json; row expansion via fragment with two `<tr>` elements
+- Supabase admin client: import `createAdminClient` from `@/lib/supabase/admin` (service role key, bypasses RLS — for cron jobs only)
+- Discord webhook: import `sendDiscordEmbed(title, fields, color)` from `@/lib/discord` — handles errors gracefully (logs, never throws)
+- Cron auth pattern: check `request.headers.get("authorization") !== process.env.CRON_SECRET` → return 401
 
 ## 2026-03-03 14:56 - US-001
 - Initialized Next.js 14 project scaffolding with all required dependencies
@@ -326,4 +329,32 @@
   - The ai_review field from Supabase is JSONB — cast it via `as HistoryRow["ai_review"]` since the type system can't infer the nested shape
   - HistoryTable adds ~5kB to the progress page first load JS (198kB → 203kB total including recharts)
   - Client-side sorting/filtering/pagination means all data is loaded once — acceptable for individual user's submission history (typically <1000 rows)
+---
+
+## 2026-03-03 16:18 - US-021
+- Implemented Discord webhook helper and morning briefing cron endpoint
+- Files changed:
+  - src/lib/discord.ts (new — sendDiscordEmbed function: POSTs rich embed to DISCORD_WEBHOOK_URL, handles errors gracefully)
+  - src/lib/supabase/admin.ts (new — createAdminClient using service role key to bypass RLS for cron jobs)
+  - src/app/api/cron/morning/route.ts (new — GET endpoint secured by CRON_SECRET, queries all users' due revisions, groups by score, sends Discord embeds)
+  - .env.local.example (modified — added SUPABASE_SERVICE_ROLE_KEY placeholder)
+- **Learnings for future iterations:**
+  - Cron endpoints need a service role Supabase client (`createAdminClient`) to query across all users (bypasses RLS)
+  - SUPABASE_SERVICE_ROLE_KEY must be added to .env.local for cron jobs to work
+  - Use `Array.from(map.entries())` when iterating Maps to avoid downlevelIteration errors (codebase pattern applies here too)
+  - Discord webhook accepts `embeds` array with `fields`, `color`, and `timestamp`; color is a hex number (e.g., 0xff4444)
+  - Morning briefing groups by performance_score (Hard=1-2, Medium=3, Easy=4-5), same grouping as the dashboard SRS queue
+---
+
+## 2026-03-03 16:21 - US-022
+- Built evening progress wrap-up cron endpoint
+- Files changed:
+  - src/app/api/cron/evening/route.ts (new — GET endpoint secured by CRON_SECRET, calculates daily stats per active user, sends Discord embeds)
+  - prd.json (US-022 passes: true)
+- **Learnings for future iterations:**
+  - Evening cron follows same pattern as morning: auth check → admin client → query → group by user → send embeds
+  - Streak calculation: collect all unique submission dates, walk backwards from today (or yesterday); break on first gap
+  - Topic insight: compute per-category average score from the week's submissions, identify the weakest category
+  - The evening endpoint only notifies users with activity today (skips inactive users) — different from morning which notifies anyone with due revisions
+  - Don't import unused utilities (e.g., slugToTitle if only slugToCategory is needed) — ESLint catches it
 ---
