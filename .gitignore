@@ -39,6 +39,7 @@ data/sources/
 next-env.d.ts
 
 # internal dev artifacts
+DEPLOYMENT.md
 IMPLEMENTATION_PLAN.md
 progress.txt
 prd.json
