@@ -358,3 +358,20 @@
   - The evening endpoint only notifies users with activity today (skips inactive users) — different from morning which notifies anyone with due revisions
   - Don't import unused utilities (e.g., slugToTitle if only slugToCategory is needed) — ESLint catches it
 ---
+
+## 2026-03-03 16:24 - US-023
+- Set up cron scheduling and deployment configuration for DigitalOcean Droplet
+- Files changed:
+  - scripts/cron-setup.sh (new — installs crontab entries for morning 8AM IST and evening 9PM IST cron jobs)
+  - scripts/deploy.sh (new — builds Next.js app, starts/restarts with PM2, checks Nginx)
+  - ecosystem.config.js (new — PM2 process management config)
+  - scripts/nginx-dsa-dashboard.conf (new — Nginx reverse proxy config with HTTPS template)
+  - DEPLOYMENT.md (new — full deployment guide: prerequisites, initial setup, env vars, HTTPS, cron, updating)
+  - prd.json (US-023 passes: true)
+- **Learnings for future iterations:**
+  - IST is UTC+5:30 — 8:00 AM IST = 02:30 UTC, 9:00 PM IST = 15:30 UTC
+  - PM2 ecosystem.config.js uses `script: "npm"` + `args: "start"` pattern for Next.js (since it's not a direct .js file)
+  - Nginx config needs `proxy_set_header` for Host, X-Real-IP, X-Forwarded-For, X-Forwarded-Proto for Next.js to work correctly behind reverse proxy
+  - Cron-setup script is idempotent: removes existing DSA cron entries before adding new ones (uses marker comment for detection)
+  - This is the FINAL user story — all 23 stories are now complete
+---

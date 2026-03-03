@@ -1,0 +1,31 @@
+{
+  "project": "my-project",
+  "branchName": "ralph/feature-name",
+  "description": "Brief description of the feature being implemented",
+  "userStories": [
+    {
+      "id": "STORY-1",
+      "title": "Set up database schema",
+      "priority": 1,
+      "passes": false,
+      "acceptanceCriteria": [
+        "Migration file created",
+        "Schema matches design doc",
+        "Typecheck passes"
+      ]
+    },
+    {
+      "id": "STORY-2",
+      "title": "Implement API endpoint",
+      "priority": 2,
+      "passes": false,
+      "dependencies": ["STORY-1"],
+      "acceptanceCriteria": [
+        "GET /api/resource returns 200",
+        "Response matches schema",
+        "Tests pass",
+        "Typecheck passes"
+      ]
+    }
+  ]
+}
