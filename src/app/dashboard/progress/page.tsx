@@ -1,6 +1,9 @@
 import { createClient } from "@/lib/supabase/server";
+import { getAllProblems } from "@/lib/problems";
 import StatsOverview from "@/components/progress/StatsOverview";
 import type { StatsData } from "@/components/progress/StatsOverview";
+import TopicChart from "@/components/progress/TopicChart";
+import type { TopicData } from "@/components/progress/TopicChart";
 
 function formatDateStr(d: Date): string {
   const y = d.getFullYear();
@@ -109,12 +112,38 @@ export default async function ProgressPage() {
     problemsDueThisWeek,
   };
 
+  // Topic mastery: compute avg score per NeetCode category
+  const problems = getAllProblems();
+  const slugToCategory = new Map(problems.map((p) => [p.slug, p.category]));
+
+  const categoryAgg = new Map<string, { total: number; count: number }>();
+  for (const s of allSubmissions) {
+    const category = slugToCategory.get(s.problem_id);
+    if (!category) continue;
+    const agg = categoryAgg.get(category);
+    if (agg) {
+      agg.total += s.performance_score;
+      agg.count += 1;
+    } else {
+      categoryAgg.set(category, { total: s.performance_score, count: 1 });
+    }
+  }
+
+  const topicData: TopicData[] = Array.from(categoryAgg.entries()).map(
+    ([category, agg]) => ({
+      category,
+      avgScore: Math.round((agg.total / agg.count) * 10) / 10,
+      attempts: agg.count,
+    })
+  );
+
   return (
     <div>
       <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">
         Progress
       </h1>
       <StatsOverview stats={stats} />
+      <TopicChart data={topicData} />
     </div>
   );
 }

@@ -361,7 +361,7 @@
         "Verify chart renders correctly in browser using dev-browser skill"
       ],
       "priority": 19,
-      "passes": false,
+      "passes": true,
       "notes": "Category is stored in problems.json, not user_progress. Need to join problem_id with problems.json to get category."
     },
     {

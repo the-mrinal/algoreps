@@ -38,6 +38,7 @@
 - RevisionCard data: extends DueRevision with topics, approach, remarks, code for progressive disclosure
 - Practice page URL query param: `?problem=slug` pre-selects a problem via useSearchParams + useEffect; requires Suspense boundary
 - Use `type X = Y` instead of `interface X extends Y {}` to avoid @typescript-eslint/no-empty-object-type lint error
+- recharts Tooltip: use custom `content={<CustomTooltip />}` component instead of `formatter` prop to avoid complex TypeScript union types
 
 ## 2026-03-03 14:56 - US-001
 - Initialized Next.js 14 project scaffolding with all required dependencies
@@ -279,4 +280,33 @@
   - `useSearchParams()` in Next.js App Router requires the component tree to have a `<Suspense>` boundary above it for static rendering compatibility
   - Use `type X = Y` (type alias) instead of `interface X extends Y {}` to avoid the @typescript-eslint/no-empty-object-type lint error
   - Practice Again link uses `?problem=slug` encoded with `encodeURIComponent`
+---
+
+## 2026-03-03 15:59 - US-018
+- Built stats overview component on progress page
+- Files changed:
+  - src/components/progress/StatsOverview.tsx (new - client component displaying 6 stat cards in responsive grid)
+  - src/app/dashboard/progress/page.tsx (new - server component querying Supabase for user stats and due revisions)
+  - prd.json (US-018 passes: true)
+- **Learnings for future iterations:**
+  - Progress page follows same pattern: server component fetches data from Supabase, passes to client component as props
+  - Streak calculation: get unique dates from submissions, walk backwards from today; if no submission today, start from yesterday (more forgiving)
+  - Due revisions count: query with `.not("next_revision_date", "is", null).lte("next_revision_date", endDate.toISOString())` then filter client-side for today vs this week
+  - `StatsData` interface is exported from StatsOverview.tsx for use by the page component (type re-use pattern)
+  - Zero-data handling: averageScore shows "N/A" when 0, streak shows "0 days", all number stats naturally show 0
+  - End of week calculation: `7 - getDay()` gives days until Sunday, except when already Sunday (getDay() === 0) use 0
+---
+
+## 2026-03-03 16:02 - US-019
+- Built topic mastery horizontal bar chart using recharts on the progress page
+- Files changed:
+  - src/components/progress/TopicChart.tsx (new — client component with horizontal BarChart, custom tooltip, color-coded bars: red for avg < 3, blue for >= 3, sorted weakest-first)
+  - src/app/dashboard/progress/page.tsx (modified — imports getAllProblems to build slug→category map, computes per-category avg score and attempt counts, passes TopicData[] to TopicChart)
+  - prd.json (US-019 passes: true)
+- **Learnings for future iterations:**
+  - recharts Tooltip `formatter` prop has complex union types that are hard to satisfy; use a custom `content` component instead (renders as JSX, avoids type gymnastics)
+  - Bar chart height: use `sorted.length * 40 + 40` for dynamic height based on number of categories
+  - recharts `Cell` component inside `Bar` allows per-bar coloring (e.g., red for low scores, blue for high)
+  - Category data is only in problems.json — must join submission `problem_id` (slug) with problems to get category; build a `Map<slug, category>` for O(1) lookup
+  - recharts adds ~100kB to the progress page first load JS (from 90kB → 196kB); acceptable for a data visualization page
 ---
