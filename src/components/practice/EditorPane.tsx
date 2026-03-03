@@ -53,6 +53,8 @@ export default function EditorPane({
   const [saveSuccess, setSaveSuccess] = useState<{
     nextRevisionDate: string;
   } | null>(null);
+  const [selfScore, setSelfScore] = useState<number>(3);
+  const [showSavePanel, setShowSavePanel] = useState(false);
 
   // Pre-populate code when problem or language changes
   useEffect(() => {
@@ -73,6 +75,8 @@ export default function EditorPane({
       setIsAnalyzing(false);
       setAnalyzeError(null);
       setSaveSuccess(null);
+      setSelfScore(3);
+      setShowSavePanel(false);
     }
   }, [problem, language]);
 
@@ -140,27 +144,34 @@ export default function EditorPane({
     }
   };
 
-  const handleSave = async () => {
-    if (!problem || !aiReview) return;
+  const handleSave = async (scoreOverride?: number) => {
+    if (!problem) return;
     setIsSaving(true);
 
+    const score = scoreOverride ?? aiReview?.performance_score ?? selfScore;
+
     try {
+      const payload: Record<string, unknown> = {
+        problem_id: problem.slug,
+        code,
+        performance_score: score,
+        is_self_reported: false,
+        time_taken_seconds: attemptState.timerSeconds,
+        run_count: attemptState.runCount,
+        successful_run_number: attemptState.successfulRunNumber,
+        manually_solved: attemptState.manuallySolved,
+      };
+
+      if (aiReview) {
+        payload.time_complexity = aiReview.time_complexity;
+        payload.space_complexity = aiReview.space_complexity;
+        payload.ai_review = aiReview;
+      }
+
       const res = await fetch("/api/submissions", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          problem_id: problem.slug,
-          code,
-          performance_score: aiReview.performance_score,
-          time_complexity: aiReview.time_complexity,
-          space_complexity: aiReview.space_complexity,
-          ai_review: aiReview,
-          is_self_reported: false,
-          time_taken_seconds: attemptState.timerSeconds,
-          run_count: attemptState.runCount,
-          successful_run_number: attemptState.successfulRunNumber,
-          manually_solved: attemptState.manuallySolved,
-        }),
+        body: JSON.stringify(payload),
       });
 
       if (!res.ok) {
@@ -172,6 +183,7 @@ export default function EditorPane({
       setSaveSuccess({
         nextRevisionDate: data.next_revision_date,
       });
+      setShowSavePanel(false);
     } catch (err) {
       setAnalyzeError(
         err instanceof Error ? err.message : "Failed to save submission"
@@ -252,6 +264,32 @@ export default function EditorPane({
               </svg>
               {attemptState.manuallySolved ? "Solved" : "Mark Solved"}
             </button>
+
+            {/* Save Submission button */}
+            {attemptState.timerStarted && !saveSuccess && (
+              <button
+                onClick={() => setShowSavePanel(!showSavePanel)}
+                disabled={isSaving}
+                className="inline-flex items-center gap-1.5 rounded-md bg-indigo-600 px-3 py-1.5 text-xs font-medium text-white hover:bg-indigo-700 disabled:opacity-50 transition-colors"
+              >
+                <svg className="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4" />
+                </svg>
+                Save
+              </button>
+            )}
+            {saveSuccess && (
+              <span className="inline-flex items-center gap-1.5 rounded-md bg-green-500/20 px-3 py-1.5 text-xs font-medium text-green-400 border border-green-500/30">
+                <svg className="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                </svg>
+                Saved! Next:{" "}
+                {new Date(saveSuccess.nextRevisionDate).toLocaleDateString("en-US", {
+                  month: "short",
+                  day: "numeric",
+                })}
+              </span>
+            )}
 
             {/* Run Code button with run count */}
             <button
@@ -391,6 +429,51 @@ export default function EditorPane({
           className="w-full rounded-md border border-gray-600 bg-gray-800 px-3 py-2 text-sm text-gray-200 font-mono placeholder-gray-500 focus:outline-none focus:ring-1 focus:ring-blue-500 resize-y"
         />
       </div>
+
+      {/* Save Panel — score picker */}
+      {showSavePanel && !saveSuccess && (
+        <div className="flex-shrink-0 border-t border-gray-700 bg-gray-800 px-3 py-2">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <span className="text-xs text-gray-400">Rate your performance:</span>
+              <div className="flex gap-1">
+                {[1, 2, 3, 4, 5].map((s) => (
+                  <button
+                    key={s}
+                    onClick={() => setSelfScore(s)}
+                    className={`h-6 w-8 rounded text-xs font-medium transition-colors ${
+                      selfScore === s
+                        ? s <= 2
+                          ? "bg-red-500 text-white"
+                          : s <= 3
+                            ? "bg-yellow-500 text-white"
+                            : "bg-green-500 text-white"
+                        : "bg-gray-700 text-gray-400 hover:bg-gray-600"
+                    }`}
+                  >
+                    {s}
+                  </button>
+                ))}
+              </div>
+            </div>
+            <div className="flex gap-2">
+              <button
+                onClick={() => setShowSavePanel(false)}
+                className="rounded-md px-3 py-1 text-xs text-gray-400 hover:text-foreground hover:bg-white/5 transition-colors"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={() => handleSave()}
+                disabled={isSaving}
+                className="rounded-md bg-indigo-600 px-3 py-1 text-xs font-medium text-white hover:bg-indigo-700 disabled:opacity-50 transition-colors"
+              >
+                {isSaving ? "Saving..." : "Save & Schedule Revision"}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Output Panel */}
       {(result || isRunning) && (
