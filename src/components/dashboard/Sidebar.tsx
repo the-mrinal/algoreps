@@ -59,12 +59,27 @@ export default function Sidebar({ email }: { email: string }) {
   const router = useRouter();
   const [mobileOpen, setMobileOpen] = useState(false);
   const [loggingOut, setLoggingOut] = useState(false);
+  const [clearing, setClearing] = useState(false);
+  const [showClearConfirm, setShowClearConfirm] = useState(false);
 
   async function handleLogout() {
     setLoggingOut(true);
     const supabase = createClient();
     await supabase.auth.signOut();
     router.push("/login");
+  }
+
+  async function handleClearAllData() {
+    setClearing(true);
+    try {
+      const res = await fetch("/api/user-data", { method: "DELETE" });
+      if (res.ok) {
+        setShowClearConfirm(false);
+        router.refresh();
+      }
+    } finally {
+      setClearing(false);
+    }
   }
 
   function isActive(href: string) {
@@ -104,6 +119,35 @@ export default function Sidebar({ email }: { email: string }) {
           {email}
         </p>
         <ThemeToggle />
+        {showClearConfirm ? (
+          <div className="rounded-md border border-red-500/30 bg-red-500/10 p-3 space-y-2">
+            <p className="text-xs text-red-400">
+              Delete all history, streaks, and progress? This cannot be undone.
+            </p>
+            <div className="flex gap-2">
+              <button
+                onClick={handleClearAllData}
+                disabled={clearing}
+                className="flex-1 rounded-md bg-red-600 px-2 py-1.5 text-xs font-medium text-white hover:bg-red-700 disabled:opacity-50 transition-colors"
+              >
+                {clearing ? "Clearing..." : "Confirm"}
+              </button>
+              <button
+                onClick={() => setShowClearConfirm(false)}
+                className="flex-1 rounded-md border border-[var(--surface-border)] px-2 py-1.5 text-xs font-medium text-gray-400 hover:text-foreground hover:bg-white/5 transition-colors"
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
+        ) : (
+          <button
+            onClick={() => setShowClearConfirm(true)}
+            className="w-full rounded-md border border-red-500/20 px-3 py-2 text-sm font-medium text-red-400 hover:text-red-300 hover:bg-red-500/10 transition-colors"
+          >
+            Clear All Data
+          </button>
+        )}
         <button
           onClick={handleLogout}
           disabled={loggingOut}
