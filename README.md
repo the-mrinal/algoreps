@@ -330,10 +330,9 @@ Please follow the existing code style and conventions.
 - [ ] Multi-language support (Java, C++, JavaScript)
 - [ ] Collaborative problem sets
 - [ ] Streak calendar visualization
-- [ ] Mobile app (React Native)
+- [ ] Mobile app 
 - [ ] Custom SRS intervals
 - [ ] Public problem set sharing
-- [ ] LeetCode API integration for auto-importing submissions
 
 ---
 
