@@ -13,17 +13,19 @@ export default async function Home() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-900 px-4">
+    <div className="min-h-screen flex items-center justify-center bg-[var(--background)] px-4">
       <div className="text-center space-y-6">
-        <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
-          DSA Dashboard
+        <h1 className="text-4xl font-bold tracking-tight">
+          <span className="text-foreground">Algo</span>
+          <span className="text-neon-cyan text-glow-cyan">Reps</span>
         </h1>
-        <p className="text-gray-600 dark:text-gray-400">
+        <div className="h-0.5 w-24 mx-auto bg-gradient-to-r from-neon-cyan/0 via-neon-cyan to-neon-cyan/0" />
+        <p className="text-gray-500 dark:text-gray-400 max-w-xs mx-auto">
           Spaced repetition for mastering Data Structures & Algorithms
         </p>
         <Link
           href="/login"
-          className="inline-block rounded-md bg-blue-600 px-6 py-2 text-sm font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+          className="inline-block rounded-md border border-neon-cyan/50 bg-neon-cyan/10 px-6 py-2 text-sm font-medium text-neon-cyan hover:bg-neon-cyan/20 hover:shadow-glow-cyan focus:outline-none focus:ring-2 focus:ring-neon-cyan/50 transition-all"
         >
           Sign In
         </Link>

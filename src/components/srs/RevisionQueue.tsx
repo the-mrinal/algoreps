@@ -25,13 +25,13 @@ function RevisionSection({
   const borderColors = {
     red: "border-l-red-500",
     yellow: "border-l-yellow-500",
-    green: "border-l-green-500",
+    green: "border-l-neon-green",
   };
 
   const headerColors = {
-    red: "text-red-700 dark:text-red-400",
-    yellow: "text-yellow-700 dark:text-yellow-400",
-    green: "text-green-700 dark:text-green-400",
+    red: "text-red-400",
+    yellow: "text-yellow-400",
+    green: "text-neon-green",
   };
 
   return (
@@ -68,15 +68,15 @@ export default function RevisionQueue({ dueRevisions }: RevisionQueueProps) {
   if (dueRevisions.length === 0) {
     return (
       <div className="text-center py-12">
-        <div className="text-4xl mb-3">&#10003;</div>
-        <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
+        <div className="text-4xl mb-3 text-neon-green">&#10003;</div>
+        <h2 className="text-xl font-semibold text-foreground mb-2">
           You&apos;re all caught up!
         </h2>
         <p className="text-gray-500 dark:text-gray-400">
           No revisions due right now. Head to{" "}
           <a
             href="/dashboard/practice"
-            className="text-blue-600 dark:text-blue-400 hover:underline"
+            className="text-neon-cyan hover:underline"
           >
             Practice
           </a>{" "}
@@ -88,13 +88,13 @@ export default function RevisionQueue({ dueRevisions }: RevisionQueueProps) {
 
   return (
     <div>
-      <div className="mb-6 p-4 bg-blue-50 dark:bg-blue-900/30 rounded-lg border border-blue-200 dark:border-blue-800">
-        <p className="text-lg font-semibold text-blue-900 dark:text-blue-100">
+      <div className="mb-6 p-4 bg-neon-cyan/5 rounded-lg border border-neon-cyan/20">
+        <p className="text-lg font-semibold text-foreground">
           {pendingCount > 0 ? (
             <>
               {pendingCount} revision{pendingCount !== 1 ? "s" : ""} due
               {rescoredIds.size > 0 && (
-                <span className="text-sm font-normal ml-2 text-blue-700 dark:text-blue-300">
+                <span className="text-sm font-normal ml-2 text-neon-cyan">
                   ({rescoredIds.size} reviewed this session)
                 </span>
               )}
@@ -103,7 +103,7 @@ export default function RevisionQueue({ dueRevisions }: RevisionQueueProps) {
             <>All {dueRevisions.length} revisions reviewed!</>
           )}
         </p>
-        <p className="text-sm text-blue-700 dark:text-blue-300 mt-0.5">
+        <p className="text-sm text-gray-500 dark:text-gray-400 mt-0.5">
           {pendingCount > 0
             ? "Review these problems to strengthen your retention."
             : "Great work! Refresh the page to see your updated queue."}

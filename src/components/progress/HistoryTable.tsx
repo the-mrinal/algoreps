@@ -21,7 +21,6 @@ export interface HistoryRow {
       interview_readiness?: string;
     };
   } | null;
-  // Enriched from problems.json
   problemTitle: string;
   difficulty: "Easy" | "Medium" | "Hard";
   category: string;
@@ -62,10 +61,9 @@ function formatDate(iso: string): string {
 
 function DifficultyBadge({ difficulty }: { difficulty: string }) {
   const colors: Record<string, string> = {
-    Easy: "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300",
-    Medium:
-      "bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300",
-    Hard: "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300",
+    Easy: "bg-neon-green/20 text-neon-green",
+    Medium: "bg-yellow-500/20 text-yellow-400",
+    Hard: "bg-red-500/20 text-red-400",
   };
   return (
     <span
@@ -79,10 +77,10 @@ function DifficultyBadge({ difficulty }: { difficulty: string }) {
 function ScoreBadge({ score }: { score: number }) {
   const color =
     score >= 4
-      ? "text-green-600 dark:text-green-400"
+      ? "text-neon-green"
       : score === 3
-        ? "text-yellow-600 dark:text-yellow-400"
-        : "text-red-600 dark:text-red-400";
+        ? "text-yellow-400"
+        : "text-red-400";
   return <span className={`font-semibold ${color}`}>{score}/5</span>;
 }
 
@@ -96,10 +94,10 @@ function SortIcon({
   sortDir: SortDir;
 }) {
   if (field !== sortField) {
-    return <span className="text-gray-400 ml-1">↕</span>;
+    return <span className="text-gray-500 ml-1">&#8597;</span>;
   }
   return (
-    <span className="ml-1">{sortDir === "asc" ? "↑" : "↓"}</span>
+    <span className="ml-1 text-neon-cyan">{sortDir === "asc" ? "↑" : "↓"}</span>
   );
 }
 
@@ -191,8 +189,8 @@ export default function HistoryTable({ rows, categories }: HistoryTableProps) {
 
   if (rows.length === 0) {
     return (
-      <div className="bg-white dark:bg-gray-800 rounded-lg p-6 border border-gray-200 dark:border-gray-700 mt-6">
-        <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
+      <div className="bg-[var(--surface)] rounded-lg p-6 border border-[var(--surface-border)] mt-6">
+        <h2 className="text-lg font-semibold text-foreground mb-4">
           Submission History
         </h2>
         <p className="text-gray-500 dark:text-gray-400 text-center py-8">
@@ -203,8 +201,8 @@ export default function HistoryTable({ rows, categories }: HistoryTableProps) {
   }
 
   return (
-    <div className="bg-white dark:bg-gray-800 rounded-lg p-6 border border-gray-200 dark:border-gray-700 mt-6">
-      <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
+    <div className="bg-[var(--surface)] rounded-lg p-6 border border-[var(--surface-border)] mt-6">
+      <h2 className="text-lg font-semibold text-foreground mb-4">
         Submission History
       </h2>
 
@@ -216,7 +214,7 @@ export default function HistoryTable({ rows, categories }: HistoryTableProps) {
             setFilterCategory(e.target.value);
             setPage(0);
           }}
-          className="bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md px-3 py-1.5 text-sm text-gray-900 dark:text-white"
+          className="bg-[var(--background)] border border-[var(--surface-border)] rounded-md px-3 py-1.5 text-sm text-foreground"
         >
           <option value="">All Categories</option>
           {categories.map((c) => (
@@ -232,7 +230,7 @@ export default function HistoryTable({ rows, categories }: HistoryTableProps) {
             setFilterDifficulty(e.target.value);
             setPage(0);
           }}
-          className="bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md px-3 py-1.5 text-sm text-gray-900 dark:text-white"
+          className="bg-[var(--background)] border border-[var(--surface-border)] rounded-md px-3 py-1.5 text-sm text-foreground"
         >
           <option value="">All Difficulties</option>
           <option value="Easy">Easy</option>
@@ -246,7 +244,7 @@ export default function HistoryTable({ rows, categories }: HistoryTableProps) {
             setFilterMinScore(Number(e.target.value));
             setPage(0);
           }}
-          className="bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md px-3 py-1.5 text-sm text-gray-900 dark:text-white"
+          className="bg-[var(--background)] border border-[var(--surface-border)] rounded-md px-3 py-1.5 text-sm text-foreground"
         >
           <option value={0}>Min Score: Any</option>
           <option value={1}>Min Score: 1+</option>
@@ -264,7 +262,7 @@ export default function HistoryTable({ rows, categories }: HistoryTableProps) {
               setFilterMinScore(0);
               setPage(0);
             }}
-            className="text-sm text-blue-500 hover:text-blue-400 underline"
+            className="text-sm text-neon-cyan hover:text-neon-cyan/80 underline"
           >
             Clear filters
           </button>
@@ -274,12 +272,12 @@ export default function HistoryTable({ rows, categories }: HistoryTableProps) {
       {/* Table */}
       <div className="overflow-x-auto">
         <table className="w-full text-sm text-left">
-          <thead className="text-xs uppercase text-gray-500 dark:text-gray-400 border-b border-gray-200 dark:border-gray-700">
+          <thead className="text-xs uppercase text-gray-500 dark:text-gray-400 border-b border-[var(--surface-border)]">
             <tr>
               {columns.map((col) => (
                 <th
                   key={col.key}
-                  className="px-3 py-3 cursor-pointer hover:text-gray-700 dark:hover:text-gray-200 select-none whitespace-nowrap"
+                  className="px-3 py-3 cursor-pointer hover:text-foreground select-none whitespace-nowrap"
                   onClick={() => handleSort(col.key)}
                 >
                   {col.label}
@@ -316,11 +314,11 @@ export default function HistoryTable({ rows, categories }: HistoryTableProps) {
 
       {/* Pagination */}
       {totalPages > 1 && (
-        <div className="flex items-center justify-between mt-4 pt-4 border-t border-gray-200 dark:border-gray-700">
+        <div className="flex items-center justify-between mt-4 pt-4 border-t border-[var(--surface-border)]">
           <button
             disabled={page === 0}
             onClick={() => setPage((p) => p - 1)}
-            className="px-3 py-1.5 text-sm rounded-md bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 disabled:opacity-40 disabled:cursor-not-allowed hover:bg-gray-200 dark:hover:bg-gray-600"
+            className="px-3 py-1.5 text-sm rounded-md bg-[var(--background)] text-foreground disabled:opacity-40 disabled:cursor-not-allowed hover:bg-white/5 border border-[var(--surface-border)]"
           >
             Previous
           </button>
@@ -330,7 +328,7 @@ export default function HistoryTable({ rows, categories }: HistoryTableProps) {
           <button
             disabled={page >= totalPages - 1}
             onClick={() => setPage((p) => p + 1)}
-            className="px-3 py-1.5 text-sm rounded-md bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 disabled:opacity-40 disabled:cursor-not-allowed hover:bg-gray-200 dark:hover:bg-gray-600"
+            className="px-3 py-1.5 text-sm rounded-md bg-[var(--background)] text-foreground disabled:opacity-40 disabled:cursor-not-allowed hover:bg-white/5 border border-[var(--surface-border)]"
           >
             Next
           </button>
@@ -352,13 +350,13 @@ function RowWithExpansion({
   return (
     <>
       <tr
-        className="border-b border-gray-100 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-750 cursor-pointer"
+        className="border-b border-[var(--surface-border)] hover:bg-white/[0.02] cursor-pointer"
         onClick={onToggle}
       >
-        <td className="px-3 py-3 whitespace-nowrap text-gray-700 dark:text-gray-300">
+        <td className="px-3 py-3 whitespace-nowrap text-gray-500 dark:text-gray-400">
           {formatDate(row.created_at)}
         </td>
-        <td className="px-3 py-3 text-gray-900 dark:text-white font-medium max-w-[200px] truncate">
+        <td className="px-3 py-3 text-foreground font-medium max-w-[200px] truncate">
           {row.problemTitle}
         </td>
         <td className="px-3 py-3">
@@ -367,21 +365,21 @@ function RowWithExpansion({
         <td className="px-3 py-3">
           <ScoreBadge score={row.performance_score} />
         </td>
-        <td className="px-3 py-3 text-gray-600 dark:text-gray-400">
-          {row.time_taken_mins != null ? `${row.time_taken_mins}m` : "—"}
+        <td className="px-3 py-3 text-gray-500 dark:text-gray-400">
+          {row.time_taken_mins != null ? `${row.time_taken_mins}m` : "\u2014"}
         </td>
-        <td className="px-3 py-3 text-gray-600 dark:text-gray-400 font-mono text-xs">
-          {row.time_complexity ?? "—"}
+        <td className="px-3 py-3 text-gray-500 dark:text-gray-400 font-mono text-xs">
+          {row.time_complexity ?? "\u2014"}
         </td>
-        <td className="px-3 py-3 text-gray-600 dark:text-gray-400 font-mono text-xs">
-          {row.space_complexity ?? "—"}
+        <td className="px-3 py-3 text-gray-500 dark:text-gray-400 font-mono text-xs">
+          {row.space_complexity ?? "\u2014"}
         </td>
         <td className="px-3 py-3">
           <span
             className={`px-2 py-0.5 rounded text-xs font-medium ${
               row.is_self_reported
-                ? "bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-300"
-                : "bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300"
+                ? "bg-neon-purple/20 text-neon-purple"
+                : "bg-neon-cyan/20 text-neon-cyan"
             }`}
           >
             {row.is_self_reported ? "Trust" : "Practice"}
@@ -389,7 +387,7 @@ function RowWithExpansion({
         </td>
       </tr>
       {isExpanded && (
-        <tr className="border-b border-gray-100 dark:border-gray-700">
+        <tr className="border-b border-[var(--surface-border)]">
           <td colSpan={8} className="px-3 py-4">
             <ExpandedDetails row={row} />
           </td>
@@ -419,7 +417,7 @@ function ExpandedDetails({ row }: { row: HistoryRow }) {
           <h4 className="text-xs font-semibold uppercase text-gray-500 dark:text-gray-400 mb-1">
             Approach
           </h4>
-          <p className="text-sm text-gray-700 dark:text-gray-300 whitespace-pre-wrap">
+          <p className="text-sm text-gray-600 dark:text-gray-300 whitespace-pre-wrap">
             {row.approach}
           </p>
         </div>
@@ -429,7 +427,7 @@ function ExpandedDetails({ row }: { row: HistoryRow }) {
           <h4 className="text-xs font-semibold uppercase text-gray-500 dark:text-gray-400 mb-1">
             Remarks
           </h4>
-          <p className="text-sm text-gray-700 dark:text-gray-300 whitespace-pre-wrap">
+          <p className="text-sm text-gray-600 dark:text-gray-300 whitespace-pre-wrap">
             {row.remarks}
           </p>
         </div>
@@ -441,7 +439,7 @@ function ExpandedDetails({ row }: { row: HistoryRow }) {
               <h4 className="text-xs font-semibold uppercase text-gray-500 dark:text-gray-400 mb-1">
                 Code Quality
               </h4>
-              <p className="text-sm text-gray-700 dark:text-gray-300 whitespace-pre-wrap">
+              <p className="text-sm text-gray-600 dark:text-gray-300 whitespace-pre-wrap">
                 {row.ai_review!.review!.code_quality}
               </p>
             </div>
@@ -451,7 +449,7 @@ function ExpandedDetails({ row }: { row: HistoryRow }) {
               <h4 className="text-xs font-semibold uppercase text-gray-500 dark:text-gray-400 mb-1">
                 Edge Cases
               </h4>
-              <p className="text-sm text-gray-700 dark:text-gray-300 whitespace-pre-wrap">
+              <p className="text-sm text-gray-600 dark:text-gray-300 whitespace-pre-wrap">
                 {row.ai_review!.review!.edge_cases}
               </p>
             </div>
@@ -461,7 +459,7 @@ function ExpandedDetails({ row }: { row: HistoryRow }) {
               <h4 className="text-xs font-semibold uppercase text-gray-500 dark:text-gray-400 mb-1">
                 Alternative Approaches
               </h4>
-              <p className="text-sm text-gray-700 dark:text-gray-300 whitespace-pre-wrap">
+              <p className="text-sm text-gray-600 dark:text-gray-300 whitespace-pre-wrap">
                 {row.ai_review!.review!.alternative_approaches}
               </p>
             </div>
@@ -471,7 +469,7 @@ function ExpandedDetails({ row }: { row: HistoryRow }) {
               <h4 className="text-xs font-semibold uppercase text-gray-500 dark:text-gray-400 mb-1">
                 Interview Readiness
               </h4>
-              <p className="text-sm text-gray-700 dark:text-gray-300 whitespace-pre-wrap">
+              <p className="text-sm text-gray-600 dark:text-gray-300 whitespace-pre-wrap">
                 {row.ai_review!.review!.interview_readiness}
               </p>
             </div>

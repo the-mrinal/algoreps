@@ -168,7 +168,7 @@ export default async function ProgressPage() {
 
   return (
     <div>
-      <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">
+      <h1 className="text-2xl font-bold text-foreground mb-6">
         Progress
       </h1>
       <StatsOverview stats={stats} />

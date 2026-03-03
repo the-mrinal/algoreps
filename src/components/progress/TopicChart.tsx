@@ -31,7 +31,7 @@ function CustomTooltip({
   if (!active || !payload || payload.length === 0) return null;
   const d = payload[0].payload;
   return (
-    <div className="bg-gray-800 border border-gray-600 rounded-md px-3 py-2 text-sm text-white">
+    <div className="bg-[var(--surface)] border border-[var(--surface-border)] rounded-md px-3 py-2 text-sm text-foreground">
       <p className="font-medium">{d.category}</p>
       <p>
         Avg Score: {d.avgScore.toFixed(1)} ({d.attempts} attempt
@@ -44,8 +44,8 @@ function CustomTooltip({
 export default function TopicChart({ data }: TopicChartProps) {
   if (data.length === 0) {
     return (
-      <div className="bg-white dark:bg-gray-800 rounded-lg p-6 border border-gray-200 dark:border-gray-700 mt-6">
-        <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
+      <div className="bg-[var(--surface)] rounded-lg p-6 border border-[var(--surface-border)] mt-6">
+        <h2 className="text-lg font-semibold text-foreground mb-4">
           Topic Mastery
         </h2>
         <p className="text-gray-500 dark:text-gray-400 text-center py-8">
@@ -59,8 +59,8 @@ export default function TopicChart({ data }: TopicChartProps) {
   const sorted = [...data].sort((a, b) => a.avgScore - b.avgScore);
 
   return (
-    <div className="bg-white dark:bg-gray-800 rounded-lg p-6 border border-gray-200 dark:border-gray-700 mt-6">
-      <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
+    <div className="bg-[var(--surface)] rounded-lg p-6 border border-[var(--surface-border)] mt-6">
+      <h2 className="text-lg font-semibold text-foreground mb-4">
         Topic Mastery
       </h2>
       <div style={{ width: "100%", height: sorted.length * 40 + 40 }}>
@@ -82,7 +82,7 @@ export default function TopicChart({ data }: TopicChartProps) {
               {sorted.map((entry) => (
                 <Cell
                   key={entry.category}
-                  fill={entry.avgScore < 3 ? "#ef4444" : "#3b82f6"}
+                  fill={entry.avgScore < 3 ? "#ef4444" : "#00fff2"}
                 />
               ))}
             </Bar>

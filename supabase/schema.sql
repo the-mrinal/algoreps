@@ -11,7 +11,8 @@ CREATE TABLE profiles (
   email TEXT NOT NULL,
   display_name TEXT,
   created_at TIMESTAMPTZ DEFAULT NOW(),
-  updated_at TIMESTAMPTZ DEFAULT NOW()
+  updated_at TIMESTAMPTZ DEFAULT NOW(),
+  theme_preference TEXT DEFAULT 'system' CHECK (theme_preference IN ('light', 'dark', 'system'))
 );
 
 -- =============================================================================

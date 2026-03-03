@@ -7,10 +7,9 @@ import ProblemPane from "./ProblemPane";
 import EditorPane from "./EditorPane";
 
 const difficultyColors: Record<string, string> = {
-  Easy: "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200",
-  Medium:
-    "bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200",
-  Hard: "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200",
+  Easy: "bg-neon-green/20 text-neon-green",
+  Medium: "bg-yellow-500/20 text-yellow-400",
+  Hard: "bg-red-500/20 text-red-400",
 };
 
 export default function ProblemBrowser({
@@ -64,9 +63,9 @@ export default function ProblemBrowser({
   return (
     <div className="flex h-full gap-2">
       {/* Category Sidebar */}
-      <div className="w-48 flex-shrink-0 overflow-y-auto rounded-lg border border-gray-200 bg-white dark:border-gray-700 dark:bg-gray-800">
-        <div className="p-3 border-b border-gray-200 dark:border-gray-700">
-          <h3 className="text-sm font-semibold text-gray-900 dark:text-white">
+      <div className="w-48 flex-shrink-0 overflow-y-auto rounded-lg border border-[var(--surface-border)] bg-[var(--surface)]">
+        <div className="p-3 border-b border-[var(--surface-border)]">
+          <h3 className="text-sm font-semibold text-foreground">
             Categories
           </h3>
         </div>
@@ -75,13 +74,13 @@ export default function ProblemBrowser({
             onClick={() => setSelectedCategory(null)}
             className={`w-full text-left px-2.5 py-1.5 rounded-md text-xs transition-colors ${
               selectedCategory === null
-                ? "bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-200 font-medium"
-                : "text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700"
+                ? "bg-neon-cyan/10 text-neon-cyan font-medium"
+                : "text-gray-500 dark:text-gray-400 hover:bg-white/5 hover:text-foreground"
             }`}
           >
             <span className="flex justify-between items-center">
               <span>All Problems</span>
-              <span className="text-xs text-gray-500 dark:text-gray-400">
+              <span className="text-xs text-gray-500 dark:text-gray-500">
                 {problems.length}
               </span>
             </span>
@@ -92,13 +91,13 @@ export default function ProblemBrowser({
               onClick={() => setSelectedCategory(cat)}
               className={`w-full text-left px-2.5 py-1.5 rounded-md text-xs transition-colors ${
                 selectedCategory === cat
-                  ? "bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-200 font-medium"
-                  : "text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700"
+                  ? "bg-neon-cyan/10 text-neon-cyan font-medium"
+                  : "text-gray-500 dark:text-gray-400 hover:bg-white/5 hover:text-foreground"
               }`}
             >
               <span className="flex justify-between items-center">
                 <span className="truncate">{cat}</span>
-                <span className="text-xs text-gray-500 dark:text-gray-400 ml-1">
+                <span className="text-xs text-gray-500 dark:text-gray-500 ml-1">
                   {categoryCounts[cat] || 0}
                 </span>
               </span>
@@ -108,14 +107,14 @@ export default function ProblemBrowser({
       </div>
 
       {/* Problem List */}
-      <div className="w-64 flex-shrink-0 flex flex-col overflow-hidden rounded-lg border border-gray-200 bg-white dark:border-gray-700 dark:bg-gray-800">
+      <div className="w-64 flex-shrink-0 flex flex-col overflow-hidden rounded-lg border border-[var(--surface-border)] bg-[var(--surface)]">
         {/* Sheet Filter */}
         {sheets.length > 0 && (
-          <div className="p-2 border-b border-gray-200 dark:border-gray-700">
+          <div className="p-2 border-b border-[var(--surface-border)]">
             <select
               value={selectedSheet || ""}
               onChange={(e) => setSelectedSheet(e.target.value || null)}
-              className="w-full rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 px-2.5 py-1.5 text-xs text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full rounded-md border border-[var(--surface-border)] bg-[var(--background)] px-2.5 py-1.5 text-xs text-foreground focus:outline-none focus:ring-1 focus:ring-neon-cyan/50"
             >
               <option value="">All Sheets</option>
               {sheets.map((s) => (
@@ -128,18 +127,18 @@ export default function ProblemBrowser({
         )}
 
         {/* Search */}
-        <div className="p-2 border-b border-gray-200 dark:border-gray-700">
+        <div className="p-2 border-b border-[var(--surface-border)]">
           <input
             type="text"
             placeholder="Search problems..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 px-2.5 py-1.5 text-xs text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full rounded-md border border-[var(--surface-border)] bg-[var(--background)] px-2.5 py-1.5 text-xs text-foreground placeholder-gray-500 focus:outline-none focus:ring-1 focus:ring-neon-cyan/50"
           />
         </div>
 
         {/* Header */}
-        <div className="px-3 py-1.5 border-b border-gray-200 dark:border-gray-700 text-xs font-medium text-gray-500 dark:text-gray-400">
+        <div className="px-3 py-1.5 border-b border-[var(--surface-border)] text-xs font-medium text-gray-500 dark:text-gray-400">
           {filteredProblems.length} problem
           {filteredProblems.length !== 1 ? "s" : ""}
           {selectedCategory ? ` in ${selectedCategory}` : ""}
@@ -151,14 +150,14 @@ export default function ProblemBrowser({
             <button
               key={problem.id}
               onClick={() => setSelectedProblem(problem)}
-              className={`w-full text-left px-3 py-2 border-b border-gray-100 dark:border-gray-700 transition-colors ${
+              className={`w-full text-left px-3 py-2 border-b border-[var(--surface-border)] transition-colors ${
                 selectedProblem?.id === problem.id
-                  ? "bg-blue-50 dark:bg-blue-900/30"
-                  : "hover:bg-gray-50 dark:hover:bg-gray-700/50"
+                  ? "bg-neon-cyan/5"
+                  : "hover:bg-white/[0.02]"
               }`}
             >
               <div className="flex items-center gap-1.5">
-                <span className="text-xs font-medium text-gray-900 dark:text-white flex-1 truncate">
+                <span className="text-xs font-medium text-foreground flex-1 truncate">
                   {problem.title}
                 </span>
                 <span
@@ -167,7 +166,7 @@ export default function ProblemBrowser({
                   {problem.difficulty}
                 </span>
               </div>
-              <div className="mt-0.5 text-[10px] text-gray-500 dark:text-gray-400">
+              <div className="mt-0.5 text-[10px] text-gray-500 dark:text-gray-500">
                 {problem.category}
               </div>
             </button>
@@ -181,12 +180,12 @@ export default function ProblemBrowser({
       </div>
 
       {/* Problem Description Pane */}
-      <div className="flex-1 min-w-0 overflow-hidden rounded-lg border border-gray-200 bg-white dark:border-gray-700 dark:bg-gray-800">
+      <div className="flex-1 min-w-0 overflow-hidden rounded-lg border border-[var(--surface-border)] bg-[var(--surface)]">
         <ProblemPane problem={selectedProblem} />
       </div>
 
       {/* Editor + Output Pane */}
-      <div className="flex-1 min-w-0 overflow-hidden rounded-lg border border-gray-200 dark:border-gray-700 bg-gray-900">
+      <div className="flex-1 min-w-0 overflow-hidden rounded-lg border border-[var(--surface-border)] bg-gray-900">
         <EditorPane problem={selectedProblem} />
       </div>
     </div>

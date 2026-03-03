@@ -45,7 +45,7 @@ export default async function DashboardHome() {
 
   return (
     <div>
-      <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">
+      <h1 className="text-2xl font-bold text-foreground mb-6">
         Revision Queue
       </h1>
       <RevisionQueue dueRevisions={dueRevisions} />

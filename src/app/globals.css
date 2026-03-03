@@ -3,15 +3,23 @@
 @tailwind utilities;
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #f8fafc;
+  --foreground: #0f172a;
+  --surface: #ffffff;
+  --surface-border: #e2e8f0;
+  --accent-primary: #00fff2;
+  --accent-secondary: #39ff14;
+  --accent-tertiary: #bf5af2;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+.dark {
+  --background: #0a0a0f;
+  --foreground: #e2e8f0;
+  --surface: #12121a;
+  --surface-border: #1e293b;
+  --accent-primary: #00fff2;
+  --accent-secondary: #39ff14;
+  --accent-tertiary: #bf5af2;
 }
 
 body {
@@ -23,5 +31,29 @@ body {
 @layer utilities {
   .text-balance {
     text-wrap: balance;
+  }
+
+  .glow-cyan {
+    box-shadow: 0 0 15px rgba(0, 255, 242, 0.35), 0 0 40px rgba(0, 255, 242, 0.1);
+  }
+
+  .glow-green {
+    box-shadow: 0 0 15px rgba(57, 255, 20, 0.35), 0 0 40px rgba(57, 255, 20, 0.1);
+  }
+
+  .glow-purple {
+    box-shadow: 0 0 15px rgba(191, 90, 242, 0.35), 0 0 40px rgba(191, 90, 242, 0.1);
+  }
+
+  .glow-cyan-sm {
+    box-shadow: 0 0 8px rgba(0, 255, 242, 0.25);
+  }
+
+  .text-glow-cyan {
+    text-shadow: 0 0 10px rgba(0, 255, 242, 0.5);
+  }
+
+  .text-glow-green {
+    text-shadow: 0 0 10px rgba(57, 255, 20, 0.5);
   }
 }

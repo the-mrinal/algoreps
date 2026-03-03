@@ -14,12 +14,12 @@ interface StatsOverviewProps {
 }
 
 const STAT_CARDS = [
-  { key: "totalUniqueProblems" as const, label: "Problems Solved", color: "text-blue-400" },
+  { key: "totalUniqueProblems" as const, label: "Problems Solved", color: "text-neon-cyan" },
   { key: "currentStreak" as const, label: "Current Streak", color: "text-orange-400" },
-  { key: "totalSubmissions" as const, label: "Total Submissions", color: "text-green-400" },
+  { key: "totalSubmissions" as const, label: "Total Submissions", color: "text-neon-green" },
   { key: "averageScore" as const, label: "Avg Score", color: "text-yellow-400" },
   { key: "problemsDueToday" as const, label: "Due Today", color: "text-red-400" },
-  { key: "problemsDueThisWeek" as const, label: "Due This Week", color: "text-purple-400" },
+  { key: "problemsDueThisWeek" as const, label: "Due This Week", color: "text-neon-purple" },
 ];
 
 function formatValue(key: keyof StatsData, value: number): string {
@@ -38,7 +38,7 @@ export default function StatsOverview({ stats }: StatsOverviewProps) {
       {STAT_CARDS.map((card) => (
         <div
           key={card.key}
-          className="bg-white dark:bg-gray-800 rounded-lg p-4 border border-gray-200 dark:border-gray-700"
+          className="bg-[var(--surface)] rounded-lg p-4 border border-[var(--surface-border)]"
         >
           <div className={`text-2xl font-bold ${card.color}`}>
             {formatValue(card.key, stats[card.key])}

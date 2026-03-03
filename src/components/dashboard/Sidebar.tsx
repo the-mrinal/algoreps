@@ -4,13 +4,54 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { useState } from "react";
+import ThemeToggle from "@/components/theme/ThemeToggle";
 
 const navItems = [
-  { href: "/dashboard", label: "Dashboard" },
-  { href: "/dashboard/practice", label: "Practice" },
-  { href: "/dashboard/log", label: "Log" },
-  { href: "/dashboard/progress", label: "Progress" },
-  { href: "/dashboard/import", label: "Import" },
+  {
+    href: "/dashboard",
+    label: "Dashboard",
+    icon: (
+      <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+        <path strokeLinecap="round" strokeLinejoin="round" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zm10 0a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zm10 0a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
+      </svg>
+    ),
+  },
+  {
+    href: "/dashboard/practice",
+    label: "Practice",
+    icon: (
+      <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+        <path strokeLinecap="round" strokeLinejoin="round" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
+      </svg>
+    ),
+  },
+  {
+    href: "/dashboard/log",
+    label: "Log",
+    icon: (
+      <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+        <path strokeLinecap="round" strokeLinejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+      </svg>
+    ),
+  },
+  {
+    href: "/dashboard/progress",
+    label: "Progress",
+    icon: (
+      <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+        <path strokeLinecap="round" strokeLinejoin="round" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+      </svg>
+    ),
+  },
+  {
+    href: "/dashboard/import",
+    label: "Import",
+    icon: (
+      <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+        <path strokeLinecap="round" strokeLinejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
+      </svg>
+    ),
+  },
 ];
 
 export default function Sidebar({ email }: { email: string }) {
@@ -33,37 +74,40 @@ export default function Sidebar({ email }: { email: string }) {
 
   const navContent = (
     <>
-      <div className="p-4 border-b border-gray-200 dark:border-gray-700">
-        <h2 className="text-lg font-bold text-gray-900 dark:text-white">
-          DSA Dashboard
+      <div className="p-4 border-b border-[var(--surface-border)]">
+        <h2 className="text-lg font-bold">
+          <span className="text-foreground">Algo</span>
+          <span className="text-neon-cyan text-glow-cyan">Reps</span>
         </h2>
       </div>
 
-      <nav className="flex-1 p-4 space-y-1">
+      <nav className="flex-1 p-3 space-y-0.5">
         {navItems.map((item) => (
           <Link
             key={item.href}
             href={item.href}
             onClick={() => setMobileOpen(false)}
-            className={`block px-3 py-2 rounded-md text-sm font-medium transition-colors ${
+            className={`flex items-center gap-2.5 px-3 py-2 rounded-md text-sm font-medium transition-all ${
               isActive(item.href)
-                ? "bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-200"
-                : "text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800"
+                ? "text-neon-cyan bg-neon-cyan/10 shadow-[0_0_10px_rgba(0,255,242,0.1)]"
+                : "text-gray-400 hover:text-foreground hover:bg-white/5"
             }`}
           >
+            {item.icon}
             {item.label}
           </Link>
         ))}
       </nav>
 
-      <div className="p-4 border-t border-gray-200 dark:border-gray-700 space-y-3">
-        <p className="text-xs text-gray-500 dark:text-gray-400 truncate">
+      <div className="p-3 border-t border-[var(--surface-border)] space-y-2">
+        <p className="text-xs text-gray-500 truncate px-3">
           {email}
         </p>
+        <ThemeToggle />
         <button
           onClick={handleLogout}
           disabled={loggingOut}
-          className="w-full rounded-md border border-gray-300 dark:border-gray-600 px-3 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 disabled:opacity-50"
+          className="w-full rounded-md border border-[var(--surface-border)] px-3 py-2 text-sm font-medium text-gray-400 hover:text-foreground hover:bg-white/5 disabled:opacity-50 transition-colors"
         >
           {loggingOut ? "Signing out..." : "Sign Out"}
         </button>
@@ -76,11 +120,11 @@ export default function Sidebar({ email }: { email: string }) {
       {/* Mobile hamburger button */}
       <button
         onClick={() => setMobileOpen(!mobileOpen)}
-        className="md:hidden fixed top-4 left-4 z-50 rounded-md bg-white dark:bg-gray-800 p-2 shadow-md border border-gray-200 dark:border-gray-700"
+        className="md:hidden fixed top-4 left-4 z-50 rounded-md bg-[var(--surface)] p-2 shadow-md border border-[var(--surface-border)]"
         aria-label="Toggle navigation"
       >
         <svg
-          className="h-5 w-5 text-gray-700 dark:text-gray-300"
+          className="h-5 w-5 text-foreground"
           fill="none"
           viewBox="0 0 24 24"
           stroke="currentColor"
@@ -97,14 +141,14 @@ export default function Sidebar({ email }: { email: string }) {
       {/* Mobile overlay */}
       {mobileOpen && (
         <div
-          className="md:hidden fixed inset-0 z-30 bg-black/50"
+          className="md:hidden fixed inset-0 z-30 bg-black/60"
           onClick={() => setMobileOpen(false)}
         />
       )}
 
       {/* Sidebar - desktop: static, mobile: slide-in */}
       <aside
-        className={`fixed inset-y-0 left-0 z-40 w-64 bg-white dark:bg-gray-900 border-r border-gray-200 dark:border-gray-700 flex flex-col transition-transform duration-200 ${
+        className={`fixed inset-y-0 left-0 z-40 w-64 bg-[var(--surface)] border-r border-[var(--surface-border)] flex flex-col transition-transform duration-200 ${
           mobileOpen ? "translate-x-0" : "-translate-x-full"
         } md:translate-x-0 md:static md:z-auto`}
       >
