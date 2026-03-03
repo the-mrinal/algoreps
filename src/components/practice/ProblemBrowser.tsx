@@ -2,6 +2,7 @@
 
 import { useState, useMemo } from "react";
 import type { Problem } from "@/types";
+import ProblemPane from "./ProblemPane";
 
 const difficultyColors: Record<string, string> = {
   Easy: "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200",
@@ -44,7 +45,7 @@ export default function ProblemBrowser({
   return (
     <div className="flex h-full gap-4">
       {/* Category Sidebar */}
-      <div className="w-64 flex-shrink-0 overflow-y-auto rounded-lg border border-gray-200 bg-white dark:border-gray-700 dark:bg-gray-800">
+      <div className="w-52 flex-shrink-0 overflow-y-auto rounded-lg border border-gray-200 bg-white dark:border-gray-700 dark:bg-gray-800">
         <div className="p-3 border-b border-gray-200 dark:border-gray-700">
           <h3 className="text-sm font-semibold text-gray-900 dark:text-white">
             Categories
@@ -88,7 +89,7 @@ export default function ProblemBrowser({
       </div>
 
       {/* Problem List */}
-      <div className="flex-1 flex flex-col overflow-hidden rounded-lg border border-gray-200 bg-white dark:border-gray-700 dark:bg-gray-800">
+      <div className="w-80 flex-shrink-0 flex flex-col overflow-hidden rounded-lg border border-gray-200 bg-white dark:border-gray-700 dark:bg-gray-800">
         {/* Search */}
         <div className="p-3 border-b border-gray-200 dark:border-gray-700">
           <input
@@ -120,7 +121,7 @@ export default function ProblemBrowser({
               }`}
             >
               <div className="flex items-center gap-2">
-                <span className="text-sm font-medium text-gray-900 dark:text-white flex-1">
+                <span className="text-sm font-medium text-gray-900 dark:text-white flex-1 truncate">
                   {problem.title}
                 </span>
                 {problem.is_blind75 && (
@@ -145,6 +146,11 @@ export default function ProblemBrowser({
             </div>
           )}
         </div>
+      </div>
+
+      {/* Problem Description Pane */}
+      <div className="flex-1 overflow-hidden rounded-lg border border-gray-200 bg-white dark:border-gray-700 dark:bg-gray-800">
+        <ProblemPane problem={selectedProblem} />
       </div>
     </div>
   );
