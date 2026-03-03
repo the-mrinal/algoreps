@@ -41,9 +41,8 @@
       "The second train of thought is, without changing the array, can we use additional space somehow? Like maybe a hash map to speed up the search?"
     ],
     "code_snippets": {
-      "javascript": "/**\n * @param {number[]} nums\n * @param {number} target\n * @return {number[]}\n */\nvar twoSum = function(nums, target) {\n    \n};",
       "python3": "class Solution:\n    def twoSum(self, nums: List[int], target: int) -> List[int]:\n        ",
-      "typescript": "function twoSum(nums: number[], target: number): number[] {\n    \n};"
+      "golang": "func twoSum(nums []int, target int) []int {\n    \n}"
     },
     "neetcode_video_id": "KLlXCFG5TnA",
     "neetcode_url": "https://neetcode.io/problems/two-integer-sum?list=neetcode150",
@@ -93,9 +92,8 @@
     ],
     "hints": [],
     "code_snippets": {
-      "javascript": "/**\n * Definition for singly-linked list.\n * function ListNode(val, next) {\n *     this.val = (val===undefined ? 0 : val)\n *     this.next = (next===undefined ? null : next)\n * }\n */\n/**\n * @param {ListNode} l1\n * @param {ListNode} l2\n * @return {ListNode}\n */\nvar addTwoNumbers = function(l1, l2) {\n    \n};",
       "python3": "# Definition for singly-linked list.\n# class ListNode:\n#     def __init__(self, val=0, next=None):\n#         self.val = val\n#         self.next = next\nclass Solution:\n    def addTwoNumbers(self, l1: Optional[ListNode], l2: Optional[ListNode]) -> Optional[ListNode]:\n        ",
-      "typescript": "/**\n * Definition for singly-linked list.\n * class ListNode {\n *     val: number\n *     next: ListNode | null\n *     constructor(val?: number, next?: ListNode | null) {\n *         this.val = (val===undefined ? 0 : val)\n *         this.next = (next===undefined ? null : next)\n *     }\n * }\n */\n\nfunction addTwoNumbers(l1: ListNode | null, l2: ListNode | null): ListNode | null {\n    \n};"
+      "golang": "/**\n * Definition for singly-linked list.\n * type ListNode struct {\n *     Val int\n *     Next *ListNode\n * }\n */\nfunc addTwoNumbers(l1 *ListNode, l2 *ListNode) *ListNode {\n    \n}"
     },
     "neetcode_video_id": "wgFPrzTjm7s",
     "neetcode_url": "https://neetcode.io/problems/add-two-numbers?list=neetcode150",
@@ -140,9 +138,8 @@
       "Generate all possible substrings & check for each substring if it's valid and keep updating maxLen accordingly."
     ],
     "code_snippets": {
-      "javascript": "/**\n * @param {string} s\n * @return {number}\n */\nvar lengthOfLongestSubstring = function(s) {\n    \n};",
       "python3": "class Solution:\n    def lengthOfLongestSubstring(self, s: str) -> int:\n        ",
-      "typescript": "function lengthOfLongestSubstring(s: string): number {\n    \n};"
+      "golang": "func lengthOfLongestSubstring(s string) int {\n    \n}"
     },
     "neetcode_video_id": "wiGpQwVHdE0",
     "neetcode_url": "https://neetcode.io/problems/longest-substring-without-duplicates?list=neetcode150",
@@ -184,9 +181,8 @@
     ],
     "hints": [],
     "code_snippets": {
-      "javascript": "/**\n * @param {number[]} nums1\n * @param {number[]} nums2\n * @return {number}\n */\nvar findMedianSortedArrays = function(nums1, nums2) {\n    \n};",
       "python3": "class Solution:\n    def findMedianSortedArrays(self, nums1: List[int], nums2: List[int]) -> float:\n        ",
-      "typescript": "function findMedianSortedArrays(nums1: number[], nums2: number[]): number {\n    \n};"
+      "golang": "func findMedianSortedArrays(nums1 []int, nums2 []int) float64 {\n    \n}"
     },
     "neetcode_video_id": "q6IEA26hvXc",
     "neetcode_url": "https://neetcode.io/problems/median-of-two-sorted-arrays?list=neetcode150",
@@ -228,9 +224,8 @@
       "Complexity based hint:</br>\r\nIf we use brute-force and check whether for every start and end position a substring is a palindrome we have O(n^2) start - end pairs and O(n) palindromic checks. Can we reduce the time for palindromic checks to O(1) by reusing some previous computation."
     ],
     "code_snippets": {
-      "javascript": "/**\n * @param {string} s\n * @return {string}\n */\nvar longestPalindrome = function(s) {\n    \n};",
       "python3": "class Solution:\n    def longestPalindrome(self, s: str) -> str:\n        ",
-      "typescript": "function longestPalindrome(s: string): string {\n    \n};"
+      "golang": "func longestPalindrome(s string) string {\n    \n}"
     },
     "neetcode_video_id": "XYQecbcd6_c",
     "neetcode_url": "https://neetcode.io/problems/longest-palindromic-substring?list=neetcode150",
@@ -270,9 +265,8 @@
     ],
     "hints": [],
     "code_snippets": {
-      "javascript": "/**\n * @param {number} x\n * @return {number}\n */\nvar reverse = function(x) {\n    \n};",
       "python3": "class Solution:\n    def reverse(self, x: int) -> int:\n        ",
-      "typescript": "function reverse(x: number): number {\n\n};"
+      "golang": "func reverse(x int) int {\n    \n}"
     },
     "neetcode_video_id": "HAgLH58IgJQ",
     "neetcode_url": "https://neetcode.io/problems/reverse-integer?list=neetcode150",
@@ -318,9 +312,8 @@
     ],
     "hints": [],
     "code_snippets": {
-      "javascript": "/**\n * @param {string} s\n * @param {string} p\n * @return {boolean}\n */\nvar isMatch = function(s, p) {\n    \n};",
       "python3": "class Solution:\n    def isMatch(self, s: str, p: str) -> bool:\n        ",
-      "typescript": "function isMatch(s: string, p: string): boolean {\n    \n};"
+      "golang": "func isMatch(s string, p string) bool {\n    \n}"
     },
     "neetcode_video_id": "HAA8mgxlov8",
     "neetcode_url": "https://neetcode.io/problems/regular-expression-matching?list=neetcode150",
@@ -367,9 +360,8 @@
       "How can you calculate the amount of water at each step?"
     ],
     "code_snippets": {
-      "javascript": "/**\n * @param {number[]} height\n * @return {number}\n */\nvar maxArea = function(height) {\n    \n};",
       "python3": "class Solution:\n    def maxArea(self, height: List[int]) -> int:\n        ",
-      "typescript": "function maxArea(height: number[]): number {\n    \n};"
+      "golang": "func maxArea(height []int) int {\n    \n}"
     },
     "neetcode_video_id": "UuiTKBwPgAo",
     "neetcode_url": "https://neetcode.io/problems/max-water-container?list=neetcode150",
@@ -416,9 +408,8 @@
       "The second train of thought for two-sum is, without changing the array, can we use additional space somehow? Like maybe a hash map to speed up the search?"
     ],
     "code_snippets": {
-      "javascript": "/**\n * @param {number[]} nums\n * @return {number[][]}\n */\nvar threeSum = function(nums) {\n    \n};",
       "python3": "class Solution:\n    def threeSum(self, nums: List[int]) -> List[List[int]]:\n        ",
-      "typescript": "function threeSum(nums: number[]): number[][] {\n    \n};"
+      "golang": "func threeSum(nums []int) [][]int {\n    \n}"
     },
     "neetcode_video_id": "jzZsG8n2R9A",
     "neetcode_url": "https://neetcode.io/problems/three-integer-sum?list=neetcode150",
@@ -467,9 +458,8 @@
     ],
     "hints": [],
     "code_snippets": {
-      "javascript": "/**\n * @param {string} digits\n * @return {string[]}\n */\nvar letterCombinations = function(digits) {\n    \n};",
       "python3": "class Solution:\n    def letterCombinations(self, digits: str) -> List[str]:\n        ",
-      "typescript": "function letterCombinations(digits: string): string[] {\n    \n};"
+      "golang": "func letterCombinations(digits string) []string {\n    \n}"
     },
     "neetcode_video_id": "0snEunUacZY",
     "neetcode_url": "https://neetcode.io/problems/combinations-of-a-phone-number?list=neetcode150",
@@ -521,9 +511,8 @@
       "Maintain two pointers and update one with a delay of n steps."
     ],
     "code_snippets": {
-      "javascript": "/**\n * Definition for singly-linked list.\n * function ListNode(val, next) {\n *     this.val = (val===undefined ? 0 : val)\n *     this.next = (next===undefined ? null : next)\n * }\n */\n/**\n * @param {ListNode} head\n * @param {number} n\n * @return {ListNode}\n */\nvar removeNthFromEnd = function(head, n) {\n    \n};",
       "python3": "# Definition for singly-linked list.\n# class ListNode:\n#     def __init__(self, val=0, next=None):\n#         self.val = val\n#         self.next = next\nclass Solution:\n    def removeNthFromEnd(self, head: Optional[ListNode], n: int) -> Optional[ListNode]:\n        ",
-      "typescript": "/**\n * Definition for singly-linked list.\n * class ListNode {\n *     val: number\n *     next: ListNode | null\n *     constructor(val?: number, next?: ListNode | null) {\n *         this.val = (val===undefined ? 0 : val)\n *         this.next = (next===undefined ? null : next)\n *     }\n * }\n */\n\nfunction removeNthFromEnd(head: ListNode | null, n: number): ListNode | null {\n    \n};"
+      "golang": "/**\n * Definition for singly-linked list.\n * type ListNode struct {\n *     Val int\n *     Next *ListNode\n * }\n */\nfunc removeNthFromEnd(head *ListNode, n int) *ListNode {\n    \n}"
     },
     "neetcode_video_id": "XVuQxVej6y8",
     "neetcode_url": "https://neetcode.io/problems/remove-node-from-end-of-linked-list?list=neetcode150",
@@ -579,9 +568,8 @@
       "When you encounter a closing bracket, check if the top of the stack was the opening for it. If yes, pop it from the stack. Otherwise, return false."
     ],
     "code_snippets": {
-      "javascript": "/**\n * @param {string} s\n * @return {boolean}\n */\nvar isValid = function(s) {\n    \n};",
       "python3": "class Solution:\n    def isValid(self, s: str) -> bool:\n        ",
-      "typescript": "function isValid(s: string): boolean {\n    \n};"
+      "golang": "func isValid(s string) bool {\n    \n}"
     },
     "neetcode_video_id": "WTzjTskDFMg",
     "neetcode_url": "https://neetcode.io/problems/validate-parentheses?list=neetcode150",
@@ -630,9 +618,8 @@
     ],
     "hints": [],
     "code_snippets": {
-      "javascript": "/**\n * Definition for singly-linked list.\n * function ListNode(val, next) {\n *     this.val = (val===undefined ? 0 : val)\n *     this.next = (next===undefined ? null : next)\n * }\n */\n/**\n * @param {ListNode} list1\n * @param {ListNode} list2\n * @return {ListNode}\n */\nvar mergeTwoLists = function(list1, list2) {\n    \n};",
       "python3": "# Definition for singly-linked list.\n# class ListNode:\n#     def __init__(self, val=0, next=None):\n#         self.val = val\n#         self.next = next\nclass Solution:\n    def mergeTwoLists(self, list1: Optional[ListNode], list2: Optional[ListNode]) -> Optional[ListNode]:\n        ",
-      "typescript": "/**\n * Definition for singly-linked list.\n * class ListNode {\n *     val: number\n *     next: ListNode | null\n *     constructor(val?: number, next?: ListNode | null) {\n *         this.val = (val===undefined ? 0 : val)\n *         this.next = (next===undefined ? null : next)\n *     }\n * }\n */\n\nfunction mergeTwoLists(list1: ListNode | null, list2: ListNode | null): ListNode | null {\n    \n};"
+      "golang": "/**\n * Definition for singly-linked list.\n * type ListNode struct {\n *     Val int\n *     Next *ListNode\n * }\n */\nfunc mergeTwoLists(list1 *ListNode, list2 *ListNode) *ListNode {\n    \n}"
     },
     "neetcode_video_id": "XIdigk956u0",
     "neetcode_url": "https://neetcode.io/problems/merge-two-sorted-linked-lists?list=neetcode150",
@@ -669,9 +656,8 @@
     ],
     "hints": [],
     "code_snippets": {
-      "javascript": "/**\n * @param {number} n\n * @return {string[]}\n */\nvar generateParenthesis = function(n) {\n    \n};",
       "python3": "class Solution:\n    def generateParenthesis(self, n: int) -> List[str]:\n        ",
-      "typescript": "function generateParenthesis(n: number): string[] {\n    \n};"
+      "golang": "func generateParenthesis(n int) []string {\n    \n}"
     },
     "neetcode_video_id": "s9fokUqJ76A",
     "neetcode_url": "https://neetcode.io/problems/generate-parentheses?list=neetcode150",
@@ -719,9 +705,8 @@
     ],
     "hints": [],
     "code_snippets": {
-      "javascript": "/**\n * Definition for singly-linked list.\n * function ListNode(val, next) {\n *     this.val = (val===undefined ? 0 : val)\n *     this.next = (next===undefined ? null : next)\n * }\n */\n/**\n * @param {ListNode[]} lists\n * @return {ListNode}\n */\nvar mergeKLists = function(lists) {\n    \n};",
       "python3": "# Definition for singly-linked list.\n# class ListNode:\n#     def __init__(self, val=0, next=None):\n#         self.val = val\n#         self.next = next\nclass Solution:\n    def mergeKLists(self, lists: List[Optional[ListNode]]) -> Optional[ListNode]:\n        ",
-      "typescript": "/**\n * Definition for singly-linked list.\n * class ListNode {\n *     val: number\n *     next: ListNode | null\n *     constructor(val?: number, next?: ListNode | null) {\n *         this.val = (val===undefined ? 0 : val)\n *         this.next = (next===undefined ? null : next)\n *     }\n * }\n */\n\nfunction mergeKLists(lists: Array<ListNode | null>): ListNode | null {\n    \n};"
+      "golang": "/**\n * Definition for singly-linked list.\n * type ListNode struct {\n *     Val int\n *     Next *ListNode\n * }\n */\nfunc mergeKLists(lists []*ListNode) *ListNode {\n    \n}"
     },
     "neetcode_video_id": "q5a5OiGbT6Q",
     "neetcode_url": "https://neetcode.io/problems/merge-k-sorted-linked-lists?list=neetcode150",
@@ -763,9 +748,8 @@
     ],
     "hints": [],
     "code_snippets": {
-      "javascript": "/**\n * Definition for singly-linked list.\n * function ListNode(val, next) {\n *     this.val = (val===undefined ? 0 : val)\n *     this.next = (next===undefined ? null : next)\n * }\n */\n/**\n * @param {ListNode} head\n * @param {number} k\n * @return {ListNode}\n */\nvar reverseKGroup = function(head, k) {\n    \n};",
       "python3": "# Definition for singly-linked list.\n# class ListNode:\n#     def __init__(self, val=0, next=None):\n#         self.val = val\n#         self.next = next\nclass Solution:\n    def reverseKGroup(self, head: Optional[ListNode], k: int) -> Optional[ListNode]:\n        ",
-      "typescript": "/**\n * Definition for singly-linked list.\n * class ListNode {\n *     val: number\n *     next: ListNode | null\n *     constructor(val?: number, next?: ListNode | null) {\n *         this.val = (val===undefined ? 0 : val)\n *         this.next = (next===undefined ? null : next)\n *     }\n * }\n */\n\nfunction reverseKGroup(head: ListNode | null, k: number): ListNode | null {\n    \n};"
+      "golang": "/**\n * Definition for singly-linked list.\n * type ListNode struct {\n *     Val int\n *     Next *ListNode\n * }\n */\nfunc reverseKGroup(head *ListNode, k int) *ListNode {\n    \n}"
     },
     "neetcode_video_id": "1UOPsfP85V4",
     "neetcode_url": "https://neetcode.io/problems/reverse-nodes-in-k-group?list=neetcode150",
@@ -810,9 +794,8 @@
     ],
     "hints": [],
     "code_snippets": {
-      "javascript": "/**\n * @param {number[]} nums\n * @param {number} target\n * @return {number}\n */\nvar search = function(nums, target) {\n    \n};",
       "python3": "class Solution:\n    def search(self, nums: List[int], target: int) -> int:\n        ",
-      "typescript": "function search(nums: number[], target: number): number {\n    \n};"
+      "golang": "func search(nums []int, target int) int {\n    \n}"
     },
     "neetcode_video_id": "U8XENwh8Oy8",
     "neetcode_url": "https://neetcode.io/problems/find-target-in-rotated-sorted-array?list=neetcode150",
@@ -855,9 +838,8 @@
     ],
     "hints": [],
     "code_snippets": {
-      "javascript": "/**\n * @param {character[][]} board\n * @return {boolean}\n */\nvar isValidSudoku = function(board) {\n    \n};",
       "python3": "class Solution:\n    def isValidSudoku(self, board: List[List[str]]) -> bool:\n        ",
-      "typescript": "function isValidSudoku(board: string[][]): boolean {\n    \n};"
+      "golang": "func isValidSudoku(board [][]byte) bool {\n    \n}"
     },
     "neetcode_video_id": "TjFXEUCMqI8",
     "neetcode_url": "https://neetcode.io/problems/valid-sudoku?list=neetcode150",
@@ -901,9 +883,8 @@
     ],
     "hints": [],
     "code_snippets": {
-      "javascript": "/**\n * @param {number[]} candidates\n * @param {number} target\n * @return {number[][]}\n */\nvar combinationSum = function(candidates, target) {\n    \n};",
       "python3": "class Solution:\n    def combinationSum(self, candidates: List[int], target: int) -> List[List[int]]:\n        ",
-      "typescript": "function combinationSum(candidates: number[], target: number): number[][] {\n    \n};"
+      "golang": "func combinationSum(candidates []int, target int) [][]int {\n    \n}"
     },
     "neetcode_video_id": "GBKI9VSKdGg",
     "neetcode_url": "https://neetcode.io/problems/combination-target-sum?list=neetcode150",
@@ -941,9 +922,8 @@
     ],
     "hints": [],
     "code_snippets": {
-      "javascript": "/**\n * @param {number[]} candidates\n * @param {number} target\n * @return {number[][]}\n */\nvar combinationSum2 = function(candidates, target) {\n    \n};",
       "python3": "class Solution:\n    def combinationSum2(self, candidates: List[int], target: int) -> List[List[int]]:\n        ",
-      "typescript": "function combinationSum2(candidates: number[], target: number): number[][] {\n    \n};"
+      "golang": "func combinationSum2(candidates []int, target int) [][]int {\n    \n}"
     },
     "neetcode_video_id": "rSA3t6BDDwg",
     "neetcode_url": "https://neetcode.io/problems/combination-target-sum-ii?list=neetcode150",
@@ -988,9 +968,8 @@
     ],
     "hints": [],
     "code_snippets": {
-      "javascript": "/**\n * @param {number[]} height\n * @return {number}\n */\nvar trap = function(height) {\n    \n};",
       "python3": "class Solution:\n    def trap(self, height: List[int]) -> int:\n        ",
-      "typescript": "function trap(height: number[]): number {\n    \n};"
+      "golang": "func trap(height []int) int {\n    \n}"
     },
     "neetcode_video_id": "ZI2z5pq0TqA",
     "neetcode_url": "https://neetcode.io/problems/trapping-rain-water?list=neetcode150",
@@ -1029,9 +1008,8 @@
     ],
     "hints": [],
     "code_snippets": {
-      "javascript": "/**\n * @param {string} num1\n * @param {string} num2\n * @return {string}\n */\nvar multiply = function(num1, num2) {\n    \n};",
       "python3": "class Solution:\n    def multiply(self, num1: str, num2: str) -> str:\n        ",
-      "typescript": "function multiply(num1: string, num2: string): string {\n    \n};"
+      "golang": "func multiply(num1 string, num2 string) string {\n    \n}"
     },
     "neetcode_video_id": "1vZswirL8Y8",
     "neetcode_url": "https://neetcode.io/problems/multiply-strings?list=neetcode150",
@@ -1070,9 +1048,8 @@
     ],
     "hints": [],
     "code_snippets": {
-      "javascript": "/**\n * @param {number[]} nums\n * @return {number}\n */\nvar jump = function(nums) {\n    \n};",
       "python3": "class Solution:\n    def jump(self, nums: List[int]) -> int:\n        ",
-      "typescript": "function jump(nums: number[]): number {\n    \n};"
+      "golang": "func jump(nums []int) int {\n    \n}"
     },
     "neetcode_video_id": "dJ7sWiOoK7g",
     "neetcode_url": "https://neetcode.io/problems/jump-game-ii?list=neetcode150",
@@ -1115,9 +1092,8 @@
     ],
     "hints": [],
     "code_snippets": {
-      "javascript": "/**\n * @param {number[]} nums\n * @return {number[][]}\n */\nvar permute = function(nums) {\n    \n};",
       "python3": "class Solution:\n    def permute(self, nums: List[int]) -> List[List[int]]:\n        ",
-      "typescript": "function permute(nums: number[]): number[][] {\n    \n};"
+      "golang": "func permute(nums []int) [][]int {\n    \n}"
     },
     "neetcode_video_id": "s7AvT7cGdSo",
     "neetcode_url": "https://neetcode.io/problems/permutations?list=neetcode150",
@@ -1160,9 +1136,8 @@
     ],
     "hints": [],
     "code_snippets": {
-      "javascript": "/**\n * @param {number[][]} matrix\n * @return {void} Do not return anything, modify matrix in-place instead.\n */\nvar rotate = function(matrix) {\n    \n};",
       "python3": "class Solution:\n    def rotate(self, matrix: List[List[int]]) -> None:\n        \"\"\"\n        Do not return anything, modify matrix in-place instead.\n        \"\"\"\n        ",
-      "typescript": "/**\n Do not return anything, modify matrix in-place instead.\n */\nfunction rotate(matrix: number[][]): void {\n    \n};"
+      "golang": "func rotate(matrix [][]int)  {\n    \n}"
     },
     "neetcode_video_id": "fMSJSS7eO1w",
     "neetcode_url": "https://neetcode.io/problems/rotate-matrix?list=neetcode150",
@@ -1207,9 +1182,8 @@
     ],
     "hints": [],
     "code_snippets": {
-      "javascript": "/**\n * @param {string[]} strs\n * @return {string[][]}\n */\nvar groupAnagrams = function(strs) {\n    \n};",
       "python3": "class Solution:\n    def groupAnagrams(self, strs: List[str]) -> List[List[str]]:\n        ",
-      "typescript": "function groupAnagrams(strs: string[]): string[][] {\n    \n};"
+      "golang": "func groupAnagrams(strs []string) [][]string {\n    \n}"
     },
     "neetcode_video_id": "vzdNOK2oB2E",
     "neetcode_url": "https://neetcode.io/problems/anagram-groups?list=neetcode150",
@@ -1254,9 +1228,8 @@
     ],
     "hints": [],
     "code_snippets": {
-      "javascript": "/**\n * @param {number} x\n * @param {number} n\n * @return {number}\n */\nvar myPow = function(x, n) {\n    \n};",
       "python3": "class Solution:\n    def myPow(self, x: float, n: int) -> float:\n        ",
-      "typescript": "function myPow(x: number, n: number): number {\n    \n};"
+      "golang": "func myPow(x float64, n int) float64 {\n    \n}"
     },
     "neetcode_video_id": "g9YQyYi4IQQ",
     "neetcode_url": "https://neetcode.io/problems/pow-x-n?list=neetcode150",
@@ -1296,9 +1269,8 @@
     ],
     "hints": [],
     "code_snippets": {
-      "javascript": "/**\n * @param {number} n\n * @return {string[][]}\n */\nvar solveNQueens = function(n) {\n    \n};",
       "python3": "class Solution:\n    def solveNQueens(self, n: int) -> List[List[str]]:\n        ",
-      "typescript": "function solveNQueens(n: number): string[][] {\n    \n};"
+      "golang": "func solveNQueens(n int) [][]string {\n    \n}"
     },
     "neetcode_video_id": "Ph95IHmRp5M",
     "neetcode_url": "https://neetcode.io/problems/n-queens?list=neetcode150",
@@ -1341,9 +1313,8 @@
     ],
     "hints": [],
     "code_snippets": {
-      "javascript": "/**\n * @param {number[]} nums\n * @return {number}\n */\nvar maxSubArray = function(nums) {\n    \n};",
       "python3": "class Solution:\n    def maxSubArray(self, nums: List[int]) -> int:\n        ",
-      "typescript": "function maxSubArray(nums: number[]): number {\n    \n};"
+      "golang": "func maxSubArray(nums []int) int {\n    \n}"
     },
     "neetcode_video_id": "5WZl3MMT0Eg",
     "neetcode_url": "https://neetcode.io/problems/maximum-subarray?list=neetcode150",
@@ -1391,9 +1362,8 @@
       "Think about when you want to switch the progress on one of the indexes. If you progress on i out of [i, j], you'll shift in the same column. Similarly, by changing values for j, you'd be shifting in the same row.\r\nAlso, keep track of the end of a boundary so that you can move inwards and then keep repeating. It's always best to simulate edge cases like a single column or a single row to see if anything breaks or not."
     ],
     "code_snippets": {
-      "javascript": "/**\n * @param {number[][]} matrix\n * @return {number[]}\n */\nvar spiralOrder = function(matrix) {\n    \n};",
       "python3": "class Solution:\n    def spiralOrder(self, matrix: List[List[int]]) -> List[int]:\n        ",
-      "typescript": "function spiralOrder(matrix: number[][]): number[] {\n    \n};"
+      "golang": "func spiralOrder(matrix [][]int) []int {\n    \n}"
     },
     "neetcode_video_id": "BJnMZNwUk1M",
     "neetcode_url": "https://neetcode.io/problems/spiral-matrix?list=neetcode150",
@@ -1431,9 +1401,8 @@
     ],
     "hints": [],
     "code_snippets": {
-      "javascript": "/**\n * @param {number[]} nums\n * @return {boolean}\n */\nvar canJump = function(nums) {\n    \n};",
       "python3": "class Solution:\n    def canJump(self, nums: List[int]) -> bool:\n        ",
-      "typescript": "function canJump(nums: number[]): boolean {\n    \n};"
+      "golang": "func canJump(nums []int) bool {\n    \n}"
     },
     "neetcode_video_id": "Yan0cv2cLy8",
     "neetcode_url": "https://neetcode.io/problems/jump-game?list=neetcode150",
@@ -1471,9 +1440,8 @@
     ],
     "hints": [],
     "code_snippets": {
-      "javascript": "/**\n * @param {number[][]} intervals\n * @return {number[][]}\n */\nvar merge = function(intervals) {\n    \n};",
       "python3": "class Solution:\n    def merge(self, intervals: List[List[int]]) -> List[List[int]]:\n        ",
-      "typescript": "function merge(intervals: number[][]): number[][] {\n    \n};"
+      "golang": "func merge(intervals [][]int) [][]int {\n    \n}"
     },
     "neetcode_video_id": "44H3cEC2fFM",
     "neetcode_url": "https://neetcode.io/problems/merge-intervals?list=neetcode150",
@@ -1517,9 +1485,8 @@
       "This can be done by comparing the end of the last interval with the start of the new interval and vice versa."
     ],
     "code_snippets": {
-      "javascript": "/**\n * @param {number[][]} intervals\n * @param {number[]} newInterval\n * @return {number[][]}\n */\nvar insert = function(intervals, newInterval) {\n    \n};",
       "python3": "class Solution:\n    def insert(self, intervals: List[List[int]], newInterval: List[int]) -> List[List[int]]:\n        ",
-      "typescript": "function insert(intervals: number[][], newInterval: number[]): number[][] {\n    \n};"
+      "golang": "func insert(intervals [][]int, newInterval []int) [][]int {\n    \n}"
     },
     "neetcode_video_id": "A8NUOmlwOlM",
     "neetcode_url": "https://neetcode.io/problems/insert-new-interval?list=neetcode150",
@@ -1560,9 +1527,8 @@
     ],
     "hints": [],
     "code_snippets": {
-      "javascript": "/**\n * @param {number} m\n * @param {number} n\n * @return {number}\n */\nvar uniquePaths = function(m, n) {\n    \n};",
       "python3": "class Solution:\n    def uniquePaths(self, m: int, n: int) -> int:\n        ",
-      "typescript": "function uniquePaths(m: number, n: number): number {\n    \n};"
+      "golang": "func uniquePaths(m int, n int) int {\n    \n}"
     },
     "neetcode_video_id": "IlEsdxuD4lY",
     "neetcode_url": "https://neetcode.io/problems/count-paths?list=neetcode150",
@@ -1605,9 +1571,8 @@
     ],
     "hints": [],
     "code_snippets": {
-      "javascript": "/**\n * @param {number[]} digits\n * @return {number[]}\n */\nvar plusOne = function(digits) {\n    \n};",
       "python3": "class Solution:\n    def plusOne(self, digits: List[int]) -> List[int]:\n        ",
-      "typescript": "function plusOne(digits: number[]): number[] {\n    \n};"
+      "golang": "func plusOne(digits []int) []int {\n    \n}"
     },
     "neetcode_video_id": "jIaA8boiG1s",
     "neetcode_url": "https://neetcode.io/problems/plus-one?list=neetcode150",
@@ -1646,9 +1611,8 @@
       "To reach nth step, what could have been your previous steps? (Think about the step sizes)"
     ],
     "code_snippets": {
-      "javascript": "/**\n * @param {number} n\n * @return {number}\n */\nvar climbStairs = function(n) {\n    \n};",
       "python3": "class Solution:\n    def climbStairs(self, n: int) -> int:\n        ",
-      "typescript": "function climbStairs(n: number): number {\n    \n};"
+      "golang": "func climbStairs(n int) int {\n    \n}"
     },
     "neetcode_video_id": "Y0lT9Fck7qI",
     "neetcode_url": "https://neetcode.io/problems/climbing-stairs?list=neetcode150",
@@ -1685,9 +1649,8 @@
     ],
     "hints": [],
     "code_snippets": {
-      "javascript": "/**\n * @param {string} word1\n * @param {string} word2\n * @return {number}\n */\nvar minDistance = function(word1, word2) {\n    \n};",
       "python3": "class Solution:\n    def minDistance(self, word1: str, word2: str) -> int:\n        ",
-      "typescript": "function minDistance(word1: string, word2: string): number {\n    \n};"
+      "golang": "func minDistance(word1 string, word2 string) int {\n    \n}"
     },
     "neetcode_video_id": "XYi2-LPrwm4",
     "neetcode_url": "https://neetcode.io/problems/edit-distance?list=neetcode150",
@@ -1736,9 +1699,8 @@
       "We can use the first cell of every row and column as a flag. This flag would determine whether a row or column has been set to zero."
     ],
     "code_snippets": {
-      "javascript": "/**\n * @param {number[][]} matrix\n * @return {void} Do not return anything, modify matrix in-place instead.\n */\nvar setZeroes = function(matrix) {\n    \n};",
       "python3": "class Solution:\n    def setZeroes(self, matrix: List[List[int]]) -> None:\n        \"\"\"\n        Do not return anything, modify matrix in-place instead.\n        \"\"\"\n        ",
-      "typescript": "/**\n Do not return anything, modify matrix in-place instead.\n */\nfunction setZeroes(matrix: number[][]): void {\n    \n};"
+      "golang": "func setZeroes(matrix [][]int)  {\n    \n}"
     },
     "neetcode_video_id": "T41rL0L3Pnw",
     "neetcode_url": "https://neetcode.io/problems/set-zeroes-in-matrix?list=neetcode150",
@@ -1782,9 +1744,8 @@
     ],
     "hints": [],
     "code_snippets": {
-      "javascript": "/**\n * @param {number[][]} matrix\n * @param {number} target\n * @return {boolean}\n */\nvar searchMatrix = function(matrix, target) {\n    \n};",
       "python3": "class Solution:\n    def searchMatrix(self, matrix: List[List[int]], target: int) -> bool:\n        ",
-      "typescript": "function searchMatrix(matrix: number[][], target: number): boolean {\n    \n};"
+      "golang": "func searchMatrix(matrix [][]int, target int) bool {\n    \n}"
     },
     "neetcode_video_id": "Ber2pi2C0j0",
     "neetcode_url": "https://neetcode.io/problems/search-2d-matrix?list=neetcode150",
@@ -1834,9 +1795,8 @@
       "Continue expanding the right and left pointers until you reach the end of s."
     ],
     "code_snippets": {
-      "javascript": "/**\n * @param {string} s\n * @param {string} t\n * @return {string}\n */\nvar minWindow = function(s, t) {\n    \n};",
       "python3": "class Solution:\n    def minWindow(self, s: str, t: str) -> str:\n        ",
-      "typescript": "function minWindow(s: string, t: string): string {\n    \n};"
+      "golang": "func minWindow(s string, t string) string {\n    \n}"
     },
     "neetcode_video_id": "jSto0O4AJbM",
     "neetcode_url": "https://neetcode.io/problems/minimum-window-with-characters?list=neetcode150",
@@ -1875,9 +1835,8 @@
     ],
     "hints": [],
     "code_snippets": {
-      "javascript": "/**\n * @param {number[]} nums\n * @return {number[][]}\n */\nvar subsets = function(nums) {\n    \n};",
       "python3": "class Solution:\n    def subsets(self, nums: List[int]) -> List[List[int]]:\n        ",
-      "typescript": "function subsets(nums: number[]): number[][] {\n    \n};"
+      "golang": "func subsets(nums []int) [][]int {\n    \n}"
     },
     "neetcode_video_id": "REOH22Xwdkk",
     "neetcode_url": "https://neetcode.io/problems/subsets?list=neetcode150",
@@ -1931,9 +1890,8 @@
     ],
     "hints": [],
     "code_snippets": {
-      "javascript": "/**\n * @param {character[][]} board\n * @param {string} word\n * @return {boolean}\n */\nvar exist = function(board, word) {\n    \n};",
       "python3": "class Solution:\n    def exist(self, board: List[List[str]], word: str) -> bool:\n        ",
-      "typescript": "function exist(board: string[][], word: string): boolean {\n    \n};"
+      "golang": "func exist(board [][]byte, word string) bool {\n    \n}"
     },
     "neetcode_video_id": "pfiQ_PS1g8E",
     "neetcode_url": "https://neetcode.io/problems/search-for-word?list=neetcode150",
@@ -1975,9 +1933,8 @@
     ],
     "hints": [],
     "code_snippets": {
-      "javascript": "/**\n * @param {number[]} heights\n * @return {number}\n */\nvar largestRectangleArea = function(heights) {\n    \n};",
       "python3": "class Solution:\n    def largestRectangleArea(self, heights: List[int]) -> int:\n        ",
-      "typescript": "function largestRectangleArea(heights: number[]): number {\n    \n};"
+      "golang": "func largestRectangleArea(heights []int) int {\n    \n}"
     },
     "neetcode_video_id": "zx5Sw9130L0",
     "neetcode_url": "https://neetcode.io/problems/largest-rectangle-in-histogram?list=neetcode150",
@@ -2015,9 +1972,8 @@
     ],
     "hints": [],
     "code_snippets": {
-      "javascript": "/**\n * @param {number[]} nums\n * @return {number[][]}\n */\nvar subsetsWithDup = function(nums) {\n    \n};",
       "python3": "class Solution:\n    def subsetsWithDup(self, nums: List[int]) -> List[List[int]]:\n        ",
-      "typescript": "function subsetsWithDup(nums: number[]): number[][] {\n    \n};"
+      "golang": "func subsetsWithDup(nums []int) [][]int {\n    \n}"
     },
     "neetcode_video_id": "Vn2v6ajA7U0",
     "neetcode_url": "https://neetcode.io/problems/subsets-ii?list=neetcode150",
@@ -2059,9 +2015,8 @@
     ],
     "hints": [],
     "code_snippets": {
-      "javascript": "/**\n * @param {string} s\n * @return {number}\n */\nvar numDecodings = function(s) {\n    \n};",
       "python3": "class Solution:\n    def numDecodings(self, s: str) -> int:\n        ",
-      "typescript": "function numDecodings(s: string): number {\n    \n};"
+      "golang": "func numDecodings(s string) int {\n    \n}"
     },
     "neetcode_video_id": "6aEyTjOwlJU",
     "neetcode_url": "https://neetcode.io/problems/decode-ways?list=neetcode150",
@@ -2110,9 +2065,8 @@
     ],
     "hints": [],
     "code_snippets": {
-      "javascript": "/**\n * @param {string} s1\n * @param {string} s2\n * @param {string} s3\n * @return {boolean}\n */\nvar isInterleave = function(s1, s2, s3) {\n    \n};",
       "python3": "class Solution:\n    def isInterleave(self, s1: str, s2: str, s3: str) -> bool:\n        ",
-      "typescript": "function isInterleave(s1: string, s2: string, s3: string): boolean {\n    \n};"
+      "golang": "func isInterleave(s1 string, s2 string, s3 string) bool {\n    \n}"
     },
     "neetcode_video_id": "3Rw3p9LrgvE",
     "neetcode_url": "https://neetcode.io/problems/interleaving-string?list=neetcode150",
@@ -2155,9 +2109,8 @@
     ],
     "hints": [],
     "code_snippets": {
-      "javascript": "/**\n * Definition for a binary tree node.\n * function TreeNode(val, left, right) {\n *     this.val = (val===undefined ? 0 : val)\n *     this.left = (left===undefined ? null : left)\n *     this.right = (right===undefined ? null : right)\n * }\n */\n/**\n * @param {TreeNode} root\n * @return {boolean}\n */\nvar isValidBST = function(root) {\n    \n};",
       "python3": "# Definition for a binary tree node.\n# class TreeNode:\n#     def __init__(self, val=0, left=None, right=None):\n#         self.val = val\n#         self.left = left\n#         self.right = right\nclass Solution:\n    def isValidBST(self, root: Optional[TreeNode]) -> bool:\n        ",
-      "typescript": "/**\n * Definition for a binary tree node.\n * class TreeNode {\n *     val: number\n *     left: TreeNode | null\n *     right: TreeNode | null\n *     constructor(val?: number, left?: TreeNode | null, right?: TreeNode | null) {\n *         this.val = (val===undefined ? 0 : val)\n *         this.left = (left===undefined ? null : left)\n *         this.right = (right===undefined ? null : right)\n *     }\n * }\n */\n\nfunction isValidBST(root: TreeNode | null): boolean {\n    \n};"
+      "golang": "/**\n * Definition for a binary tree node.\n * type TreeNode struct {\n *     Val int\n *     Left *TreeNode\n *     Right *TreeNode\n * }\n */\nfunc isValidBST(root *TreeNode) bool {\n    \n}"
     },
     "neetcode_video_id": "s6ATEkipzow",
     "neetcode_url": "https://neetcode.io/problems/valid-binary-search-tree?list=neetcode150",
@@ -2207,9 +2160,8 @@
     ],
     "hints": [],
     "code_snippets": {
-      "javascript": "/**\n * Definition for a binary tree node.\n * function TreeNode(val, left, right) {\n *     this.val = (val===undefined ? 0 : val)\n *     this.left = (left===undefined ? null : left)\n *     this.right = (right===undefined ? null : right)\n * }\n */\n/**\n * @param {TreeNode} p\n * @param {TreeNode} q\n * @return {boolean}\n */\nvar isSameTree = function(p, q) {\n    \n};",
       "python3": "# Definition for a binary tree node.\n# class TreeNode:\n#     def __init__(self, val=0, left=None, right=None):\n#         self.val = val\n#         self.left = left\n#         self.right = right\nclass Solution:\n    def isSameTree(self, p: Optional[TreeNode], q: Optional[TreeNode]) -> bool:\n        ",
-      "typescript": "/**\n * Definition for a binary tree node.\n * class TreeNode {\n *     val: number\n *     left: TreeNode | null\n *     right: TreeNode | null\n *     constructor(val?: number, left?: TreeNode | null, right?: TreeNode | null) {\n *         this.val = (val===undefined ? 0 : val)\n *         this.left = (left===undefined ? null : left)\n *         this.right = (right===undefined ? null : right)\n *     }\n * }\n */\n\nfunction isSameTree(p: TreeNode | null, q: TreeNode | null): boolean {\n    \n};"
+      "golang": "/**\n * Definition for a binary tree node.\n * type TreeNode struct {\n *     Val int\n *     Left *TreeNode\n *     Right *TreeNode\n * }\n */\nfunc isSameTree(p *TreeNode, q *TreeNode) bool {\n    \n}"
     },
     "neetcode_video_id": "vRbbcKXCxOw",
     "neetcode_url": "https://neetcode.io/problems/same-binary-tree?list=neetcode150",
@@ -2260,9 +2212,8 @@
       "Use a queue to perform BFS."
     ],
     "code_snippets": {
-      "javascript": "/**\n * Definition for a binary tree node.\n * function TreeNode(val, left, right) {\n *     this.val = (val===undefined ? 0 : val)\n *     this.left = (left===undefined ? null : left)\n *     this.right = (right===undefined ? null : right)\n * }\n */\n/**\n * @param {TreeNode} root\n * @return {number[][]}\n */\nvar levelOrder = function(root) {\n    \n};",
       "python3": "# Definition for a binary tree node.\n# class TreeNode:\n#     def __init__(self, val=0, left=None, right=None):\n#         self.val = val\n#         self.left = left\n#         self.right = right\nclass Solution:\n    def levelOrder(self, root: Optional[TreeNode]) -> List[List[int]]:\n        ",
-      "typescript": "/**\n * Definition for a binary tree node.\n * class TreeNode {\n *     val: number\n *     left: TreeNode | null\n *     right: TreeNode | null\n *     constructor(val?: number, left?: TreeNode | null, right?: TreeNode | null) {\n *         this.val = (val===undefined ? 0 : val)\n *         this.left = (left===undefined ? null : left)\n *         this.right = (right===undefined ? null : right)\n *     }\n * }\n */\n\nfunction levelOrder(root: TreeNode | null): number[][] {\n    \n};"
+      "golang": "/**\n * Definition for a binary tree node.\n * type TreeNode struct {\n *     Val int\n *     Left *TreeNode\n *     Right *TreeNode\n * }\n */\nfunc levelOrder(root *TreeNode) [][]int {\n    \n}"
     },
     "neetcode_video_id": "6ZnyEApgFYg",
     "neetcode_url": "https://neetcode.io/problems/level-order-traversal-of-binary-tree?list=neetcode150",
@@ -2305,9 +2256,8 @@
     ],
     "hints": [],
     "code_snippets": {
-      "javascript": "/**\n * Definition for a binary tree node.\n * function TreeNode(val, left, right) {\n *     this.val = (val===undefined ? 0 : val)\n *     this.left = (left===undefined ? null : left)\n *     this.right = (right===undefined ? null : right)\n * }\n */\n/**\n * @param {TreeNode} root\n * @return {number}\n */\nvar maxDepth = function(root) {\n    \n};",
       "python3": "# Definition for a binary tree node.\n# class TreeNode:\n#     def __init__(self, val=0, left=None, right=None):\n#         self.val = val\n#         self.left = left\n#         self.right = right\nclass Solution:\n    def maxDepth(self, root: Optional[TreeNode]) -> int:\n        ",
-      "typescript": "/**\n * Definition for a binary tree node.\n * class TreeNode {\n *     val: number\n *     left: TreeNode | null\n *     right: TreeNode | null\n *     constructor(val?: number, left?: TreeNode | null, right?: TreeNode | null) {\n *         this.val = (val===undefined ? 0 : val)\n *         this.left = (left===undefined ? null : left)\n *         this.right = (right===undefined ? null : right)\n *     }\n * }\n */\n\nfunction maxDepth(root: TreeNode | null): number {\n    \n};"
+      "golang": "/**\n * Definition for a binary tree node.\n * type TreeNode struct {\n *     Val int\n *     Left *TreeNode\n *     Right *TreeNode\n * }\n */\nfunc maxDepth(root *TreeNode) int {\n    \n}"
     },
     "neetcode_video_id": "hTM3phVI6YQ",
     "neetcode_url": "https://neetcode.io/problems/depth-of-binary-tree?list=neetcode150",
@@ -2356,9 +2306,8 @@
     ],
     "hints": [],
     "code_snippets": {
-      "javascript": "/**\n * Definition for a binary tree node.\n * function TreeNode(val, left, right) {\n *     this.val = (val===undefined ? 0 : val)\n *     this.left = (left===undefined ? null : left)\n *     this.right = (right===undefined ? null : right)\n * }\n */\n/**\n * @param {number[]} preorder\n * @param {number[]} inorder\n * @return {TreeNode}\n */\nvar buildTree = function(preorder, inorder) {\n    \n};",
       "python3": "# Definition for a binary tree node.\n# class TreeNode:\n#     def __init__(self, val=0, left=None, right=None):\n#         self.val = val\n#         self.left = left\n#         self.right = right\nclass Solution:\n    def buildTree(self, preorder: List[int], inorder: List[int]) -> Optional[TreeNode]:\n        ",
-      "typescript": "/**\n * Definition for a binary tree node.\n * class TreeNode {\n *     val: number\n *     left: TreeNode | null\n *     right: TreeNode | null\n *     constructor(val?: number, left?: TreeNode | null, right?: TreeNode | null) {\n *         this.val = (val===undefined ? 0 : val)\n *         this.left = (left===undefined ? null : left)\n *         this.right = (right===undefined ? null : right)\n *     }\n * }\n */\n\nfunction buildTree(preorder: number[], inorder: number[]): TreeNode | null {\n    \n};"
+      "golang": "/**\n * Definition for a binary tree node.\n * type TreeNode struct {\n *     Val int\n *     Left *TreeNode\n *     Right *TreeNode\n * }\n */\nfunc buildTree(preorder []int, inorder []int) *TreeNode {\n    \n}"
     },
     "neetcode_video_id": "ihj4IQGZ2zc",
     "neetcode_url": "https://neetcode.io/problems/binary-tree-from-preorder-and-inorder-traversal?list=neetcode150",
@@ -2407,9 +2356,8 @@
     ],
     "hints": [],
     "code_snippets": {
-      "javascript": "/**\n * Definition for a binary tree node.\n * function TreeNode(val, left, right) {\n *     this.val = (val===undefined ? 0 : val)\n *     this.left = (left===undefined ? null : left)\n *     this.right = (right===undefined ? null : right)\n * }\n */\n/**\n * @param {TreeNode} root\n * @return {boolean}\n */\nvar isBalanced = function(root) {\n    \n};",
       "python3": "# Definition for a binary tree node.\n# class TreeNode:\n#     def __init__(self, val=0, left=None, right=None):\n#         self.val = val\n#         self.left = left\n#         self.right = right\nclass Solution:\n    def isBalanced(self, root: Optional[TreeNode]) -> bool:\n        ",
-      "typescript": "/**\n * Definition for a binary tree node.\n * class TreeNode {\n *     val: number\n *     left: TreeNode | null\n *     right: TreeNode | null\n *     constructor(val?: number, left?: TreeNode | null, right?: TreeNode | null) {\n *         this.val = (val===undefined ? 0 : val)\n *         this.left = (left===undefined ? null : left)\n *         this.right = (right===undefined ? null : right)\n *     }\n * }\n */\n\nfunction isBalanced(root: TreeNode | null): boolean {\n    \n};"
+      "golang": "/**\n * Definition for a binary tree node.\n * type TreeNode struct {\n *     Val int\n *     Left *TreeNode\n *     Right *TreeNode\n * }\n */\nfunc isBalanced(root *TreeNode) bool {\n    \n}"
     },
     "neetcode_video_id": "QfJsau0ItOY",
     "neetcode_url": "https://neetcode.io/problems/balanced-binary-tree?list=neetcode150",
@@ -2446,9 +2394,8 @@
     ],
     "hints": [],
     "code_snippets": {
-      "javascript": "/**\n * @param {string} s\n * @param {string} t\n * @return {number}\n */\nvar numDistinct = function(s, t) {\n    \n};",
       "python3": "class Solution:\n    def numDistinct(self, s: str, t: str) -> int:\n        ",
-      "typescript": "function numDistinct(s: string, t: string): number {\n    \n};"
+      "golang": "func numDistinct(s string, t string) int {\n    \n}"
     },
     "neetcode_video_id": "-RDzMJ33nx8",
     "neetcode_url": "https://neetcode.io/problems/count-subsequences?list=neetcode150",
@@ -2485,9 +2432,8 @@
     ],
     "hints": [],
     "code_snippets": {
-      "javascript": "/**\n * @param {number[]} prices\n * @return {number}\n */\nvar maxProfit = function(prices) {\n    \n};",
       "python3": "class Solution:\n    def maxProfit(self, prices: List[int]) -> int:\n        ",
-      "typescript": "function maxProfit(prices: number[]): number {\n    \n};"
+      "golang": "func maxProfit(prices []int) int {\n    \n}"
     },
     "neetcode_video_id": "1pkOgXD63yU",
     "neetcode_url": "https://neetcode.io/problems/buy-and-sell-crypto?list=neetcode150",
@@ -2530,9 +2476,8 @@
     ],
     "hints": [],
     "code_snippets": {
-      "javascript": "/**\n * Definition for a binary tree node.\n * function TreeNode(val, left, right) {\n *     this.val = (val===undefined ? 0 : val)\n *     this.left = (left===undefined ? null : left)\n *     this.right = (right===undefined ? null : right)\n * }\n */\n/**\n * @param {TreeNode} root\n * @return {number}\n */\nvar maxPathSum = function(root) {\n    \n};",
       "python3": "# Definition for a binary tree node.\n# class TreeNode:\n#     def __init__(self, val=0, left=None, right=None):\n#         self.val = val\n#         self.left = left\n#         self.right = right\nclass Solution:\n    def maxPathSum(self, root: Optional[TreeNode]) -> int:\n        ",
-      "typescript": "/**\n * Definition for a binary tree node.\n * class TreeNode {\n *     val: number\n *     left: TreeNode | null\n *     right: TreeNode | null\n *     constructor(val?: number, left?: TreeNode | null, right?: TreeNode | null) {\n *         this.val = (val===undefined ? 0 : val)\n *         this.left = (left===undefined ? null : left)\n *         this.right = (right===undefined ? null : right)\n *     }\n * }\n */\n\nfunction maxPathSum(root: TreeNode | null): number {\n    \n};"
+      "golang": "/**\n * Definition for a binary tree node.\n * type TreeNode struct {\n *     Val int\n *     Left *TreeNode\n *     Right *TreeNode\n * }\n */\nfunc maxPathSum(root *TreeNode) int {\n    \n}"
     },
     "neetcode_video_id": "Hr5cWUld4vU",
     "neetcode_url": "https://neetcode.io/problems/binary-tree-maximum-path-sum?list=neetcode150",
@@ -2574,9 +2519,8 @@
     ],
     "hints": [],
     "code_snippets": {
-      "javascript": "/**\n * @param {string} s\n * @return {boolean}\n */\nvar isPalindrome = function(s) {\n    \n};",
       "python3": "class Solution:\n    def isPalindrome(self, s: str) -> bool:\n        ",
-      "typescript": "function isPalindrome(s: string): boolean {\n    \n};"
+      "golang": "func isPalindrome(s string) bool {\n    \n}"
     },
     "neetcode_video_id": "jJXJ16kPFWg",
     "neetcode_url": "https://neetcode.io/problems/is-palindrome?list=neetcode150",
@@ -2619,9 +2563,8 @@
     ],
     "hints": [],
     "code_snippets": {
-      "javascript": "/**\n * @param {string} beginWord\n * @param {string} endWord\n * @param {string[]} wordList\n * @return {number}\n */\nvar ladderLength = function(beginWord, endWord, wordList) {\n    \n};",
       "python3": "class Solution:\n    def ladderLength(self, beginWord: str, endWord: str, wordList: List[str]) -> int:\n        ",
-      "typescript": "function ladderLength(beginWord: string, endWord: string, wordList: string[]): number {\n    \n};"
+      "golang": "func ladderLength(beginWord string, endWord string, wordList []string) int {\n    \n}"
     },
     "neetcode_video_id": "h9iTnkgv05E",
     "neetcode_url": "https://neetcode.io/problems/word-ladder?list=neetcode150",
@@ -2664,9 +2607,8 @@
     ],
     "hints": [],
     "code_snippets": {
-      "javascript": "/**\n * @param {number[]} nums\n * @return {number}\n */\nvar longestConsecutive = function(nums) {\n    \n};",
       "python3": "class Solution:\n    def longestConsecutive(self, nums: List[int]) -> int:\n        ",
-      "typescript": "function longestConsecutive(nums: number[]): number {\n    \n};"
+      "golang": "func longestConsecutive(nums []int) int {\n    \n}"
     },
     "neetcode_video_id": "P6RZZMu_maU",
     "neetcode_url": "https://neetcode.io/problems/longest-consecutive-sequence?list=neetcode150",
@@ -2710,9 +2652,8 @@
     ],
     "hints": [],
     "code_snippets": {
-      "javascript": "/**\n * @param {character[][]} board\n * @return {void} Do not return anything, modify board in-place instead.\n */\nvar solve = function(board) {\n    \n};",
       "python3": "class Solution:\n    def solve(self, board: List[List[str]]) -> None:\n        \"\"\"\n        Do not return anything, modify board in-place instead.\n        \"\"\"\n        ",
-      "typescript": "/**\n Do not return anything, modify board in-place instead.\n */\nfunction solve(board: string[][]): void {\n    \n};"
+      "golang": "func solve(board [][]byte)  {\n    \n}"
     },
     "neetcode_video_id": "9z2BunfoZ5Y",
     "neetcode_url": "https://neetcode.io/problems/surrounded-regions?list=neetcode150",
@@ -2750,9 +2691,8 @@
     ],
     "hints": [],
     "code_snippets": {
-      "javascript": "/**\n * @param {string} s\n * @return {string[][]}\n */\nvar partition = function(s) {\n    \n};",
       "python3": "class Solution:\n    def partition(self, s: str) -> List[List[str]]:\n        ",
-      "typescript": "function partition(s: string): string[][] {\n    \n};"
+      "golang": "func partition(s string) [][]string {\n    \n}"
     },
     "neetcode_video_id": "3jvWodd7ht0",
     "neetcode_url": "https://neetcode.io/problems/palindrome-partitioning?list=neetcode150",
@@ -2810,9 +2750,8 @@
     ],
     "hints": [],
     "code_snippets": {
-      "javascript": "/**\n * // Definition for a _Node.\n * function _Node(val, neighbors) {\n *    this.val = val === undefined ? 0 : val;\n *    this.neighbors = neighbors === undefined ? [] : neighbors;\n * };\n */\n\n/**\n * @param {_Node} node\n * @return {_Node}\n */\nvar cloneGraph = function(node) {\n    \n};",
       "python3": "\"\"\"\n# Definition for a Node.\nclass Node:\n    def __init__(self, val = 0, neighbors = None):\n        self.val = val\n        self.neighbors = neighbors if neighbors is not None else []\n\"\"\"\n\nfrom typing import Optional\nclass Solution:\n    def cloneGraph(self, node: Optional['Node']) -> Optional['Node']:\n        ",
-      "typescript": "/**\n * Definition for _Node.\n * class _Node {\n *     val: number\n *     neighbors: _Node[]\n * \n *     constructor(val?: number, neighbors?: _Node[]) {\n *         this.val = (val===undefined ? 0 : val)\n *         this.neighbors = (neighbors===undefined ? [] : neighbors)\n *     }\n * }\n * \n */\n\n\nfunction cloneGraph(node: _Node | null): _Node | null {\n\t\n};"
+      "golang": "/**\n * Definition for a Node.\n * type Node struct {\n *     Val int\n *     Neighbors []*Node\n * }\n */\n\nfunc cloneGraph(node *Node) *Node {\n    \n}"
     },
     "neetcode_video_id": "mQeF6bN8hMk",
     "neetcode_url": "https://neetcode.io/problems/clone-graph?list=neetcode150",
@@ -2851,9 +2790,8 @@
     ],
     "hints": [],
     "code_snippets": {
-      "javascript": "/**\n * @param {number[]} gas\n * @param {number[]} cost\n * @return {number}\n */\nvar canCompleteCircuit = function(gas, cost) {\n    \n};",
       "python3": "class Solution:\n    def canCompleteCircuit(self, gas: List[int], cost: List[int]) -> int:\n        ",
-      "typescript": "function canCompleteCircuit(gas: number[], cost: number[]): number {\n    \n};"
+      "golang": "func canCompleteCircuit(gas []int, cost []int) int {\n    \n}"
     },
     "neetcode_video_id": "lJwbPZGo05A",
     "neetcode_url": "https://neetcode.io/problems/gas-station?list=neetcode150",
@@ -2898,9 +2836,8 @@
       "Think about the XOR (^) operator's property."
     ],
     "code_snippets": {
-      "javascript": "/**\n * @param {number[]} nums\n * @return {number}\n */\nvar singleNumber = function(nums) {\n    \n};",
       "python3": "class Solution:\n    def singleNumber(self, nums: List[int]) -> int:\n        ",
-      "typescript": "function singleNumber(nums: number[]): number {\n    \n};"
+      "golang": "func singleNumber(nums []int) int {\n    \n}"
     },
     "neetcode_video_id": "qMPX1AOa83k",
     "neetcode_url": "https://neetcode.io/problems/single-number?list=neetcode150",
@@ -2954,9 +2891,8 @@
       "The interweaving is done using next</b> pointers and we can make use of interweaved structure to get the correct reference nodes for random</b> pointers."
     ],
     "code_snippets": {
-      "javascript": "/**\n * // Definition for a _Node.\n * function _Node(val, next, random) {\n *    this.val = val;\n *    this.next = next;\n *    this.random = random;\n * };\n */\n\n/**\n * @param {_Node} head\n * @return {_Node}\n */\nvar copyRandomList = function(head) {\n    \n};",
       "python3": "\"\"\"\n# Definition for a Node.\nclass Node:\n    def __init__(self, x: int, next: 'Node' = None, random: 'Node' = None):\n        self.val = int(x)\n        self.next = next\n        self.random = random\n\"\"\"\n\nclass Solution:\n    def copyRandomList(self, head: 'Optional[Node]') -> 'Optional[Node]':\n        ",
-      "typescript": "/**\n * Definition for _Node.\n * class _Node {\n *     val: number\n *     next: _Node | null\n *     random: _Node | null\n * \n *     constructor(val?: number, next?: _Node, random?: _Node) {\n *         this.val = (val===undefined ? 0 : val)\n *         this.next = (next===undefined ? null : next)\n *         this.random = (random===undefined ? null : random)\n *     }\n * }\n */\n\n\nfunction copyRandomList(head: _Node | null): _Node | null {\n    \n};"
+      "golang": "/**\n * Definition for a Node.\n * type Node struct {\n *     Val int\n *     Next *Node\n *     Random *Node\n * }\n */\n\nfunc copyRandomList(head *Node) *Node {\n    \n}"
     },
     "neetcode_video_id": "5Y2EiZST97Y",
     "neetcode_url": "https://neetcode.io/problems/copy-linked-list-with-random-pointer?list=neetcode150",
@@ -3005,9 +2941,8 @@
     ],
     "hints": [],
     "code_snippets": {
-      "javascript": "/**\n * @param {string} s\n * @param {string[]} wordDict\n * @return {boolean}\n */\nvar wordBreak = function(s, wordDict) {\n    \n};",
       "python3": "class Solution:\n    def wordBreak(self, s: str, wordDict: List[str]) -> bool:\n        ",
-      "typescript": "function wordBreak(s: string, wordDict: string[]): boolean {\n    \n};"
+      "golang": "func wordBreak(s string, wordDict []string) bool {\n    \n}"
     },
     "neetcode_video_id": "Sx9NNgInc3A",
     "neetcode_url": "https://neetcode.io/problems/word-break?list=neetcode150",
@@ -3057,9 +2992,8 @@
     ],
     "hints": [],
     "code_snippets": {
-      "javascript": "/**\n * Definition for singly-linked list.\n * function ListNode(val) {\n *     this.val = val;\n *     this.next = null;\n * }\n */\n\n/**\n * @param {ListNode} head\n * @return {boolean}\n */\nvar hasCycle = function(head) {\n    \n};",
       "python3": "# Definition for singly-linked list.\n# class ListNode:\n#     def __init__(self, x):\n#         self.val = x\n#         self.next = None\n\nclass Solution:\n    def hasCycle(self, head: Optional[ListNode]) -> bool:\n        ",
-      "typescript": "/**\n * Definition for singly-linked list.\n * class ListNode {\n *     val: number\n *     next: ListNode | null\n *     constructor(val?: number, next?: ListNode | null) {\n *         this.val = (val===undefined ? 0 : val)\n *         this.next = (next===undefined ? null : next)\n *     }\n * }\n */\n\nfunction hasCycle(head: ListNode | null): boolean {\n    \n};"
+      "golang": "/**\n * Definition for singly-linked list.\n * type ListNode struct {\n *     Val int\n *     Next *ListNode\n * }\n */\nfunc hasCycle(head *ListNode) bool {\n    \n}"
     },
     "neetcode_video_id": "gBTe7lFR3vc",
     "neetcode_url": "https://neetcode.io/problems/linked-list-cycle-detection?list=neetcode150",
@@ -3112,9 +3046,8 @@
     ],
     "hints": [],
     "code_snippets": {
-      "javascript": "/**\n * Definition for singly-linked list.\n * function ListNode(val, next) {\n *     this.val = (val===undefined ? 0 : val)\n *     this.next = (next===undefined ? null : next)\n * }\n */\n/**\n * @param {ListNode} head\n * @return {void} Do not return anything, modify head in-place instead.\n */\nvar reorderList = function(head) {\n    \n};",
       "python3": "# Definition for singly-linked list.\n# class ListNode:\n#     def __init__(self, val=0, next=None):\n#         self.val = val\n#         self.next = next\nclass Solution:\n    def reorderList(self, head: Optional[ListNode]) -> None:\n        \"\"\"\n        Do not return anything, modify head in-place instead.\n        \"\"\"\n        ",
-      "typescript": "/**\n * Definition for singly-linked list.\n * class ListNode {\n *     val: number\n *     next: ListNode | null\n *     constructor(val?: number, next?: ListNode | null) {\n *         this.val = (val===undefined ? 0 : val)\n *         this.next = (next===undefined ? null : next)\n *     }\n * }\n */\n\n/**\n Do not return anything, modify head in-place instead.\n */\nfunction reorderList(head: ListNode | null): void {\n    \n};"
+      "golang": "/**\n * Definition for singly-linked list.\n * type ListNode struct {\n *     Val int\n *     Next *ListNode\n * }\n */\nfunc reorderList(head *ListNode)  {\n    \n}"
     },
     "neetcode_video_id": "S5bfdUTrKLM",
     "neetcode_url": "https://neetcode.io/problems/reorder-linked-list?list=neetcode150",
@@ -3150,9 +3083,8 @@
     ],
     "hints": [],
     "code_snippets": {
-      "javascript": "/**\n * @param {number} capacity\n */\nvar LRUCache = function(capacity) {\n    \n};\n\n/** \n * @param {number} key\n * @return {number}\n */\nLRUCache.prototype.get = function(key) {\n    \n};\n\n/** \n * @param {number} key \n * @param {number} value\n * @return {void}\n */\nLRUCache.prototype.put = function(key, value) {\n    \n};\n\n/** \n * Your LRUCache object will be instantiated and called as such:\n * var obj = new LRUCache(capacity)\n * var param_1 = obj.get(key)\n * obj.put(key,value)\n */",
       "python3": "class LRUCache:\n\n    def __init__(self, capacity: int):\n        \n\n    def get(self, key: int) -> int:\n        \n\n    def put(self, key: int, value: int) -> None:\n        \n\n\n# Your LRUCache object will be instantiated and called as such:\n# obj = LRUCache(capacity)\n# param_1 = obj.get(key)\n# obj.put(key,value)",
-      "typescript": "class LRUCache {\n    constructor(capacity: number) {\n        \n    }\n\n    get(key: number): number {\n        \n    }\n\n    put(key: number, value: number): void {\n        \n    }\n}\n\n/**\n * Your LRUCache object will be instantiated and called as such:\n * var obj = new LRUCache(capacity)\n * var param_1 = obj.get(key)\n * obj.put(key,value)\n */"
+      "golang": "type LRUCache struct {\n    \n}\n\n\nfunc Constructor(capacity int) LRUCache {\n    \n}\n\n\nfunc (this *LRUCache) Get(key int) int {\n    \n}\n\n\nfunc (this *LRUCache) Put(key int, value int)  {\n    \n}\n\n\n/**\n * Your LRUCache object will be instantiated and called as such:\n * obj := Constructor(capacity);\n * param_1 := obj.Get(key);\n * obj.Put(key,value);\n */"
     },
     "neetcode_video_id": "7ABFKPK2hD4",
     "neetcode_url": "https://neetcode.io/problems/lru-cache?list=neetcode150",
@@ -3195,9 +3127,8 @@
     ],
     "hints": [],
     "code_snippets": {
-      "javascript": "/**\n * @param {string[]} tokens\n * @return {number}\n */\nvar evalRPN = function(tokens) {\n    \n};",
       "python3": "class Solution:\n    def evalRPN(self, tokens: List[str]) -> int:\n        ",
-      "typescript": "function evalRPN(tokens: string[]): number {\n    \n};"
+      "golang": "func evalRPN(tokens []string) int {\n    \n}"
     },
     "neetcode_video_id": "iu0082c4HDE",
     "neetcode_url": "https://neetcode.io/problems/evaluate-reverse-polish-notation?list=neetcode150",
@@ -3235,9 +3166,8 @@
     ],
     "hints": [],
     "code_snippets": {
-      "javascript": "/**\n * @param {number[]} nums\n * @return {number}\n */\nvar maxProduct = function(nums) {\n    \n};",
       "python3": "class Solution:\n    def maxProduct(self, nums: List[int]) -> int:\n        ",
-      "typescript": "function maxProduct(nums: number[]): number {\n    \n};"
+      "golang": "func maxProduct(nums []int) int {\n    \n}"
     },
     "neetcode_video_id": "lXVy6YWFcRM",
     "neetcode_url": "https://neetcode.io/problems/maximum-product-subarray?list=neetcode150",
@@ -3286,9 +3216,8 @@
       "<ol>\r\n<li>All the elements to the left of inflection point > first element of the array.</li>\r\n<li>All the elements to the right of inflection point < first element of the array.</li>\r\n<ol>"
     ],
     "code_snippets": {
-      "javascript": "/**\n * @param {number[]} nums\n * @return {number}\n */\nvar findMin = function(nums) {\n    \n};",
       "python3": "class Solution:\n    def findMin(self, nums: List[int]) -> int:\n        ",
-      "typescript": "function findMin(nums: number[]): number {\n    \n};"
+      "golang": "func findMin(nums []int) int {\n    \n}"
     },
     "neetcode_video_id": "nIVW4P8b1VA",
     "neetcode_url": "https://neetcode.io/problems/find-minimum-in-rotated-sorted-array?list=neetcode150",
@@ -3323,9 +3252,8 @@
       "Consider each node in the stack having a minimum value. (Credits to @aakarshmadhavan)"
     ],
     "code_snippets": {
-      "javascript": "\nvar MinStack = function() {\n    \n};\n\n/** \n * @param {number} val\n * @return {void}\n */\nMinStack.prototype.push = function(val) {\n    \n};\n\n/**\n * @return {void}\n */\nMinStack.prototype.pop = function() {\n    \n};\n\n/**\n * @return {number}\n */\nMinStack.prototype.top = function() {\n    \n};\n\n/**\n * @return {number}\n */\nMinStack.prototype.getMin = function() {\n    \n};\n\n/** \n * Your MinStack object will be instantiated and called as such:\n * var obj = new MinStack()\n * obj.push(val)\n * obj.pop()\n * var param_3 = obj.top()\n * var param_4 = obj.getMin()\n */",
       "python3": "class MinStack:\n\n    def __init__(self):\n        \n\n    def push(self, val: int) -> None:\n        \n\n    def pop(self) -> None:\n        \n\n    def top(self) -> int:\n        \n\n    def getMin(self) -> int:\n        \n\n\n# Your MinStack object will be instantiated and called as such:\n# obj = MinStack()\n# obj.push(val)\n# obj.pop()\n# param_3 = obj.top()\n# param_4 = obj.getMin()",
-      "typescript": "class MinStack {\n    constructor() {\n        \n    }\n\n    push(val: number): void {\n        \n    }\n\n    pop(): void {\n        \n    }\n\n    top(): number {\n        \n    }\n\n    getMin(): number {\n        \n    }\n}\n\n/**\n * Your MinStack object will be instantiated and called as such:\n * var obj = new MinStack()\n * obj.push(val)\n * obj.pop()\n * var param_3 = obj.top()\n * var param_4 = obj.getMin()\n */"
+      "golang": "type MinStack struct {\n    \n}\n\n\nfunc Constructor() MinStack {\n    \n}\n\n\nfunc (this *MinStack) Push(val int)  {\n    \n}\n\n\nfunc (this *MinStack) Pop()  {\n    \n}\n\n\nfunc (this *MinStack) Top() int {\n    \n}\n\n\nfunc (this *MinStack) GetMin() int {\n    \n}\n\n\n/**\n * Your MinStack object will be instantiated and called as such:\n * obj := Constructor();\n * obj.Push(val);\n * obj.Pop();\n * param_3 := obj.Top();\n * param_4 := obj.GetMin();\n */"
     },
     "neetcode_video_id": "qkLl7nAwDPo",
     "neetcode_url": "https://neetcode.io/problems/minimum-stack?list=neetcode150",
@@ -3371,9 +3299,8 @@
     ],
     "hints": [],
     "code_snippets": {
-      "javascript": "/**\n * @param {number[]} numbers\n * @param {number} target\n * @return {number[]}\n */\nvar twoSum = function(numbers, target) {\n    \n};",
       "python3": "class Solution:\n    def twoSum(self, numbers: List[int], target: int) -> List[int]:\n        ",
-      "typescript": "function twoSum(numbers: number[], target: number): number[] {\n    \n};"
+      "golang": "func twoSum(numbers []int, target int) []int {\n    \n}"
     },
     "neetcode_video_id": "cQ1Oz4ckceM",
     "neetcode_url": "https://neetcode.io/problems/two-integer-sum-ii?list=neetcode150",
@@ -3410,9 +3337,8 @@
     ],
     "hints": [],
     "code_snippets": {
-      "javascript": "/**\n * @param {number} n\n * @return {number}\n */\nvar reverseBits = function(n) {\n    \n};",
       "python3": "class Solution:\n    def reverseBits(self, n: int) -> int:\n        ",
-      "typescript": "function reverseBits(n: number): number {\n    \n};"
+      "golang": "func reverseBits(n int) int {\n    \n}"
     },
     "neetcode_video_id": "UcoN6UjAI64",
     "neetcode_url": "https://neetcode.io/problems/reverse-bits?list=neetcode150",
@@ -3453,9 +3379,8 @@
     ],
     "hints": [],
     "code_snippets": {
-      "javascript": "/**\n * @param {number} n\n * @return {number}\n */\nvar hammingWeight = function(n) {\n    \n};",
       "python3": "class Solution:\n    def hammingWeight(self, n: int) -> int:\n        ",
-      "typescript": "function hammingWeight(n: number): number {\n    \n};"
+      "golang": "func hammingWeight(n int) int {\n    \n}"
     },
     "neetcode_video_id": "5Km3utixwZs",
     "neetcode_url": "https://neetcode.io/problems/number-of-one-bits?list=neetcode150",
@@ -3492,9 +3417,8 @@
     ],
     "hints": [],
     "code_snippets": {
-      "javascript": "/**\n * @param {number[]} nums\n * @return {number}\n */\nvar rob = function(nums) {\n    \n};",
       "python3": "class Solution:\n    def rob(self, nums: List[int]) -> int:\n        ",
-      "typescript": "function rob(nums: number[]): number {\n    \n};"
+      "golang": "func rob(nums []int) int {\n    \n}"
     },
     "neetcode_video_id": "73r3KWiEvyk",
     "neetcode_url": "https://neetcode.io/problems/house-robber?list=neetcode150",
@@ -3547,9 +3471,8 @@
     ],
     "hints": [],
     "code_snippets": {
-      "javascript": "/**\n * Definition for a binary tree node.\n * function TreeNode(val, left, right) {\n *     this.val = (val===undefined ? 0 : val)\n *     this.left = (left===undefined ? null : left)\n *     this.right = (right===undefined ? null : right)\n * }\n */\n/**\n * @param {TreeNode} root\n * @return {number[]}\n */\nvar rightSideView = function(root) {\n    \n};",
       "python3": "# Definition for a binary tree node.\n# class TreeNode:\n#     def __init__(self, val=0, left=None, right=None):\n#         self.val = val\n#         self.left = left\n#         self.right = right\nclass Solution:\n    def rightSideView(self, root: Optional[TreeNode]) -> List[int]:\n        ",
-      "typescript": "/**\n * Definition for a binary tree node.\n * class TreeNode {\n *     val: number\n *     left: TreeNode | null\n *     right: TreeNode | null\n *     constructor(val?: number, left?: TreeNode | null, right?: TreeNode | null) {\n *         this.val = (val===undefined ? 0 : val)\n *         this.left = (left===undefined ? null : left)\n *         this.right = (right===undefined ? null : right)\n *     }\n * }\n */\n\nfunction rightSideView(root: TreeNode | null): number[] {\n    \n};"
+      "golang": "/**\n * Definition for a binary tree node.\n * type TreeNode struct {\n *     Val int\n *     Left *TreeNode\n *     Right *TreeNode\n * }\n */\nfunc rightSideView(root *TreeNode) []int {\n    \n}"
     },
     "neetcode_video_id": "d4zLyf32e3I",
     "neetcode_url": "https://neetcode.io/problems/binary-tree-right-side-view?list=neetcode150",
@@ -3591,9 +3514,8 @@
     ],
     "hints": [],
     "code_snippets": {
-      "javascript": "/**\n * @param {character[][]} grid\n * @return {number}\n */\nvar numIslands = function(grid) {\n    \n};",
       "python3": "class Solution:\n    def numIslands(self, grid: List[List[str]]) -> int:\n        ",
-      "typescript": "function numIslands(grid: string[][]): number {\n    \n};"
+      "golang": "func numIslands(grid [][]byte) int {\n    \n}"
     },
     "neetcode_video_id": "pV2kpPD66nE",
     "neetcode_url": "https://neetcode.io/problems/count-number-of-islands?list=neetcode150",
@@ -3630,9 +3552,8 @@
     ],
     "hints": [],
     "code_snippets": {
-      "javascript": "/**\n * @param {number} n\n * @return {boolean}\n */\nvar isHappy = function(n) {\n    \n};",
       "python3": "class Solution:\n    def isHappy(self, n: int) -> bool:\n        ",
-      "typescript": "function isHappy(n: number): boolean {\n    \n};"
+      "golang": "func isHappy(n int) bool {\n    \n}"
     },
     "neetcode_video_id": "ljz85bxOYJ0",
     "neetcode_url": "https://neetcode.io/problems/non-cyclical-number?list=neetcode150",
@@ -3680,9 +3601,8 @@
     ],
     "hints": [],
     "code_snippets": {
-      "javascript": "/**\n * Definition for singly-linked list.\n * function ListNode(val, next) {\n *     this.val = (val===undefined ? 0 : val)\n *     this.next = (next===undefined ? null : next)\n * }\n */\n/**\n * @param {ListNode} head\n * @return {ListNode}\n */\nvar reverseList = function(head) {\n    \n};",
       "python3": "# Definition for singly-linked list.\n# class ListNode:\n#     def __init__(self, val=0, next=None):\n#         self.val = val\n#         self.next = next\nclass Solution:\n    def reverseList(self, head: Optional[ListNode]) -> Optional[ListNode]:\n        ",
-      "typescript": "/**\n * Definition for singly-linked list.\n * class ListNode {\n *     val: number\n *     next: ListNode | null\n *     constructor(val?: number, next?: ListNode | null) {\n *         this.val = (val===undefined ? 0 : val)\n *         this.next = (next===undefined ? null : next)\n *     }\n * }\n */\n\nfunction reverseList(head: ListNode | null): ListNode | null {\n    \n};"
+      "golang": "/**\n * Definition for singly-linked list.\n * type ListNode struct {\n *     Val int\n *     Next *ListNode\n * }\n */\nfunc reverseList(head *ListNode) *ListNode {\n    \n}"
     },
     "neetcode_video_id": "G0_I-ZF0S38",
     "neetcode_url": "https://neetcode.io/problems/reverse-a-linked-list?list=neetcode150",
@@ -3728,9 +3648,8 @@
       "Topological sort could also be done via <a href=\"http://en.wikipedia.org/wiki/Topological_sorting#Algorithms\" target=\"_blank\">BFS</a>."
     ],
     "code_snippets": {
-      "javascript": "/**\n * @param {number} numCourses\n * @param {number[][]} prerequisites\n * @return {boolean}\n */\nvar canFinish = function(numCourses, prerequisites) {\n    \n};",
       "python3": "class Solution:\n    def canFinish(self, numCourses: int, prerequisites: List[List[int]]) -> bool:\n        ",
-      "typescript": "function canFinish(numCourses: number, prerequisites: number[][]): boolean {\n    \n};"
+      "golang": "func canFinish(numCourses int, prerequisites [][]int) bool {\n    \n}"
     },
     "neetcode_video_id": "EgI5nU9etnU",
     "neetcode_url": "https://neetcode.io/problems/course-schedule?list=neetcode150",
@@ -3765,9 +3684,8 @@
     ],
     "hints": [],
     "code_snippets": {
-      "javascript": "\nvar Trie = function() {\n    \n};\n\n/** \n * @param {string} word\n * @return {void}\n */\nTrie.prototype.insert = function(word) {\n    \n};\n\n/** \n * @param {string} word\n * @return {boolean}\n */\nTrie.prototype.search = function(word) {\n    \n};\n\n/** \n * @param {string} prefix\n * @return {boolean}\n */\nTrie.prototype.startsWith = function(prefix) {\n    \n};\n\n/** \n * Your Trie object will be instantiated and called as such:\n * var obj = new Trie()\n * obj.insert(word)\n * var param_2 = obj.search(word)\n * var param_3 = obj.startsWith(prefix)\n */",
       "python3": "class Trie:\n\n    def __init__(self):\n        \n\n    def insert(self, word: str) -> None:\n        \n\n    def search(self, word: str) -> bool:\n        \n\n    def startsWith(self, prefix: str) -> bool:\n        \n\n\n# Your Trie object will be instantiated and called as such:\n# obj = Trie()\n# obj.insert(word)\n# param_2 = obj.search(word)\n# param_3 = obj.startsWith(prefix)",
-      "typescript": "class Trie {\n    constructor() {\n        \n    }\n\n    insert(word: string): void {\n        \n    }\n\n    search(word: string): boolean {\n        \n    }\n\n    startsWith(prefix: string): boolean {\n        \n    }\n}\n\n/**\n * Your Trie object will be instantiated and called as such:\n * var obj = new Trie()\n * obj.insert(word)\n * var param_2 = obj.search(word)\n * var param_3 = obj.startsWith(prefix)\n */"
+      "golang": "type Trie struct {\n    \n}\n\n\nfunc Constructor() Trie {\n    \n}\n\n\nfunc (this *Trie) Insert(word string)  {\n    \n}\n\n\nfunc (this *Trie) Search(word string) bool {\n    \n}\n\n\nfunc (this *Trie) StartsWith(prefix string) bool {\n    \n}\n\n\n/**\n * Your Trie object will be instantiated and called as such:\n * obj := Constructor();\n * obj.Insert(word);\n * param_2 := obj.Search(word);\n * param_3 := obj.StartsWith(prefix);\n */"
     },
     "neetcode_video_id": "oobqoCJlHA0",
     "neetcode_url": "https://neetcode.io/problems/implement-prefix-tree?list=neetcode150",
@@ -3819,9 +3737,8 @@
       "Topological sort could also be done via <a href=\"http://en.wikipedia.org/wiki/Topological_sorting#Algorithms\" target=\"_blank\">BFS</a>."
     ],
     "code_snippets": {
-      "javascript": "/**\n * @param {number} numCourses\n * @param {number[][]} prerequisites\n * @return {number[]}\n */\nvar findOrder = function(numCourses, prerequisites) {\n    \n};",
       "python3": "class Solution:\n    def findOrder(self, numCourses: int, prerequisites: List[List[int]]) -> List[int]:\n        ",
-      "typescript": "function findOrder(numCourses: number, prerequisites: number[][]): number[] {\n    \n};"
+      "golang": "func findOrder(numCourses int, prerequisites [][]int) []int {\n    \n}"
     },
     "neetcode_video_id": "Akt3glAwyfY",
     "neetcode_url": "https://neetcode.io/problems/course-schedule-ii?list=neetcode150",
@@ -3860,9 +3777,8 @@
       "You should be familiar with how a Trie works. If not, please work on this problem: <a href=\"https://leetcode.com/problems/implement-trie-prefix-tree/\">Implement Trie (Prefix Tree)</a> first."
     ],
     "code_snippets": {
-      "javascript": "\nvar WordDictionary = function() {\n    \n};\n\n/** \n * @param {string} word\n * @return {void}\n */\nWordDictionary.prototype.addWord = function(word) {\n    \n};\n\n/** \n * @param {string} word\n * @return {boolean}\n */\nWordDictionary.prototype.search = function(word) {\n    \n};\n\n/** \n * Your WordDictionary object will be instantiated and called as such:\n * var obj = new WordDictionary()\n * obj.addWord(word)\n * var param_2 = obj.search(word)\n */",
       "python3": "class WordDictionary:\n\n    def __init__(self):\n        \n\n    def addWord(self, word: str) -> None:\n        \n\n    def search(self, word: str) -> bool:\n        \n\n\n# Your WordDictionary object will be instantiated and called as such:\n# obj = WordDictionary()\n# obj.addWord(word)\n# param_2 = obj.search(word)",
-      "typescript": "class WordDictionary {\n    constructor() {\n        \n    }\n\n    addWord(word: string): void {\n        \n    }\n\n    search(word: string): boolean {\n        \n    }\n}\n\n/**\n * Your WordDictionary object will be instantiated and called as such:\n * var obj = new WordDictionary()\n * obj.addWord(word)\n * var param_2 = obj.search(word)\n */"
+      "golang": "type WordDictionary struct {\n    \n}\n\n\nfunc Constructor() WordDictionary {\n    \n}\n\n\nfunc (this *WordDictionary) AddWord(word string)  {\n    \n}\n\n\nfunc (this *WordDictionary) Search(word string) bool {\n    \n}\n\n\n/**\n * Your WordDictionary object will be instantiated and called as such:\n * obj := Constructor();\n * obj.AddWord(word);\n * param_2 := obj.Search(word);\n */"
     },
     "neetcode_video_id": "BTf05gs_8iU",
     "neetcode_url": "https://neetcode.io/problems/design-word-search-data-structure?list=neetcode150",
@@ -3915,9 +3831,8 @@
       "If the current candidate does not exist in all words&#39; prefix, you could stop backtracking immediately. What kind of data structure could answer such query efficiently? Does a hash table work? Why or why not? How about a Trie? If you would like to learn how to implement a basic trie, please work on this problem: <a href=\"https://leetcode.com/problems/implement-trie-prefix-tree/\">Implement Trie (Prefix Tree)</a> first."
     ],
     "code_snippets": {
-      "javascript": "/**\n * @param {character[][]} board\n * @param {string[]} words\n * @return {string[]}\n */\nvar findWords = function(board, words) {\n    \n};",
       "python3": "class Solution:\n    def findWords(self, board: List[List[str]], words: List[str]) -> List[str]:\n        ",
-      "typescript": "function findWords(board: string[][], words: string[]): string[] {\n    \n};"
+      "golang": "func findWords(board [][]byte, words []string) []string {\n    \n}"
     },
     "neetcode_video_id": "asbcE9mZz_U",
     "neetcode_url": "https://neetcode.io/problems/search-for-word-ii?list=neetcode150",
@@ -3961,9 +3876,8 @@
       "Since House[1] and House[n] are adjacent, they cannot be robbed together. Therefore, the problem becomes to rob either House[1]-House[n-1] or House[2]-House[n], depending on which choice offers more money. Now the problem has degenerated to the <a href =\"https://leetcode.com/problems/house-robber/description/\">House Robber</a>, which is already been solved."
     ],
     "code_snippets": {
-      "javascript": "/**\n * @param {number[]} nums\n * @return {number}\n */\nvar rob = function(nums) {\n    \n};",
       "python3": "class Solution:\n    def rob(self, nums: List[int]) -> int:\n        ",
-      "typescript": "function rob(nums: number[]): number {\n    \n};"
+      "golang": "func rob(nums []int) int {\n    \n}"
     },
     "neetcode_video_id": "rWAJCfYYOvM",
     "neetcode_url": "https://neetcode.io/problems/house-robber-ii?list=neetcode150",
@@ -4003,9 +3917,8 @@
     ],
     "hints": [],
     "code_snippets": {
-      "javascript": "/**\n * @param {number[]} nums\n * @param {number} k\n * @return {number}\n */\nvar findKthLargest = function(nums, k) {\n    \n};",
       "python3": "class Solution:\n    def findKthLargest(self, nums: List[int], k: int) -> int:\n        ",
-      "typescript": "function findKthLargest(nums: number[], k: number): number {\n    \n};"
+      "golang": "func findKthLargest(nums []int, k int) int {\n    \n}"
     },
     "neetcode_video_id": "XEmy13g1Qxc",
     "neetcode_url": "https://neetcode.io/problems/kth-largest-element-in-an-array?list=neetcode150",
@@ -4048,9 +3961,8 @@
     ],
     "hints": [],
     "code_snippets": {
-      "javascript": "/**\n * @param {number[]} nums\n * @return {boolean}\n */\nvar containsDuplicate = function(nums) {\n    \n};",
       "python3": "class Solution:\n    def containsDuplicate(self, nums: List[int]) -> bool:\n        ",
-      "typescript": "function containsDuplicate(nums: number[]): boolean {\n    \n};"
+      "golang": "func containsDuplicate(nums []int) bool {\n    \n}"
     },
     "neetcode_video_id": "3OamzN90kPg",
     "neetcode_url": "https://neetcode.io/problems/duplicate-integer?list=neetcode150",
@@ -4100,9 +4012,8 @@
     ],
     "hints": [],
     "code_snippets": {
-      "javascript": "/**\n * Definition for a binary tree node.\n * function TreeNode(val, left, right) {\n *     this.val = (val===undefined ? 0 : val)\n *     this.left = (left===undefined ? null : left)\n *     this.right = (right===undefined ? null : right)\n * }\n */\n/**\n * @param {TreeNode} root\n * @return {TreeNode}\n */\nvar invertTree = function(root) {\n    \n};",
       "python3": "# Definition for a binary tree node.\n# class TreeNode:\n#     def __init__(self, val=0, left=None, right=None):\n#         self.val = val\n#         self.left = left\n#         self.right = right\nclass Solution:\n    def invertTree(self, root: Optional[TreeNode]) -> Optional[TreeNode]:\n        ",
-      "typescript": "/**\n * Definition for a binary tree node.\n * class TreeNode {\n *     val: number\n *     left: TreeNode | null\n *     right: TreeNode | null\n *     constructor(val?: number, left?: TreeNode | null, right?: TreeNode | null) {\n *         this.val = (val===undefined ? 0 : val)\n *         this.left = (left===undefined ? null : left)\n *         this.right = (right===undefined ? null : right)\n *     }\n * }\n */\n\nfunction invertTree(root: TreeNode | null): TreeNode | null {\n    \n};"
+      "golang": "/**\n * Definition for a binary tree node.\n * type TreeNode struct {\n *     Val int\n *     Left *TreeNode\n *     Right *TreeNode\n * }\n */\nfunc invertTree(root *TreeNode) *TreeNode {\n    \n}"
     },
     "neetcode_video_id": "OnSn2XEQ4MY",
     "neetcode_url": "https://neetcode.io/problems/invert-a-binary-tree?list=neetcode150",
@@ -4151,9 +4062,8 @@
       "The optimal runtime complexity is O(height of BST)."
     ],
     "code_snippets": {
-      "javascript": "/**\n * Definition for a binary tree node.\n * function TreeNode(val, left, right) {\n *     this.val = (val===undefined ? 0 : val)\n *     this.left = (left===undefined ? null : left)\n *     this.right = (right===undefined ? null : right)\n * }\n */\n/**\n * @param {TreeNode} root\n * @param {number} k\n * @return {number}\n */\nvar kthSmallest = function(root, k) {\n    \n};",
       "python3": "# Definition for a binary tree node.\n# class TreeNode:\n#     def __init__(self, val=0, left=None, right=None):\n#         self.val = val\n#         self.left = left\n#         self.right = right\nclass Solution:\n    def kthSmallest(self, root: Optional[TreeNode], k: int) -> int:\n        ",
-      "typescript": "/**\n * Definition for a binary tree node.\n * class TreeNode {\n *     val: number\n *     left: TreeNode | null\n *     right: TreeNode | null\n *     constructor(val?: number, left?: TreeNode | null, right?: TreeNode | null) {\n *         this.val = (val===undefined ? 0 : val)\n *         this.left = (left===undefined ? null : left)\n *         this.right = (right===undefined ? null : right)\n *     }\n * }\n */\n\nfunction kthSmallest(root: TreeNode | null, k: number): number {\n    \n};"
+      "golang": "/**\n * Definition for a binary tree node.\n * type TreeNode struct {\n *     Val int\n *     Left *TreeNode\n *     Right *TreeNode\n * }\n */\nfunc kthSmallest(root *TreeNode, k int) int {\n    \n}"
     },
     "neetcode_video_id": "5LUXSvjmGCw",
     "neetcode_url": "https://neetcode.io/problems/kth-smallest-integer-in-bst?list=neetcode150",
@@ -4206,9 +4116,8 @@
     ],
     "hints": [],
     "code_snippets": {
-      "javascript": "/**\n * Definition for a binary tree node.\n * function TreeNode(val) {\n *     this.val = val;\n *     this.left = this.right = null;\n * }\n */\n\n/**\n * @param {TreeNode} root\n * @param {TreeNode} p\n * @param {TreeNode} q\n * @return {TreeNode}\n */\nvar lowestCommonAncestor = function(root, p, q) {\n    \n};",
       "python3": "# Definition for a binary tree node.\n# class TreeNode:\n#     def __init__(self, x):\n#         self.val = x\n#         self.left = None\n#         self.right = None\n\nclass Solution:\n    def lowestCommonAncestor(self, root: 'TreeNode', p: 'TreeNode', q: 'TreeNode') -> 'TreeNode':\n        ",
-      "typescript": "/**\n * Definition for a binary tree node.\n * class TreeNode {\n *     val: number\n *     left: TreeNode | null\n *     right: TreeNode | null\n *     constructor(val?: number, left?: TreeNode | null, right?: TreeNode | null) {\n *         this.val = (val===undefined ? 0 : val)\n *         this.left = (left===undefined ? null : left)\n *         this.right = (right===undefined ? null : right)\n *     }\n * }\n */\n\nfunction lowestCommonAncestor(root: TreeNode | null, p: TreeNode | null, q: TreeNode | null): TreeNode | null {\n\t\n};"
+      "golang": "/**\n * Definition for a binary tree node.\n * type TreeNode struct {\n *     Val   int\n *     Left  *TreeNode\n *     Right *TreeNode\n * }\n */\n\nfunc lowestCommonAncestor(root, p, q *TreeNode) *TreeNode {\n\t\n}"
     },
     "neetcode_video_id": "gs2LMfuOR9k",
     "neetcode_url": "https://neetcode.io/problems/lowest-common-ancestor-in-binary-search-tree?list=neetcode150",
@@ -4249,9 +4158,8 @@
       "Can you minimize additional space usage by reusing memory or modifying the input array to store intermediate results?"
     ],
     "code_snippets": {
-      "javascript": "/**\n * @param {number[]} nums\n * @return {number[]}\n */\nvar productExceptSelf = function(nums) {\n    \n};",
       "python3": "class Solution:\n    def productExceptSelf(self, nums: List[int]) -> List[int]:\n        ",
-      "typescript": "function productExceptSelf(nums: number[]): number[] {\n    \n};"
+      "golang": "func productExceptSelf(nums []int) []int {\n    \n}"
     },
     "neetcode_video_id": "bNvIQI2wAjk",
     "neetcode_url": "https://neetcode.io/problems/products-of-array-discluding-self?list=neetcode150",
@@ -4296,9 +4204,8 @@
       "Remove redundant elements and the queue should store only elements that need to be considered."
     ],
     "code_snippets": {
-      "javascript": "/**\n * @param {number[]} nums\n * @param {number} k\n * @return {number[]}\n */\nvar maxSlidingWindow = function(nums, k) {\n    \n};",
       "python3": "class Solution:\n    def maxSlidingWindow(self, nums: List[int], k: int) -> List[int]:\n        ",
-      "typescript": "function maxSlidingWindow(nums: number[], k: number): number[] {\n    \n};"
+      "golang": "func maxSlidingWindow(nums []int, k int) []int {\n    \n}"
     },
     "neetcode_video_id": "DfljaUwZsOk",
     "neetcode_url": "https://neetcode.io/problems/sliding-window-maximum?list=neetcode150",
@@ -4336,9 +4243,8 @@
     ],
     "hints": [],
     "code_snippets": {
-      "javascript": "/**\n * @param {string} s\n * @param {string} t\n * @return {boolean}\n */\nvar isAnagram = function(s, t) {\n    \n};",
       "python3": "class Solution:\n    def isAnagram(self, s: str, t: str) -> bool:\n        ",
-      "typescript": "function isAnagram(s: string, t: string): boolean {\n    \n};"
+      "golang": "func isAnagram(s string, t string) bool {\n    \n}"
     },
     "neetcode_video_id": "9UtInBqnCgA",
     "neetcode_url": "https://neetcode.io/problems/is-anagram?list=neetcode150",
@@ -4463,9 +4369,8 @@
     ],
     "hints": [],
     "code_snippets": {
-      "javascript": "/**\n * @param {number[]} nums\n * @return {number}\n */\nvar missingNumber = function(nums) {\n    \n};",
       "python3": "class Solution:\n    def missingNumber(self, nums: List[int]) -> int:\n        ",
-      "typescript": "function missingNumber(nums: number[]): number {\n    \n};"
+      "golang": "func missingNumber(nums []int) int {\n    \n}"
     },
     "neetcode_video_id": "WnPLSRLSANE",
     "neetcode_url": "https://neetcode.io/problems/missing-number?list=neetcode150",
@@ -4580,9 +4485,8 @@
     ],
     "hints": [],
     "code_snippets": {
-      "javascript": "/**\n * @param {number[]} nums\n * @return {number}\n */\nvar findDuplicate = function(nums) {\n    \n};",
       "python3": "class Solution:\n    def findDuplicate(self, nums: List[int]) -> int:\n        ",
-      "typescript": "function findDuplicate(nums: number[]): number {\n    \n};"
+      "golang": "func findDuplicate(nums []int) int {\n    \n}"
     },
     "neetcode_video_id": "wjYnzkAhcNk",
     "neetcode_url": "https://neetcode.io/problems/find-duplicate-integer?list=neetcode150",
@@ -4618,9 +4522,8 @@
     ],
     "hints": [],
     "code_snippets": {
-      "javascript": "\nvar MedianFinder = function() {\n    \n};\n\n/** \n * @param {number} num\n * @return {void}\n */\nMedianFinder.prototype.addNum = function(num) {\n    \n};\n\n/**\n * @return {number}\n */\nMedianFinder.prototype.findMedian = function() {\n    \n};\n\n/** \n * Your MedianFinder object will be instantiated and called as such:\n * var obj = new MedianFinder()\n * obj.addNum(num)\n * var param_2 = obj.findMedian()\n */",
       "python3": "class MedianFinder:\n\n    def __init__(self):\n        \n\n    def addNum(self, num: int) -> None:\n        \n\n    def findMedian(self) -> float:\n        \n\n\n# Your MedianFinder object will be instantiated and called as such:\n# obj = MedianFinder()\n# obj.addNum(num)\n# param_2 = obj.findMedian()",
-      "typescript": "class MedianFinder {\n    constructor() {\n        \n    }\n\n    addNum(num: number): void {\n        \n    }\n\n    findMedian(): number {\n        \n    }\n}\n\n/**\n * Your MedianFinder object will be instantiated and called as such:\n * var obj = new MedianFinder()\n * obj.addNum(num)\n * var param_2 = obj.findMedian()\n */"
+      "golang": "type MedianFinder struct {\n    \n}\n\n\nfunc Constructor() MedianFinder {\n    \n}\n\n\nfunc (this *MedianFinder) AddNum(num int)  {\n    \n}\n\n\nfunc (this *MedianFinder) FindMedian() float64 {\n    \n}\n\n\n/**\n * Your MedianFinder object will be instantiated and called as such:\n * obj := Constructor();\n * obj.AddNum(num);\n * param_2 := obj.FindMedian();\n */"
     },
     "neetcode_video_id": "itmhHWaHupI",
     "neetcode_url": "https://neetcode.io/problems/find-median-in-a-data-stream?list=neetcode150",
@@ -4665,9 +4568,8 @@
     ],
     "hints": [],
     "code_snippets": {
-      "javascript": "/**\n * Definition for a binary tree node.\n * function TreeNode(val) {\n *     this.val = val;\n *     this.left = this.right = null;\n * }\n */\n\n/**\n * Encodes a tree to a single string.\n *\n * @param {TreeNode} root\n * @return {string}\n */\nvar serialize = function(root) {\n    \n};\n\n/**\n * Decodes your encoded data to tree.\n *\n * @param {string} data\n * @return {TreeNode}\n */\nvar deserialize = function(data) {\n    \n};\n\n/**\n * Your functions will be called as such:\n * deserialize(serialize(root));\n */",
       "python3": "# Definition for a binary tree node.\n# class TreeNode(object):\n#     def __init__(self, x):\n#         self.val = x\n#         self.left = None\n#         self.right = None\n\nclass Codec:\n\n    def serialize(self, root):\n        \"\"\"Encodes a tree to a single string.\n        \n        :type root: TreeNode\n        :rtype: str\n        \"\"\"\n        \n\n    def deserialize(self, data):\n        \"\"\"Decodes your encoded data to tree.\n        \n        :type data: str\n        :rtype: TreeNode\n        \"\"\"\n        \n\n# Your Codec object will be instantiated and called as such:\n# ser = Codec()\n# deser = Codec()\n# ans = deser.deserialize(ser.serialize(root))",
-      "typescript": "/**\n * Definition for a binary tree node.\n * class TreeNode {\n *     val: number\n *     left: TreeNode | null\n *     right: TreeNode | null\n *     constructor(val?: number, left?: TreeNode | null, right?: TreeNode | null) {\n *         this.val = (val===undefined ? 0 : val)\n *         this.left = (left===undefined ? null : left)\n *         this.right = (right===undefined ? null : right)\n *     }\n * }\n */\n\n/*\n * Encodes a tree to a single string.\n */\nfunction serialize(root: TreeNode | null): string {\n\n};\n\n/*\n * Decodes your encoded data to tree.\n */\nfunction deserialize(data: string): TreeNode | null {\n\n};\n\n\n/**\n * Your functions will be called as such:\n * deserialize(serialize(root));\n */"
+      "golang": "/**\n * Definition for a binary tree node.\n * type TreeNode struct {\n *     Val int\n *     Left *TreeNode\n *     Right *TreeNode\n * }\n */\n\ntype Codec struct {\n    \n}\n\nfunc Constructor() Codec {\n    \n}\n\n// Serializes a tree to a single string.\nfunc (this *Codec) serialize(root *TreeNode) string {\n    \n}\n\n// Deserializes your encoded data to tree.\nfunc (this *Codec) deserialize(data string) *TreeNode {    \n    \n}\n\n\n/**\n * Your Codec object will be instantiated and called as such:\n * ser := Constructor();\n * deser := Constructor();\n * data := ser.serialize(root);\n * ans := deser.deserialize(data);\n */"
     },
     "neetcode_video_id": "u4JAi2JJhI8",
     "neetcode_url": "https://neetcode.io/problems/serialize-and-deserialize-binary-tree?list=neetcode150",
@@ -4710,9 +4612,8 @@
     ],
     "hints": [],
     "code_snippets": {
-      "javascript": "/**\n * @param {number[]} nums\n * @return {number}\n */\nvar lengthOfLIS = function(nums) {\n    \n};",
       "python3": "class Solution:\n    def lengthOfLIS(self, nums: List[int]) -> int:\n        ",
-      "typescript": "function lengthOfLIS(nums: number[]): number {\n    \n};"
+      "golang": "func lengthOfLIS(nums []int) int {\n    \n}"
     },
     "neetcode_video_id": "cjWnW0hdF1Y",
     "neetcode_url": "https://neetcode.io/problems/longest-increasing-subsequence?list=neetcode150",
@@ -4749,9 +4650,8 @@
     ],
     "hints": [],
     "code_snippets": {
-      "javascript": "/**\n * @param {number[]} prices\n * @return {number}\n */\nvar maxProfit = function(prices) {\n    \n};",
       "python3": "class Solution:\n    def maxProfit(self, prices: List[int]) -> int:\n        ",
-      "typescript": "function maxProfit(prices: number[]): number {\n    \n};"
+      "golang": "func maxProfit(prices []int) int {\n    \n}"
     },
     "neetcode_video_id": "I7j0F7AHpb8",
     "neetcode_url": "https://neetcode.io/problems/buy-and-sell-crypto-with-cooldown?list=neetcode150",
@@ -4789,9 +4689,8 @@
     ],
     "hints": [],
     "code_snippets": {
-      "javascript": "/**\n * @param {number[]} nums\n * @return {number}\n */\nvar maxCoins = function(nums) {\n    \n};",
       "python3": "class Solution:\n    def maxCoins(self, nums: List[int]) -> int:\n        ",
-      "typescript": "function maxCoins(nums: number[]): number {\n    \n};"
+      "golang": "func maxCoins(nums []int) int {\n    \n}"
     },
     "neetcode_video_id": "VFskby7lUbw",
     "neetcode_url": "https://neetcode.io/problems/burst-balloons?list=neetcode150",
@@ -4835,9 +4734,8 @@
     ],
     "hints": [],
     "code_snippets": {
-      "javascript": "/**\n * @param {number[]} coins\n * @param {number} amount\n * @return {number}\n */\nvar coinChange = function(coins, amount) {\n    \n};",
       "python3": "class Solution:\n    def coinChange(self, coins: List[int], amount: int) -> int:\n        ",
-      "typescript": "function coinChange(coins: number[], amount: number): number {\n    \n};"
+      "golang": "func coinChange(coins []int, amount int) int {\n    \n}"
     },
     "neetcode_video_id": "H9bfqozjoqs",
     "neetcode_url": "https://neetcode.io/problems/coin-change?list=neetcode150",
@@ -4916,9 +4814,8 @@
     ],
     "hints": [],
     "code_snippets": {
-      "javascript": "/**\n * @param {number[][]} matrix\n * @return {number}\n */\nvar longestIncreasingPath = function(matrix) {\n    \n};",
       "python3": "class Solution:\n    def longestIncreasingPath(self, matrix: List[List[int]]) -> int:\n        ",
-      "typescript": "function longestIncreasingPath(matrix: number[][]): number {\n    \n};"
+      "golang": "func longestIncreasingPath(matrix [][]int) int {\n    \n}"
     },
     "neetcode_video_id": "wCc_nd-GiEc",
     "neetcode_url": "https://neetcode.io/problems/longest-increasing-path-in-matrix?list=neetcode150",
@@ -4964,9 +4861,8 @@
     ],
     "hints": [],
     "code_snippets": {
-      "javascript": "/**\n * @param {string[][]} tickets\n * @return {string[]}\n */\nvar findItinerary = function(tickets) {\n    \n};",
       "python3": "class Solution:\n    def findItinerary(self, tickets: List[List[str]]) -> List[str]:\n        ",
-      "typescript": "function findItinerary(tickets: string[][]): string[] {\n    \n};"
+      "golang": "func findItinerary(tickets [][]string) []string {\n    \n}"
     },
     "neetcode_video_id": "ZyB_gQ8vqGA",
     "neetcode_url": "https://neetcode.io/problems/reconstruct-flight-path?list=neetcode150",
@@ -5006,9 +4902,8 @@
       "Or does the odd/even status of the number help you in calculating the number of 1s?"
     ],
     "code_snippets": {
-      "javascript": "/**\n * @param {number} n\n * @return {number[]}\n */\nvar countBits = function(n) {\n    \n};",
       "python3": "class Solution:\n    def countBits(self, n: int) -> List[int]:\n        ",
-      "typescript": "function countBits(n: number): number[] {\n    \n};"
+      "golang": "func countBits(n int) []int {\n    \n}"
     },
     "neetcode_video_id": "RyBM56RIWrM",
     "neetcode_url": "https://neetcode.io/problems/counting-bits?list=neetcode150",
@@ -5053,9 +4948,8 @@
     ],
     "hints": [],
     "code_snippets": {
-      "javascript": "/**\n * @param {number[]} nums\n * @param {number} k\n * @return {number[]}\n */\nvar topKFrequent = function(nums, k) {\n    \n};",
       "python3": "class Solution:\n    def topKFrequent(self, nums: List[int], k: int) -> List[int]:\n        ",
-      "typescript": "function topKFrequent(nums: number[], k: number): number[] {\n    \n};"
+      "golang": "func topKFrequent(nums []int, k int) []int {\n    \n}"
     },
     "neetcode_video_id": "YPTqKIgVk-k",
     "neetcode_url": "https://neetcode.io/problems/top-k-elements-in-list?list=neetcode150",
@@ -5092,9 +4986,8 @@
     ],
     "hints": [],
     "code_snippets": {
-      "javascript": "\nvar Twitter = function() {\n    \n};\n\n/** \n * @param {number} userId \n * @param {number} tweetId\n * @return {void}\n */\nTwitter.prototype.postTweet = function(userId, tweetId) {\n    \n};\n\n/** \n * @param {number} userId\n * @return {number[]}\n */\nTwitter.prototype.getNewsFeed = function(userId) {\n    \n};\n\n/** \n * @param {number} followerId \n * @param {number} followeeId\n * @return {void}\n */\nTwitter.prototype.follow = function(followerId, followeeId) {\n    \n};\n\n/** \n * @param {number} followerId \n * @param {number} followeeId\n * @return {void}\n */\nTwitter.prototype.unfollow = function(followerId, followeeId) {\n    \n};\n\n/** \n * Your Twitter object will be instantiated and called as such:\n * var obj = new Twitter()\n * obj.postTweet(userId,tweetId)\n * var param_2 = obj.getNewsFeed(userId)\n * obj.follow(followerId,followeeId)\n * obj.unfollow(followerId,followeeId)\n */",
       "python3": "class Twitter:\n\n    def __init__(self):\n        \n\n    def postTweet(self, userId: int, tweetId: int) -> None:\n        \n\n    def getNewsFeed(self, userId: int) -> List[int]:\n        \n\n    def follow(self, followerId: int, followeeId: int) -> None:\n        \n\n    def unfollow(self, followerId: int, followeeId: int) -> None:\n        \n\n\n# Your Twitter object will be instantiated and called as such:\n# obj = Twitter()\n# obj.postTweet(userId,tweetId)\n# param_2 = obj.getNewsFeed(userId)\n# obj.follow(followerId,followeeId)\n# obj.unfollow(followerId,followeeId)",
-      "typescript": "class Twitter {\n    constructor() {\n        \n    }\n\n    postTweet(userId: number, tweetId: number): void {\n        \n    }\n\n    getNewsFeed(userId: number): number[] {\n        \n    }\n\n    follow(followerId: number, followeeId: number): void {\n        \n    }\n\n    unfollow(followerId: number, followeeId: number): void {\n        \n    }\n}\n\n/**\n * Your Twitter object will be instantiated and called as such:\n * var obj = new Twitter()\n * obj.postTweet(userId,tweetId)\n * var param_2 = obj.getNewsFeed(userId)\n * obj.follow(followerId,followeeId)\n * obj.unfollow(followerId,followeeId)\n */"
+      "golang": "type Twitter struct {\n    \n}\n\n\nfunc Constructor() Twitter {\n    \n}\n\n\nfunc (this *Twitter) PostTweet(userId int, tweetId int)  {\n    \n}\n\n\nfunc (this *Twitter) GetNewsFeed(userId int) []int {\n    \n}\n\n\nfunc (this *Twitter) Follow(followerId int, followeeId int)  {\n    \n}\n\n\nfunc (this *Twitter) Unfollow(followerId int, followeeId int)  {\n    \n}\n\n\n/**\n * Your Twitter object will be instantiated and called as such:\n * obj := Constructor();\n * obj.PostTweet(userId,tweetId);\n * param_2 := obj.GetNewsFeed(userId);\n * obj.Follow(followerId,followeeId);\n * obj.Unfollow(followerId,followeeId);\n */"
     },
     "neetcode_video_id": "pNichitDD2E",
     "neetcode_url": "https://neetcode.io/problems/design-twitter-feed?list=neetcode150",
@@ -5130,9 +5023,8 @@
     ],
     "hints": [],
     "code_snippets": {
-      "javascript": "/**\n * @param {number} a\n * @param {number} b\n * @return {number}\n */\nvar getSum = function(a, b) {\n    \n};",
       "python3": "class Solution:\n    def getSum(self, a: int, b: int) -> int:\n        ",
-      "typescript": "function getSum(a: number, b: number): number {\n    \n};"
+      "golang": "func getSum(a int, b int) int {\n    \n}"
     },
     "neetcode_video_id": "gVUrDV4tZfY",
     "neetcode_url": "https://neetcode.io/problems/sum-of-two-integers?list=neetcode150",
@@ -5169,9 +5061,8 @@
     ],
     "hints": [],
     "code_snippets": {
-      "javascript": "/**\n * @param {number[]} nums\n * @return {boolean}\n */\nvar canPartition = function(nums) {\n    \n};",
       "python3": "class Solution:\n    def canPartition(self, nums: List[int]) -> bool:\n        ",
-      "typescript": "function canPartition(nums: number[]): boolean {\n    \n};"
+      "golang": "func canPartition(nums []int) bool {\n    \n}"
     },
     "neetcode_video_id": "IsvocB5BJhw",
     "neetcode_url": "https://neetcode.io/problems/partition-equal-subset-sum?list=neetcode150",
@@ -5216,9 +5107,8 @@
     ],
     "hints": [],
     "code_snippets": {
-      "javascript": "/**\n * @param {number[][]} heights\n * @return {number[][]}\n */\nvar pacificAtlantic = function(heights) {\n    \n};",
       "python3": "class Solution:\n    def pacificAtlantic(self, heights: List[List[int]]) -> List[List[int]]:\n        ",
-      "typescript": "function pacificAtlantic(heights: number[][]): number[][] {\n    \n};"
+      "golang": "func pacificAtlantic(heights [][]int) [][]int {\n    \n}"
     },
     "neetcode_video_id": "s-VkcjHqkGI",
     "neetcode_url": "https://neetcode.io/problems/pacific-atlantic-water-flow?list=neetcode150",
@@ -5257,9 +5147,8 @@
     ],
     "hints": [],
     "code_snippets": {
-      "javascript": "/**\n * @param {string} s\n * @param {number} k\n * @return {number}\n */\nvar characterReplacement = function(s, k) {\n    \n};",
       "python3": "class Solution:\n    def characterReplacement(self, s: str, k: int) -> int:\n        ",
-      "typescript": "function characterReplacement(s: string, k: number): number {\n    \n};"
+      "golang": "func characterReplacement(s string, k int) int {\n    \n}"
     },
     "neetcode_video_id": "gqXU1UyA8pk",
     "neetcode_url": "https://neetcode.io/problems/longest-repeating-substring-with-replacement?list=neetcode150",
@@ -5304,9 +5193,8 @@
     ],
     "hints": [],
     "code_snippets": {
-      "javascript": "/**\n * @param {number[][]} intervals\n * @return {number}\n */\nvar eraseOverlapIntervals = function(intervals) {\n    \n};",
       "python3": "class Solution:\n    def eraseOverlapIntervals(self, intervals: List[List[int]]) -> int:\n        ",
-      "typescript": "function eraseOverlapIntervals(intervals: number[][]): number {\n    \n};"
+      "golang": "func eraseOverlapIntervals(intervals [][]int) int {\n    \n}"
     },
     "neetcode_video_id": "nONCGxWoUfM",
     "neetcode_url": "https://neetcode.io/problems/non-overlapping-intervals?list=neetcode150",
@@ -5346,9 +5234,8 @@
     ],
     "hints": [],
     "code_snippets": {
-      "javascript": "/**\n * @param {number[]} nums\n * @param {number} target\n * @return {number}\n */\nvar findTargetSumWays = function(nums, target) {\n    \n};",
       "python3": "class Solution:\n    def findTargetSumWays(self, nums: List[int], target: int) -> int:\n        ",
-      "typescript": "function findTargetSumWays(nums: number[], target: number): number {\n    \n};"
+      "golang": "func findTargetSumWays(nums []int, target int) int {\n    \n}"
     },
     "neetcode_video_id": "g0npyaQtAQM",
     "neetcode_url": "https://neetcode.io/problems/target-sum?list=neetcode150",
@@ -5392,9 +5279,8 @@
     ],
     "hints": [],
     "code_snippets": {
-      "javascript": "/**\n * @param {number} amount\n * @param {number[]} coins\n * @return {number}\n */\nvar change = function(amount, coins) {\n    \n};",
       "python3": "class Solution:\n    def change(self, amount: int, coins: List[int]) -> int:\n        ",
-      "typescript": "function change(amount: number, coins: number[]): number {\n    \n};"
+      "golang": "func change(amount int, coins []int) int {\n    \n}"
     },
     "neetcode_video_id": "Mjy4hd2xgrs",
     "neetcode_url": "https://neetcode.io/problems/coin-change-ii?list=neetcode150",
@@ -5436,9 +5322,8 @@
     ],
     "hints": [],
     "code_snippets": {
-      "javascript": "/**\n * Definition for a binary tree node.\n * function TreeNode(val, left, right) {\n *     this.val = (val===undefined ? 0 : val)\n *     this.left = (left===undefined ? null : left)\n *     this.right = (right===undefined ? null : right)\n * }\n */\n/**\n * @param {TreeNode} root\n * @return {number}\n */\nvar diameterOfBinaryTree = function(root) {\n    \n};",
       "python3": "# Definition for a binary tree node.\n# class TreeNode:\n#     def __init__(self, val=0, left=None, right=None):\n#         self.val = val\n#         self.left = left\n#         self.right = right\nclass Solution:\n    def diameterOfBinaryTree(self, root: Optional[TreeNode]) -> int:\n        ",
-      "typescript": "/**\n * Definition for a binary tree node.\n * class TreeNode {\n *     val: number\n *     left: TreeNode | null\n *     right: TreeNode | null\n *     constructor(val?: number, left?: TreeNode | null, right?: TreeNode | null) {\n *         this.val = (val===undefined ? 0 : val)\n *         this.left = (left===undefined ? null : left)\n *         this.right = (right===undefined ? null : right)\n *     }\n * }\n */\n\nfunction diameterOfBinaryTree(root: TreeNode | null): number {\n    \n};"
+      "golang": "/**\n * Definition for a binary tree node.\n * type TreeNode struct {\n *     Val int\n *     Left *TreeNode\n *     Right *TreeNode\n * }\n */\nfunc diameterOfBinaryTree(root *TreeNode) int {\n    \n}"
     },
     "neetcode_video_id": "bkxqA8Rfv04",
     "neetcode_url": "https://neetcode.io/problems/binary-tree-diameter?list=neetcode150",
@@ -5484,9 +5369,8 @@
       "What about hash table?  An array of size 26?"
     ],
     "code_snippets": {
-      "javascript": "/**\n * @param {string} s1\n * @param {string} s2\n * @return {boolean}\n */\nvar checkInclusion = function(s1, s2) {\n    \n};",
       "python3": "class Solution:\n    def checkInclusion(self, s1: str, s2: str) -> bool:\n        ",
-      "typescript": "function checkInclusion(s1: string, s2: string): boolean {\n    \n};"
+      "golang": "func checkInclusion(s1 string, s2 string) bool {\n    \n}"
     },
     "neetcode_video_id": "UbyhOgBN834",
     "neetcode_url": "https://neetcode.io/problems/permutation-string?list=neetcode150",
@@ -5537,9 +5421,8 @@
       "Recursive formulae can be: \r\nisIdentical(s,t)= s.val==t.val AND isIdentical(s.left,t.left) AND isIdentical(s.right,t.right)"
     ],
     "code_snippets": {
-      "javascript": "/**\n * Definition for a binary tree node.\n * function TreeNode(val, left, right) {\n *     this.val = (val===undefined ? 0 : val)\n *     this.left = (left===undefined ? null : left)\n *     this.right = (right===undefined ? null : right)\n * }\n */\n/**\n * @param {TreeNode} root\n * @param {TreeNode} subRoot\n * @return {boolean}\n */\nvar isSubtree = function(root, subRoot) {\n    \n};",
       "python3": "# Definition for a binary tree node.\n# class TreeNode:\n#     def __init__(self, val=0, left=None, right=None):\n#         self.val = val\n#         self.left = left\n#         self.right = right\nclass Solution:\n    def isSubtree(self, root: Optional[TreeNode], subRoot: Optional[TreeNode]) -> bool:\n        ",
-      "typescript": "/**\n * Definition for a binary tree node.\n * class TreeNode {\n *     val: number\n *     left: TreeNode | null\n *     right: TreeNode | null\n *     constructor(val?: number, left?: TreeNode | null, right?: TreeNode | null) {\n *         this.val = (val===undefined ? 0 : val)\n *         this.left = (left===undefined ? null : left)\n *         this.right = (right===undefined ? null : right)\n *     }\n * }\n */\n\nfunction isSubtree(root: TreeNode | null, subRoot: TreeNode | null): boolean {\n    \n};"
+      "golang": "/**\n * Definition for a binary tree node.\n * type TreeNode struct {\n *     Val int\n *     Left *TreeNode\n *     Right *TreeNode\n * }\n */\nfunc isSubtree(root *TreeNode, subRoot *TreeNode) bool {\n    \n}"
     },
     "neetcode_video_id": "E36O5SWp-LE",
     "neetcode_url": "https://neetcode.io/problems/subtree-of-a-binary-tree?list=neetcode150",
@@ -5590,9 +5473,8 @@
       "Use Priority Queue."
     ],
     "code_snippets": {
-      "javascript": "/**\n * @param {character[]} tasks\n * @param {number} n\n * @return {number}\n */\nvar leastInterval = function(tasks, n) {\n    \n};",
       "python3": "class Solution:\n    def leastInterval(self, tasks: List[str], n: int) -> int:\n        ",
-      "typescript": "function leastInterval(tasks: string[], n: number): number {\n    \n};"
+      "golang": "func leastInterval(tasks []byte, n int) int {\n    \n}"
     },
     "neetcode_video_id": "s8p8ukTyA2I",
     "neetcode_url": "https://neetcode.io/problems/task-scheduling?list=neetcode150",
@@ -5634,9 +5516,8 @@
       "Complexity based hint:</br>\r\nIf we use brute force and check whether for every start and end position a substring is a palindrome we have O(n^2) start - end pairs and O(n) palindromic checks. Can we reduce the time for palindromic checks to O(1) by reusing some previous computation?"
     ],
     "code_snippets": {
-      "javascript": "/**\n * @param {string} s\n * @return {number}\n */\nvar countSubstrings = function(s) {\n    \n};",
       "python3": "class Solution:\n    def countSubstrings(self, s: str) -> int:\n        ",
-      "typescript": "function countSubstrings(s: string): number {\n    \n};"
+      "golang": "func countSubstrings(s string) int {\n    \n}"
     },
     "neetcode_video_id": "4RACzI5-du8",
     "neetcode_url": "https://neetcode.io/problems/palindromic-substrings?list=neetcode150",
@@ -5685,9 +5566,8 @@
       "How about using 2 stacks instead of 1? Think about it."
     ],
     "code_snippets": {
-      "javascript": "/**\n * @param {string} s\n * @return {boolean}\n */\nvar checkValidString = function(s) {\n    \n};",
       "python3": "class Solution:\n    def checkValidString(self, s: str) -> bool:\n        ",
-      "typescript": "function checkValidString(s: string): boolean {\n    \n};"
+      "golang": "func checkValidString(s string) bool {\n    \n}"
     },
     "neetcode_video_id": "QhPdNS143Qg",
     "neetcode_url": "https://neetcode.io/problems/valid-parenthesis-string?list=neetcode150",
@@ -5735,9 +5615,8 @@
     ],
     "hints": [],
     "code_snippets": {
-      "javascript": "/**\n * @param {number[][]} edges\n * @return {number[]}\n */\nvar findRedundantConnection = function(edges) {\n    \n};",
       "python3": "class Solution:\n    def findRedundantConnection(self, edges: List[List[int]]) -> List[int]:\n        ",
-      "typescript": "function findRedundantConnection(edges: number[][]): number[] {\n    \n};"
+      "golang": "func findRedundantConnection(edges [][]int) []int {\n    \n}"
     },
     "neetcode_video_id": "FXWRE67PLL0",
     "neetcode_url": "https://neetcode.io/problems/redundant-connection?list=neetcode150",
@@ -5783,9 +5662,8 @@
     ],
     "hints": [],
     "code_snippets": {
-      "javascript": "/**\n * @param {number[][]} grid\n * @return {number}\n */\nvar maxAreaOfIsland = function(grid) {\n    \n};",
       "python3": "class Solution:\n    def maxAreaOfIsland(self, grid: List[List[int]]) -> int:\n        ",
-      "typescript": "function maxAreaOfIsland(grid: number[][]): number {\n    \n};"
+      "golang": "func maxAreaOfIsland(grid [][]int) int {\n    \n}"
     },
     "neetcode_video_id": "iJGr1OtmH0c",
     "neetcode_url": "https://neetcode.io/problems/max-area-of-island?list=neetcode150",
@@ -5829,9 +5707,8 @@
     ],
     "hints": [],
     "code_snippets": {
-      "javascript": "/**\n * @param {number} k\n * @param {number[]} nums\n */\nvar KthLargest = function(k, nums) {\n    \n};\n\n/** \n * @param {number} val\n * @return {number}\n */\nKthLargest.prototype.add = function(val) {\n    \n};\n\n/** \n * Your KthLargest object will be instantiated and called as such:\n * var obj = new KthLargest(k, nums)\n * var param_1 = obj.add(val)\n */",
       "python3": "class KthLargest:\n\n    def __init__(self, k: int, nums: List[int]):\n        \n\n    def add(self, val: int) -> int:\n        \n\n\n# Your KthLargest object will be instantiated and called as such:\n# obj = KthLargest(k, nums)\n# param_1 = obj.add(val)",
-      "typescript": "class KthLargest {\n    constructor(k: number, nums: number[]) {\n        \n    }\n\n    add(val: number): number {\n        \n    }\n}\n\n/**\n * Your KthLargest object will be instantiated and called as such:\n * var obj = new KthLargest(k, nums)\n * var param_1 = obj.add(val)\n */"
+      "golang": "type KthLargest struct {\n    \n}\n\n\nfunc Constructor(k int, nums []int) KthLargest {\n    \n}\n\n\nfunc (this *KthLargest) Add(val int) int {\n    \n}\n\n\n/**\n * Your KthLargest object will be instantiated and called as such:\n * obj := Constructor(k, nums);\n * param_1 := obj.Add(val);\n */"
     },
     "neetcode_video_id": "hOjcdrqMoQ8",
     "neetcode_url": "https://neetcode.io/problems/kth-largest-integer-in-a-stream?list=neetcode150",
@@ -5870,9 +5747,8 @@
     ],
     "hints": [],
     "code_snippets": {
-      "javascript": "/**\n * @param {number[]} nums\n * @param {number} target\n * @return {number}\n */\nvar search = function(nums, target) {\n    \n};",
       "python3": "class Solution:\n    def search(self, nums: List[int], target: int) -> int:\n        ",
-      "typescript": "function search(nums: number[], target: number): number {\n    \n};"
+      "golang": "func search(nums []int, target int) int {\n    \n}"
     },
     "neetcode_video_id": "s4DPM8ct1pI",
     "neetcode_url": "https://neetcode.io/problems/binary-search?list=neetcode150",
@@ -5917,9 +5793,8 @@
       "If the temperature is say, 70 today, then in the future a warmer temperature must be either 71, 72, 73, ..., 99, or 100.  We could remember when all of them occur next."
     ],
     "code_snippets": {
-      "javascript": "/**\n * @param {number[]} temperatures\n * @return {number[]}\n */\nvar dailyTemperatures = function(temperatures) {\n    \n};",
       "python3": "class Solution:\n    def dailyTemperatures(self, temperatures: List[int]) -> List[int]:\n        ",
-      "typescript": "function dailyTemperatures(temperatures: number[]): number[] {\n    \n};"
+      "golang": "func dailyTemperatures(temperatures []int) []int {\n    \n}"
     },
     "neetcode_video_id": "cTBiBSnjO3c",
     "neetcode_url": "https://neetcode.io/problems/daily-temperatures?list=neetcode150",
@@ -5977,9 +5852,8 @@
       "We visit each node at some time, and if that time is better than the fastest time we've reached this node, we travel along outgoing edges in sorted order.  Alternatively, we could use Dijkstra's algorithm."
     ],
     "code_snippets": {
-      "javascript": "/**\n * @param {number[][]} times\n * @param {number} n\n * @param {number} k\n * @return {number}\n */\nvar networkDelayTime = function(times, n, k) {\n    \n};",
       "python3": "class Solution:\n    def networkDelayTime(self, times: List[List[int]], n: int, k: int) -> int:\n        ",
-      "typescript": "function networkDelayTime(times: number[][], n: number, k: number): number {\n\n};"
+      "golang": "func networkDelayTime(times [][]int, n int, k int) int {\n    \n}"
     },
     "neetcode_video_id": "EaphyqKU4PQ",
     "neetcode_url": "https://neetcode.io/problems/network-delay-time?list=neetcode150",
@@ -6020,9 +5894,8 @@
       "Now, looping from n - 1 to 0, the dp[i] = cost[i] + min(dp[i + 1], dp[i + 2]). The answer will be the minimum of dp[0] and dp[1]"
     ],
     "code_snippets": {
-      "javascript": "/**\n * @param {number[]} cost\n * @return {number}\n */\nvar minCostClimbingStairs = function(cost) {\n    \n};",
       "python3": "class Solution:\n    def minCostClimbingStairs(self, cost: List[int]) -> int:\n        ",
-      "typescript": "function minCostClimbingStairs(cost: number[]): number {\n    \n};"
+      "golang": "func minCostClimbingStairs(cost []int) int {\n    \n}"
     },
     "neetcode_video_id": "ktmzAZWkEZ0",
     "neetcode_url": "https://neetcode.io/problems/min-cost-climbing-stairs?list=neetcode150",
@@ -6063,9 +5936,8 @@
       "Try to greedily choose the smallest partition that includes the first letter.  If you have something like \"abaccbdeffed\", then you might need to add b.  You can use an map like \"last['b'] = 5\" to help you expand the width of your partition."
     ],
     "code_snippets": {
-      "javascript": "/**\n * @param {string} s\n * @return {number[]}\n */\nvar partitionLabels = function(s) {\n    \n};",
       "python3": "class Solution:\n    def partitionLabels(self, s: str) -> List[int]:\n        ",
-      "typescript": "function partitionLabels(s: string): number[] {\n    \n};"
+      "golang": "func partitionLabels(s string) []int {\n    \n}"
     },
     "neetcode_video_id": "B7m8UmZE-vw",
     "neetcode_url": "https://neetcode.io/problems/partition-labels?list=neetcode150",
@@ -6116,9 +5988,8 @@
       "Use either Dijkstra's, or binary search for the best time T for which you can reach the end if you only step on squares at most T."
     ],
     "code_snippets": {
-      "javascript": "/**\n * @param {number[][]} grid\n * @return {number}\n */\nvar swimInWater = function(grid) {\n    \n};",
       "python3": "class Solution:\n    def swimInWater(self, grid: List[List[int]]) -> int:\n        ",
-      "typescript": "function swimInWater(grid: number[][]): number {\n    \n};"
+      "golang": "func swimInWater(grid [][]int) int {\n    \n}"
     },
     "neetcode_video_id": "amvrKlMLuGY",
     "neetcode_url": "https://neetcode.io/problems/swim-in-rising-water?list=neetcode150",
@@ -6177,9 +6048,8 @@
     ],
     "hints": [],
     "code_snippets": {
-      "javascript": "/**\n * @param {number} n\n * @param {number[][]} flights\n * @param {number} src\n * @param {number} dst\n * @param {number} k\n * @return {number}\n */\nvar findCheapestPrice = function(n, flights, src, dst, k) {\n    \n};",
       "python3": "class Solution:\n    def findCheapestPrice(self, n: int, flights: List[List[int]], src: int, dst: int, k: int) -> int:\n        ",
-      "typescript": "function findCheapestPrice(n: number, flights: number[][], src: number, dst: number, k: number): number {\n    \n};"
+      "golang": "func findCheapestPrice(n int, flights [][]int, src int, dst int, k int) int {\n    \n}"
     },
     "neetcode_video_id": "5eIK3zUdYmE",
     "neetcode_url": "https://neetcode.io/problems/cheapest-flight-path?list=neetcode150",
@@ -6219,9 +6089,8 @@
     ],
     "hints": [],
     "code_snippets": {
-      "javascript": "/**\n * @param {number[]} hand\n * @param {number} groupSize\n * @return {boolean}\n */\nvar isNStraightHand = function(hand, groupSize) {\n    \n};",
       "python3": "class Solution:\n    def isNStraightHand(self, hand: List[int], groupSize: int) -> bool:\n        ",
-      "typescript": "function isNStraightHand(hand: number[], groupSize: number): boolean {\n    \n};"
+      "golang": "func isNStraightHand(hand []int, groupSize int) bool {\n    \n}"
     },
     "neetcode_video_id": "amnrMCVd2YI",
     "neetcode_url": "https://neetcode.io/problems/hand-of-straights?list=neetcode150",
@@ -6269,9 +6138,8 @@
     ],
     "hints": [],
     "code_snippets": {
-      "javascript": "/**\n * @param {number} target\n * @param {number[]} position\n * @param {number[]} speed\n * @return {number}\n */\nvar carFleet = function(target, position, speed) {\n    \n};",
       "python3": "class Solution:\n    def carFleet(self, target: int, position: List[int], speed: List[int]) -> int:\n        ",
-      "typescript": "function carFleet(target: number, position: number[], speed: number[]): number {\n    \n};"
+      "golang": "func carFleet(target int, position []int, speed []int) int {\n    \n}"
     },
     "neetcode_video_id": "Pr6T-3yB9RM",
     "neetcode_url": "https://neetcode.io/problems/car-fleet?list=neetcode150",
@@ -6314,9 +6182,8 @@
     ],
     "hints": [],
     "code_snippets": {
-      "javascript": "/**\n * @param {number[]} piles\n * @param {number} h\n * @return {number}\n */\nvar minEatingSpeed = function(piles, h) {\n    \n};",
       "python3": "class Solution:\n    def minEatingSpeed(self, piles: List[int], h: int) -> int:\n        ",
-      "typescript": "function minEatingSpeed(piles: number[], h: number): number {\n    \n};"
+      "golang": "func minEatingSpeed(piles []int, h int) int {\n    \n}"
     },
     "neetcode_video_id": "U2SozAs9RzA",
     "neetcode_url": "https://neetcode.io/problems/eating-bananas?list=neetcode150",
@@ -6362,9 +6229,8 @@
     ],
     "hints": [],
     "code_snippets": {
-      "javascript": "/**\n * @param {number[][]} points\n * @param {number} k\n * @return {number[][]}\n */\nvar kClosest = function(points, k) {\n    \n};",
       "python3": "class Solution:\n    def kClosest(self, points: List[List[int]], k: int) -> List[List[int]]:\n        ",
-      "typescript": "function kClosest(points: number[][], k: number): number[][] {\n    \n};"
+      "golang": "func kClosest(points [][]int, k int) [][]int {\n    \n}"
     },
     "neetcode_video_id": "rI2EBUEMfTk",
     "neetcode_url": "https://neetcode.io/problems/k-closest-points-to-origin?list=neetcode150",
@@ -6401,9 +6267,8 @@
     ],
     "hints": [],
     "code_snippets": {
-      "javascript": "\nvar TimeMap = function() {\n    \n};\n\n/** \n * @param {string} key \n * @param {string} value \n * @param {number} timestamp\n * @return {void}\n */\nTimeMap.prototype.set = function(key, value, timestamp) {\n    \n};\n\n/** \n * @param {string} key \n * @param {number} timestamp\n * @return {string}\n */\nTimeMap.prototype.get = function(key, timestamp) {\n    \n};\n\n/** \n * Your TimeMap object will be instantiated and called as such:\n * var obj = new TimeMap()\n * obj.set(key,value,timestamp)\n * var param_2 = obj.get(key,timestamp)\n */",
       "python3": "class TimeMap:\n\n    def __init__(self):\n        \n\n    def set(self, key: str, value: str, timestamp: int) -> None:\n        \n\n    def get(self, key: str, timestamp: int) -> str:\n        \n\n\n# Your TimeMap object will be instantiated and called as such:\n# obj = TimeMap()\n# obj.set(key,value,timestamp)\n# param_2 = obj.get(key,timestamp)",
-      "typescript": "class TimeMap {\n    constructor() {\n        \n    }\n\n    set(key: string, value: string, timestamp: number): void {\n        \n    }\n\n    get(key: string, timestamp: number): string {\n        \n    }\n}\n\n/**\n * Your TimeMap object will be instantiated and called as such:\n * var obj = new TimeMap()\n * obj.set(key,value,timestamp)\n * var param_2 = obj.get(key,timestamp)\n */"
+      "golang": "type TimeMap struct {\n    \n}\n\n\nfunc Constructor() TimeMap {\n    \n}\n\n\nfunc (this *TimeMap) Set(key string, value string, timestamp int)  {\n    \n}\n\n\nfunc (this *TimeMap) Get(key string, timestamp int) string {\n    \n}\n\n\n/**\n * Your TimeMap object will be instantiated and called as such:\n * obj := Constructor();\n * obj.Set(key,value,timestamp);\n * param_2 := obj.Get(key,timestamp);\n */"
     },
     "neetcode_video_id": "fu2cD_6E8Hw",
     "neetcode_url": "https://neetcode.io/problems/time-based-key-value-store?list=neetcode150",
@@ -6454,9 +6319,8 @@
     ],
     "hints": [],
     "code_snippets": {
-      "javascript": "/**\n * @param {number[][]} grid\n * @return {number}\n */\nvar orangesRotting = function(grid) {\n    \n};",
       "python3": "class Solution:\n    def orangesRotting(self, grid: List[List[int]]) -> int:\n        ",
-      "typescript": "function orangesRotting(grid: number[][]): number {\n    \n};"
+      "golang": "func orangesRotting(grid [][]int) int {\n    \n}"
     },
     "neetcode_video_id": "y704fEOx0s0",
     "neetcode_url": "https://neetcode.io/problems/rotting-fruit?list=neetcode150",
@@ -6495,9 +6359,8 @@
       "Simulate the process.  We can do it with a heap, or by sorting some list of stones every time we take a turn."
     ],
     "code_snippets": {
-      "javascript": "/**\n * @param {number[]} stones\n * @return {number}\n */\nvar lastStoneWeight = function(stones) {\n    \n};",
       "python3": "class Solution:\n    def lastStoneWeight(self, stones: List[int]) -> int:\n        ",
-      "typescript": "function lastStoneWeight(stones: number[]): number {\n    \n};"
+      "golang": "func lastStoneWeight(stones []int) int {\n    \n}"
     },
     "neetcode_video_id": "B-QCq79-Vfw",
     "neetcode_url": "https://neetcode.io/problems/last-stone-weight?list=neetcode150",
@@ -6542,9 +6405,8 @@
       "DP[i][j] = DP[i - 1][j - 1] + 1 , if text1[i] == text2[j]\r\nDP[i][j] = max(DP[i - 1][j], DP[i][j - 1]) , otherwise"
     ],
     "code_snippets": {
-      "javascript": "/**\n * @param {string} text1\n * @param {string} text2\n * @return {number}\n */\nvar longestCommonSubsequence = function(text1, text2) {\n    \n};",
       "python3": "class Solution:\n    def longestCommonSubsequence(self, text1: str, text2: str) -> int:\n        ",
-      "typescript": "function longestCommonSubsequence(text1: string, text2: string): number {\n    \n};"
+      "golang": "func longestCommonSubsequence(text1 string, text2 string) int {\n    \n}"
     },
     "neetcode_video_id": "Ua0GhsJSlWM",
     "neetcode_url": "https://neetcode.io/problems/longest-common-subsequence?list=neetcode150",
@@ -6596,9 +6458,8 @@
       "Use DFS (Depth First Search) to traverse the tree, and constantly keep track of the current path maximum."
     ],
     "code_snippets": {
-      "javascript": "/**\n * Definition for a binary tree node.\n * function TreeNode(val, left, right) {\n *     this.val = (val===undefined ? 0 : val)\n *     this.left = (left===undefined ? null : left)\n *     this.right = (right===undefined ? null : right)\n * }\n */\n/**\n * @param {TreeNode} root\n * @return {number}\n */\nvar goodNodes = function(root) {\n    \n};",
       "python3": "# Definition for a binary tree node.\n# class TreeNode:\n#     def __init__(self, val=0, left=None, right=None):\n#         self.val = val\n#         self.left = left\n#         self.right = right\nclass Solution:\n    def goodNodes(self, root: TreeNode) -> int:\n        ",
-      "typescript": "/**\n * Definition for a binary tree node.\n * class TreeNode {\n *     val: number\n *     left: TreeNode | null\n *     right: TreeNode | null\n *     constructor(val?: number, left?: TreeNode | null, right?: TreeNode | null) {\n *         this.val = (val===undefined ? 0 : val)\n *         this.left = (left===undefined ? null : left)\n *         this.right = (right===undefined ? null : right)\n *     }\n * }\n */\n\nfunction goodNodes(root: TreeNode | null): number {\n\n};"
+      "golang": "/**\n * Definition for a binary tree node.\n * type TreeNode struct {\n *     Val int\n *     Left *TreeNode\n *     Right *TreeNode\n * }\n */\nfunc goodNodes(root *TreeNode) int {\n    \n}"
     },
     "neetcode_video_id": "7cp5imvDzl4",
     "neetcode_url": "https://neetcode.io/problems/count-good-nodes-in-binary-tree?list=neetcode150",
@@ -6645,9 +6506,8 @@
       "The problem is now the cost of minimum spanning tree in graph with above edges."
     ],
     "code_snippets": {
-      "javascript": "/**\n * @param {number[][]} points\n * @return {number}\n */\nvar minCostConnectPoints = function(points) {\n    \n};",
       "python3": "class Solution:\n    def minCostConnectPoints(self, points: List[List[int]]) -> int:\n        ",
-      "typescript": "function minCostConnectPoints(points: number[][]): number {\n    \n};"
+      "golang": "func minCostConnectPoints(points [][]int) int {\n    \n}"
     },
     "neetcode_video_id": "f7JOBJIC-NA",
     "neetcode_url": "https://neetcode.io/problems/min-cost-to-connect-points?list=neetcode150",
@@ -6693,9 +6553,8 @@
       "Is there a way to add and remove intervals by going from the smallest query to the largest query to find the minimum size?"
     ],
     "code_snippets": {
-      "javascript": "/**\n * @param {number[][]} intervals\n * @param {number[]} queries\n * @return {number[]}\n */\nvar minInterval = function(intervals, queries) {\n    \n};",
       "python3": "class Solution:\n    def minInterval(self, intervals: List[List[int]], queries: List[int]) -> List[int]:\n        ",
-      "typescript": "function minInterval(intervals: number[][], queries: number[]): number[] {\n    \n};"
+      "golang": "func minInterval(intervals [][]int, queries []int) []int {\n    \n}"
     },
     "neetcode_video_id": "5hQ5WWW5awQ",
     "neetcode_url": "https://neetcode.io/problems/minimum-interval-including-query?list=neetcode150",
@@ -6741,9 +6600,8 @@
       "What property of max can you use to solve the problem?"
     ],
     "code_snippets": {
-      "javascript": "/**\n * @param {number[][]} triplets\n * @param {number[]} target\n * @return {boolean}\n */\nvar mergeTriplets = function(triplets, target) {\n    \n};",
       "python3": "class Solution:\n    def mergeTriplets(self, triplets: List[List[int]], target: List[int]) -> bool:\n        ",
-      "typescript": "function mergeTriplets(triplets: number[][], target: number[]): boolean {\n    \n};"
+      "golang": "func mergeTriplets(triplets [][]int, target []int) bool {\n    \n}"
     },
     "neetcode_video_id": "kShkQLQZ9K4",
     "neetcode_url": "https://neetcode.io/problems/merge-triplets-to-form-target?list=neetcode150",
@@ -6783,9 +6641,8 @@
       "Traverse the hash map and if any point has the same y-coordinate as the query point, consider this point and the query point to form one of the horizontal lines of the square."
     ],
     "code_snippets": {
-      "javascript": "\nvar DetectSquares = function() {\n    \n};\n\n/** \n * @param {number[]} point\n * @return {void}\n */\nDetectSquares.prototype.add = function(point) {\n    \n};\n\n/** \n * @param {number[]} point\n * @return {number}\n */\nDetectSquares.prototype.count = function(point) {\n    \n};\n\n/** \n * Your DetectSquares object will be instantiated and called as such:\n * var obj = new DetectSquares()\n * obj.add(point)\n * var param_2 = obj.count(point)\n */",
       "python3": "class DetectSquares:\n\n    def __init__(self):\n        \n\n    def add(self, point: List[int]) -> None:\n        \n\n    def count(self, point: List[int]) -> int:\n        \n\n\n# Your DetectSquares object will be instantiated and called as such:\n# obj = DetectSquares()\n# obj.add(point)\n# param_2 = obj.count(point)",
-      "typescript": "class DetectSquares {\n    constructor() {\n        \n    }\n\n    add(point: number[]): void {\n        \n    }\n\n    count(point: number[]): number {\n        \n    }\n}\n\n/**\n * Your DetectSquares object will be instantiated and called as such:\n * var obj = new DetectSquares()\n * obj.add(point)\n * var param_2 = obj.count(point)\n */"
+      "golang": "type DetectSquares struct {\n    \n}\n\n\nfunc Constructor() DetectSquares {\n    \n}\n\n\nfunc (this *DetectSquares) Add(point []int)  {\n    \n}\n\n\nfunc (this *DetectSquares) Count(point []int) int {\n    \n}\n\n\n/**\n * Your DetectSquares object will be instantiated and called as such:\n * obj := Constructor();\n * obj.Add(point);\n * param_2 := obj.Count(point);\n */"
     },
     "neetcode_video_id": "bahebearrDc",
     "neetcode_url": "https://neetcode.io/problems/count-squares?list=neetcode150",

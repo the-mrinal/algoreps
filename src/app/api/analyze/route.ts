@@ -7,7 +7,7 @@ const GEMINI_API_URL =
 export async function POST(req: Request) {
   try {
     const body = await req.json();
-    const { code, problemTitle, problemDescription } = body;
+    const { code, language, problemTitle, problemDescription } = body;
 
     if (!code || !problemTitle || !problemDescription) {
       return NextResponse.json(
@@ -24,7 +24,7 @@ export async function POST(req: Request) {
       );
     }
 
-    const prompt = buildReviewPrompt(code, problemTitle, problemDescription);
+    const prompt = buildReviewPrompt(code, problemTitle, problemDescription, language || "python3");
 
     const response = await fetch(`${GEMINI_API_URL}?key=${apiKey}`, {
       method: "POST",

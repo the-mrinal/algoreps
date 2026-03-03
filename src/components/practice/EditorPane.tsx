@@ -26,6 +26,7 @@ export default function EditorPane({
 }: {
   problem: Problem | null;
 }) {
+  const [language, setLanguage] = useState<"python3" | "golang">("python3");
   const [code, setCode] = useState("");
   const [input, setInput] = useState("");
   const [result, setResult] = useState<ExecutionResult | null>(null);
@@ -42,13 +43,18 @@ export default function EditorPane({
     nextRevisionDate: string;
   } | null>(null);
 
-  // Pre-populate code when problem changes
+  // Pre-populate code when problem or language changes
   useEffect(() => {
     if (problem) {
-      const snippet =
-        problem.code_snippets["javascript"] ||
-        problem.code_snippets["python3"] ||
-        "";
+      const raw = problem.code_snippets[language] || "";
+      let snippet = raw;
+      if (language === "golang" && raw && !raw.startsWith("package")) {
+        snippet = `package main\n\nimport "fmt"\n\n${raw}\n\nfunc main() {\n\tfmt.Println("TODO: call your function here")\n}`;
+      } else if (language === "python3" && raw) {
+        const methodMatch = raw.match(/def (\w+)\(self/);
+        const methodName = methodMatch ? methodMatch[1] : "solve";
+        snippet = `from typing import List, Optional\nfrom collections import defaultdict, deque\n\n${raw}\n\n# TODO: call your solution\n# print(Solution().${methodName}())`;
+      }
       setCode(snippet);
       setResult(null);
       setInput("");
@@ -57,7 +63,7 @@ export default function EditorPane({
       setAnalyzeError(null);
       setSaveSuccess(null);
     }
-  }, [problem]);
+  }, [problem, language]);
 
   const handleRunCode = async () => {
     setIsRunning(true);
@@ -66,7 +72,7 @@ export default function EditorPane({
       const res = await fetch("/api/run-code", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ code, input }),
+        body: JSON.stringify({ code, input, language }),
       });
       const data: ExecutionResult = await res.json();
       setResult(data);
@@ -95,6 +101,7 @@ export default function EditorPane({
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           code,
+          language,
           problemTitle: problem.title,
           problemDescription: problem.description,
         }),
@@ -171,11 +178,23 @@ export default function EditorPane({
 
   return (
     <div className="flex h-full flex-col overflow-hidden">
+      {/* Language Selector */}
+      <div className="flex-shrink-0 bg-gray-900 px-3 py-1.5 border-b border-gray-700">
+        <select
+          value={language}
+          onChange={(e) => setLanguage(e.target.value as "python3" | "golang")}
+          className="rounded-md border border-gray-600 bg-gray-800 px-2 py-1 text-xs font-medium text-gray-200 focus:outline-none focus:ring-1 focus:ring-blue-500"
+        >
+          <option value="python3">Python 3</option>
+          <option value="golang">Go</option>
+        </select>
+      </div>
+
       {/* Monaco Editor */}
       <div className="flex-1 min-h-0">
         <MonacoEditor
           height="100%"
-          language="javascript"
+          language={language === "python3" ? "python" : "go"}
           theme="vs-dark"
           value={code}
           onChange={(value) => setCode(value || "")}
@@ -185,7 +204,7 @@ export default function EditorPane({
             lineNumbers: "on",
             scrollBeyondLastLine: false,
             automaticLayout: true,
-            tabSize: 2,
+            tabSize: 4,
             wordWrap: "on",
           }}
         />

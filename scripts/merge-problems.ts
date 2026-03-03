@@ -99,7 +99,7 @@ interface UnifiedProblem {
   examples: { example_num: number; example_text: string; images: string[] }[];
   constraints: string[];
   hints: string[];
-  code_snippets: { javascript: string; python3: string; [key: string]: string };
+  code_snippets: { python3: string; golang: string; [key: string]: string };
   neetcode_video_id: string;
   neetcode_url: string;
   leetcode_url: string;
@@ -144,9 +144,8 @@ function parseKrmanikProblem(
   const codeSnippets: Record<string, string> = {};
   if (q.codeSnippets) {
     for (const snippet of q.codeSnippets) {
-      if (snippet.langSlug === "javascript") codeSnippets.javascript = snippet.code;
       if (snippet.langSlug === "python3") codeSnippets.python3 = snippet.code;
-      if (snippet.langSlug === "typescript") codeSnippets.typescript = snippet.code;
+      if (snippet.langSlug === "golang") codeSnippets.golang = snippet.code;
     }
   }
 
@@ -295,14 +294,11 @@ function main(): void {
 
       const codeSnippets: Record<string, string> = {};
       if (neenza.code_snippets) {
-        if (neenza.code_snippets.javascript) {
-          codeSnippets.javascript = neenza.code_snippets.javascript;
-        }
         if (neenza.code_snippets.python3) {
           codeSnippets.python3 = neenza.code_snippets.python3;
         }
-        if (neenza.code_snippets.typescript) {
-          codeSnippets.typescript = neenza.code_snippets.typescript;
+        if (neenza.code_snippets.golang) {
+          codeSnippets.golang = neenza.code_snippets.golang;
         }
       }
 
@@ -348,8 +344,8 @@ function main(): void {
   // 8. Summary
   const categories = new Set(problems.map((p) => p.category));
   const blind75Count = problems.filter((p) => p.is_blind75).length;
-  const withJs = problems.filter((p) => p.code_snippets.javascript).length;
   const withPy = problems.filter((p) => p.code_snippets.python3).length;
+  const withGo = problems.filter((p) => p.code_snippets.golang).length;
 
   console.log("\n=== Merge Complete ===");
   console.log(`  Total problems: ${problems.length}`);
@@ -357,8 +353,8 @@ function main(): void {
   console.log(`  From krmanik fallback: ${fallbackCount}`);
   console.log(`  Categories: ${categories.size} (${Array.from(categories).join(", ")})`);
   console.log(`  Blind75: ${blind75Count}`);
-  console.log(`  With JavaScript snippets: ${withJs}`);
   console.log(`  With Python3 snippets: ${withPy}`);
+  console.log(`  With Golang snippets: ${withGo}`);
   console.log(`  Output: ${OUTPUT_FILE}`);
 
   if (missingSiteData.length > 0) {

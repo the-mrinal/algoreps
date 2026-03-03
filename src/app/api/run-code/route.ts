@@ -15,7 +15,11 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: "Invalid JSON body" }, { status: 400 });
   }
 
-  const { code, input } = body as { code?: string; input?: string };
+  const { code, input, language } = body as {
+    code?: string;
+    input?: string;
+    language?: string;
+  };
 
   if (!code || typeof code !== "string") {
     return NextResponse.json(
@@ -24,16 +28,24 @@ export async function POST(request: NextRequest) {
     );
   }
 
+  const langConfig: Record<string, { file: string; command: string; args: (file: string) => string[] }> = {
+    python3: { file: "solution.py", command: "python3", args: (f) => [f] },
+    golang: { file: "solution.go", command: "go", args: (f) => ["run", f] },
+  };
+
+  const lang = language && langConfig[language] ? language : "python3";
+  const config = langConfig[lang];
+
   const stdinInput = typeof input === "string" ? input : "";
   const execId = randomUUID();
   const execDir = join(tmpdir(), `dsa-run-${execId}`);
-  const filePath = join(execDir, "solution.js");
+  const filePath = join(execDir, config.file);
 
   try {
     await mkdir(execDir, { recursive: true });
     await writeFile(filePath, code, "utf-8");
 
-    const result = await executeCode(filePath, stdinInput);
+    const result = await executeCode(config.command, config.args(filePath), stdinInput);
 
     return NextResponse.json(result, { status: 200 });
   } catch (error) {
@@ -49,7 +61,8 @@ export async function POST(request: NextRequest) {
 }
 
 function executeCode(
-  filePath: string,
+  command: string,
+  args: string[],
   stdinInput: string
 ): Promise<{
   stdout: string;
@@ -63,7 +76,7 @@ function executeCode(
     let stderr = "";
     let settled = false;
 
-    const child: ChildProcess = spawn("node", [filePath], {
+    const child: ChildProcess = spawn(command, args, {
       timeout: TIMEOUT_MS,
     });
 

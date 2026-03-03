@@ -1,8 +1,10 @@
 export function buildReviewPrompt(
   code: string,
   problemTitle: string,
-  problemDescription: string
+  problemDescription: string,
+  language: string = "python3"
 ): string {
+  const langFence = language === "golang" ? "go" : "python";
   return `You are a senior software engineer conducting a code review for a DSA interview preparation platform.
 
 ## Problem
@@ -10,7 +12,7 @@ export function buildReviewPrompt(
 **Description**: ${problemDescription}
 
 ## Submitted Code
-\`\`\`javascript
+\`\`\`${langFence}
 ${code}
 \`\`\`
 
