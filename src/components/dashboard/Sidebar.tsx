@@ -10,6 +10,7 @@ const navItems = [
   {
     href: "/dashboard",
     label: "Dashboard",
+    desktopOnly: false,
     icon: (
       <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
         <path strokeLinecap="round" strokeLinejoin="round" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zm10 0a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zm10 0a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
@@ -19,6 +20,7 @@ const navItems = [
   {
     href: "/dashboard/practice",
     label: "Practice",
+    desktopOnly: true,
     icon: (
       <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
         <path strokeLinecap="round" strokeLinejoin="round" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
@@ -28,6 +30,7 @@ const navItems = [
   {
     href: "/dashboard/log",
     label: "Log",
+    desktopOnly: false,
     icon: (
       <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
         <path strokeLinecap="round" strokeLinejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
@@ -37,6 +40,7 @@ const navItems = [
   {
     href: "/dashboard/progress",
     label: "Progress",
+    desktopOnly: true,
     icon: (
       <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
         <path strokeLinecap="round" strokeLinejoin="round" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
@@ -46,6 +50,7 @@ const navItems = [
   {
     href: "/dashboard/import",
     label: "Import",
+    desktopOnly: false,
     icon: (
       <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
         <path strokeLinecap="round" strokeLinejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
@@ -96,21 +101,34 @@ export default function Sidebar({ email }: { email: string }) {
         </h2>
       </div>
 
-      <nav className="flex-1 p-3 space-y-0.5">
+      <nav className="flex-1 overflow-y-auto min-h-0 p-3 space-y-0.5">
         {navItems.map((item) => (
-          <Link
-            key={item.href}
-            href={item.href}
-            onClick={() => setMobileOpen(false)}
-            className={`flex items-center gap-2.5 px-3 py-2 rounded-md text-sm font-medium transition-all ${
-              isActive(item.href)
-                ? "text-neon-cyan bg-neon-cyan/10 shadow-[0_0_10px_rgba(0,255,242,0.1)]"
-                : "text-gray-400 hover:text-foreground hover:bg-white/5"
-            }`}
-          >
-            {item.icon}
-            {item.label}
-          </Link>
+          <div key={item.href}>
+            {item.desktopOnly && (
+              <span
+                className="flex md:hidden items-center gap-2.5 px-3 py-2 rounded-md text-sm font-medium text-gray-600 cursor-not-allowed"
+                title="Available on desktop only"
+              >
+                {item.icon}
+                {item.label}
+                <svg className="h-3 w-3 ml-auto opacity-50" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                </svg>
+              </span>
+            )}
+            <Link
+              href={item.href}
+              onClick={() => setMobileOpen(false)}
+              className={`${item.desktopOnly ? "hidden md:flex" : "flex"} items-center gap-2.5 px-3 py-2 rounded-md text-sm font-medium transition-all ${
+                isActive(item.href)
+                  ? "text-neon-cyan bg-neon-cyan/10 shadow-[0_0_10px_rgba(0,255,242,0.1)]"
+                  : "text-gray-400 hover:text-foreground hover:bg-white/5"
+              }`}
+            >
+              {item.icon}
+              {item.label}
+            </Link>
+          </div>
         ))}
       </nav>
 

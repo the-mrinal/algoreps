@@ -1,5 +1,6 @@
 import { createClient } from "@/lib/supabase/server";
 import { getAllProblems, getCategories } from "@/lib/problems";
+import DesktopOnly from "@/components/dashboard/DesktopOnly";
 import StatsOverview from "@/components/progress/StatsOverview";
 import type { StatsData } from "@/components/progress/StatsOverview";
 import TopicChart from "@/components/progress/TopicChart";
@@ -167,13 +168,15 @@ export default async function ProgressPage() {
   const allCategories = await getCategories();
 
   return (
-    <div>
-      <h1 className="text-2xl font-bold text-foreground mb-6">
-        Progress
-      </h1>
-      <StatsOverview stats={stats} />
-      <TopicChart data={topicData} />
-      <HistoryTable rows={historyRows} categories={allCategories} />
-    </div>
+    <DesktopOnly>
+      <div>
+        <h1 className="text-2xl font-bold text-foreground mb-6">
+          Progress
+        </h1>
+        <StatsOverview stats={stats} />
+        <TopicChart data={topicData} />
+        <HistoryTable rows={historyRows} categories={allCategories} />
+      </div>
+    </DesktopOnly>
   );
 }
