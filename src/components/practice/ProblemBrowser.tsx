@@ -1,0 +1,151 @@
+"use client";
+
+import { useState, useMemo } from "react";
+import type { Problem } from "@/types";
+
+const difficultyColors: Record<string, string> = {
+  Easy: "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200",
+  Medium:
+    "bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200",
+  Hard: "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200",
+};
+
+export default function ProblemBrowser({
+  problems,
+  categories,
+}: {
+  problems: Problem[];
+  categories: string[];
+}) {
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [selectedProblem, setSelectedProblem] = useState<Problem | null>(null);
+
+  const categoryCounts = useMemo(() => {
+    const counts: Record<string, number> = {};
+    for (const p of problems) {
+      counts[p.category] = (counts[p.category] || 0) + 1;
+    }
+    return counts;
+  }, [problems]);
+
+  const filteredProblems = useMemo(() => {
+    let result = problems;
+    if (selectedCategory) {
+      result = result.filter((p) => p.category === selectedCategory);
+    }
+    if (searchQuery.trim()) {
+      const query = searchQuery.toLowerCase();
+      result = result.filter((p) => p.title.toLowerCase().includes(query));
+    }
+    return result;
+  }, [problems, selectedCategory, searchQuery]);
+
+  return (
+    <div className="flex h-full gap-4">
+      {/* Category Sidebar */}
+      <div className="w-64 flex-shrink-0 overflow-y-auto rounded-lg border border-gray-200 bg-white dark:border-gray-700 dark:bg-gray-800">
+        <div className="p-3 border-b border-gray-200 dark:border-gray-700">
+          <h3 className="text-sm font-semibold text-gray-900 dark:text-white">
+            Categories
+          </h3>
+        </div>
+        <div className="p-2 space-y-0.5">
+          <button
+            onClick={() => setSelectedCategory(null)}
+            className={`w-full text-left px-3 py-2 rounded-md text-sm transition-colors ${
+              selectedCategory === null
+                ? "bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-200 font-medium"
+                : "text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700"
+            }`}
+          >
+            <span className="flex justify-between items-center">
+              <span>All Problems</span>
+              <span className="text-xs text-gray-500 dark:text-gray-400">
+                {problems.length}
+              </span>
+            </span>
+          </button>
+          {categories.map((cat) => (
+            <button
+              key={cat}
+              onClick={() => setSelectedCategory(cat)}
+              className={`w-full text-left px-3 py-2 rounded-md text-sm transition-colors ${
+                selectedCategory === cat
+                  ? "bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-200 font-medium"
+                  : "text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700"
+              }`}
+            >
+              <span className="flex justify-between items-center">
+                <span className="truncate">{cat}</span>
+                <span className="text-xs text-gray-500 dark:text-gray-400 ml-2">
+                  {categoryCounts[cat] || 0}
+                </span>
+              </span>
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* Problem List */}
+      <div className="flex-1 flex flex-col overflow-hidden rounded-lg border border-gray-200 bg-white dark:border-gray-700 dark:bg-gray-800">
+        {/* Search */}
+        <div className="p-3 border-b border-gray-200 dark:border-gray-700">
+          <input
+            type="text"
+            placeholder="Search problems by title..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="w-full rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 px-3 py-2 text-sm text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+        </div>
+
+        {/* Header */}
+        <div className="px-4 py-2 border-b border-gray-200 dark:border-gray-700 text-xs font-medium text-gray-500 dark:text-gray-400">
+          {filteredProblems.length} problem
+          {filteredProblems.length !== 1 ? "s" : ""}
+          {selectedCategory ? ` in ${selectedCategory}` : ""}
+        </div>
+
+        {/* List */}
+        <div className="flex-1 overflow-y-auto">
+          {filteredProblems.map((problem) => (
+            <button
+              key={problem.id}
+              onClick={() => setSelectedProblem(problem)}
+              className={`w-full text-left px-4 py-3 border-b border-gray-100 dark:border-gray-700 transition-colors ${
+                selectedProblem?.id === problem.id
+                  ? "bg-blue-50 dark:bg-blue-900/30"
+                  : "hover:bg-gray-50 dark:hover:bg-gray-700/50"
+              }`}
+            >
+              <div className="flex items-center gap-2">
+                <span className="text-sm font-medium text-gray-900 dark:text-white flex-1">
+                  {problem.title}
+                </span>
+                {problem.is_blind75 && (
+                  <span className="text-xs px-1.5 py-0.5 rounded bg-purple-100 text-purple-700 dark:bg-purple-900 dark:text-purple-200 font-medium">
+                    B75
+                  </span>
+                )}
+                <span
+                  className={`text-xs px-2 py-0.5 rounded-full font-medium ${difficultyColors[problem.difficulty]}`}
+                >
+                  {problem.difficulty}
+                </span>
+              </div>
+              <div className="mt-1 text-xs text-gray-500 dark:text-gray-400">
+                {problem.category}
+              </div>
+            </button>
+          ))}
+          {filteredProblems.length === 0 && (
+            <div className="p-8 text-center text-sm text-gray-500 dark:text-gray-400">
+              No problems found matching your criteria.
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
