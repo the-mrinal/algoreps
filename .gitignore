@@ -37,3 +37,10 @@ data/sources/
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# internal dev artifacts
+IMPLEMENTATION_PLAN.md
+progress.txt
+prd.json
+tasks/
+supabase/.temp/
