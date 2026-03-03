@@ -286,7 +286,7 @@
         "Verify form in browser using dev-browser skill"
       ],
       "priority": 15,
-      "passes": false,
+      "passes": true,
       "notes": ""
     },
     {
@@ -304,7 +304,7 @@
         "Verify SRS queue in browser using dev-browser skill"
       ],
       "priority": 16,
-      "passes": false,
+      "passes": true,
       "notes": "Problem titles need to be resolved by joining problem_id with problems.json data."
     },
     {

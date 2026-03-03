@@ -31,6 +31,9 @@
 - AIReview component: displays review results with score indicator, 4 review section cards, save button; rendered inside EditorPane below output panel
 - EditorPane manages analyze + save state internally (no onAnalyze callback needed from parent) — has access to `problem` prop and `code` state
 - Save flow: POST to /api/submissions with problem slug as problem_id, code, performance_score, complexities, ai_review JSON, is_self_reported=false
+- Trust Mode (self-reported) submissions: POST to /api/submissions with is_self_reported=true, problem slug as problem_id
+- Searchable dropdown: input + absolute dropdown list + useRef + mousedown listener for outside-click close
+- SRS queue query: `.lte("next_revision_date", new Date().toISOString())` to get due revisions; enrich with problems.json via slug→Problem Map
 
 ## 2026-03-03 14:56 - US-001
 - Initialized Next.js 14 project scaffolding with all required dependencies
@@ -223,4 +226,34 @@
   - The AI review panel is rendered inside EditorPane's flex column with max-h-80 and overflow-y-auto to prevent it from pushing the editor off-screen
   - Score indicator uses colored bars (red for 1-2, yellow for 3, green for 4-5) rather than stars for clearer visual feedback
   - Save success shows next revision date formatted with weekday, month, day for readability
+---
+
+## 2026-03-03 15:48 - US-015
+- Built Trust Mode logger form for external submissions
+- Files changed:
+  - src/app/dashboard/log/page.tsx (new — server component, loads problems from lib, renders TrustModeForm)
+  - src/components/logger/TrustModeForm.tsx (new — client component with searchable problem dropdown, code paste area, multi-select topics, approach/remarks textareas, score slider 1-5, time taken, complexity dropdowns, submit to /api/submissions)
+- **Learnings for future iterations:**
+  - Follow the practice page pattern: server component loads problem data → passes to client component as props
+  - Searchable dropdown pattern: combine input field + absolute-positioned dropdown list + ref-based outside-click detection (useEffect with mousedown listener)
+  - Multi-select tag pattern: display selected items as removable chips above the search input; filter out already-selected items from dropdown
+  - Score slider uses `<input type="range">` with `accent-blue-500` for Tailwind styling; labels displayed via SCORE_LABELS lookup
+  - Complexity options use Unicode superscripts (O(n²), O(2ⁿ)) for cleaner display
+  - Form reset after successful submission: set all state back to initial values
+  - The log page is at /dashboard/log, matching the sidebar navigation link from US-007
+---
+
+## 2026-03-03 15:51 - US-016
+- Built SRS revision queue on dashboard home, replacing the placeholder page
+- Files changed:
+  - src/app/dashboard/page.tsx (replaced — server component that queries Supabase for due revisions, enriches with problem data from problems.json, passes to RevisionQueue client component)
+  - src/components/srs/RevisionQueue.tsx (new — client component displaying due revisions grouped by score: Hard 1-2 red, Medium 3 yellow, Easy 4-5 green; shows total count, problem title, category, score badge, days since last attempt; empty state with link to practice)
+  - prd.json (US-016 passes: true)
+- **Learnings for future iterations:**
+  - Dashboard page is now a server component (async) since it needs to query Supabase and load problems.json via fs
+  - Due revisions query: `supabase.from("user_progress").select(...).eq("user_id", user.id).lte("next_revision_date", new Date().toISOString())`
+  - Problem data enrichment: build a Map from slug → Problem for O(1) lookup, then map over submissions
+  - Grouping is by *performance_score* (not problem difficulty): Hard=1-2, Medium=3, Easy=4-5
+  - The DueRevision interface is exported from RevisionQueue.tsx for reuse by the page component
+  - RevisionQueue is a client component (no server-side data fetching) — all data passed as props
 ---
