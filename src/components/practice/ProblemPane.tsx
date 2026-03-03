@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import type { Problem } from "@/types";
 
 const difficultyColors: Record<string, string> = {
@@ -9,12 +9,58 @@ const difficultyColors: Record<string, string> = {
   Hard: "bg-red-500/20 text-red-400",
 };
 
+interface SubmissionRecord {
+  id: string;
+  performance_score: number;
+  created_at: string;
+  time_taken_mins: number | null;
+  time_complexity: string | null;
+  space_complexity: string | null;
+  is_self_reported: boolean;
+}
+
+const scoreLabels: Record<number, { label: string; color: string }> = {
+  1: { label: "Struggled", color: "text-red-400" },
+  2: { label: "Suboptimal", color: "text-orange-400" },
+  3: { label: "Acceptable", color: "text-yellow-400" },
+  4: { label: "Clean", color: "text-neon-green" },
+  5: { label: "Optimal", color: "text-neon-cyan" },
+};
+
 export default function ProblemPane({
   problem,
 }: {
   problem: Problem | null;
 }) {
   const [revealedHints, setRevealedHints] = useState<Set<number>>(new Set());
+  const [submissions, setSubmissions] = useState<SubmissionRecord[]>([]);
+  const [loadingHistory, setLoadingHistory] = useState(false);
+
+  useEffect(() => {
+    if (!problem) {
+      setSubmissions([]);
+      return;
+    }
+
+    let cancelled = false;
+    setLoadingHistory(true);
+
+    fetch(`/api/submissions?problem_id=${encodeURIComponent(problem.slug)}&limit=50`)
+      .then((res) => (res.ok ? res.json() : []))
+      .then((data: SubmissionRecord[]) => {
+        if (!cancelled) setSubmissions(data);
+      })
+      .catch(() => {
+        if (!cancelled) setSubmissions([]);
+      })
+      .finally(() => {
+        if (!cancelled) setLoadingHistory(false);
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [problem]);
 
   if (!problem) {
     return (
@@ -203,6 +249,96 @@ export default function ProblemPane({
             </svg>
             Watch NeetCode Video
           </a>
+        )}
+      </div>
+
+      {/* Submission History */}
+      <div className="border-t border-[var(--surface-border)] pt-4">
+        <h3 className="text-sm font-semibold text-foreground mb-3 flex items-center gap-2">
+          <svg className="h-4 w-4 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+            <path strokeLinecap="round" strokeLinejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+          Submission History
+          {submissions.length > 0 && (
+            <span className="text-xs font-normal text-gray-500">
+              ({submissions.length} attempt{submissions.length !== 1 ? "s" : ""})
+            </span>
+          )}
+        </h3>
+
+        {loadingHistory ? (
+          <div className="flex items-center gap-2 text-xs text-gray-500 py-2">
+            <svg className="h-3 w-3 animate-spin" fill="none" viewBox="0 0 24 24">
+              <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+              <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+            </svg>
+            Loading history...
+          </div>
+        ) : submissions.length === 0 ? (
+          <p className="text-xs text-gray-500 py-2">
+            No attempts yet. Solve this problem to track your progress.
+          </p>
+        ) : (
+          <div className="space-y-2">
+            {/* Summary stats */}
+            <div className="flex gap-3 text-xs">
+              <div className="rounded-md bg-white/5 border border-[var(--surface-border)] px-3 py-2 flex-1 text-center">
+                <div className="text-lg font-bold text-foreground">{submissions.length}</div>
+                <div className="text-gray-500">Attempts</div>
+              </div>
+              <div className="rounded-md bg-white/5 border border-[var(--surface-border)] px-3 py-2 flex-1 text-center">
+                <div className={`text-lg font-bold ${scoreLabels[Math.max(...submissions.map((s) => s.performance_score))]?.color ?? "text-foreground"}`}>
+                  {Math.max(...submissions.map((s) => s.performance_score))}/5
+                </div>
+                <div className="text-gray-500">Best Score</div>
+              </div>
+              <div className="rounded-md bg-white/5 border border-[var(--surface-border)] px-3 py-2 flex-1 text-center">
+                <div className={`text-lg font-bold ${scoreLabels[submissions[0].performance_score]?.color ?? "text-foreground"}`}>
+                  {submissions[0].performance_score}/5
+                </div>
+                <div className="text-gray-500">Latest</div>
+              </div>
+            </div>
+
+            {/* Individual attempts */}
+            <div className="space-y-1.5">
+              {submissions.map((sub, idx) => {
+                const date = new Date(sub.created_at);
+                const daysAgo = Math.floor((Date.now() - date.getTime()) / (1000 * 60 * 60 * 24));
+                const timeLabel = daysAgo === 0 ? "Today" : daysAgo === 1 ? "Yesterday" : `${daysAgo}d ago`;
+                const score = scoreLabels[sub.performance_score];
+
+                return (
+                  <div
+                    key={sub.id}
+                    className="flex items-center justify-between rounded-md border border-[var(--surface-border)] bg-white/[0.02] px-3 py-2 text-xs"
+                  >
+                    <div className="flex items-center gap-3">
+                      <span className="text-gray-500 w-6 text-right">#{submissions.length - idx}</span>
+                      <span className="text-gray-400">
+                        {date.toLocaleDateString("en-US", { month: "short", day: "numeric" })}
+                      </span>
+                      <span className="text-gray-600">({timeLabel})</span>
+                    </div>
+                    <div className="flex items-center gap-3">
+                      {sub.time_taken_mins && (
+                        <span className="text-gray-500">{sub.time_taken_mins}min</span>
+                      )}
+                      {sub.time_complexity && (
+                        <span className="text-gray-500 font-mono">{sub.time_complexity}</span>
+                      )}
+                      <span className={`font-medium ${score?.color ?? "text-gray-400"}`}>
+                        {sub.performance_score}/5
+                      </span>
+                      <span className={`px-1.5 py-0.5 rounded text-[10px] ${sub.is_self_reported ? "bg-neon-purple/20 text-neon-purple" : "bg-neon-cyan/20 text-neon-cyan"}`}>
+                        {sub.is_self_reported ? "Trust" : "Practice"}
+                      </span>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
         )}
       </div>
     </div>
