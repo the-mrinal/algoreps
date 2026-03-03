@@ -2,7 +2,8 @@
 
 import { useState, useEffect } from "react";
 import dynamic from "next/dynamic";
-import type { Problem } from "@/types";
+import type { Problem, AIReviewResponse } from "@/types";
+import AIReview from "./AIReview";
 
 const MonacoEditor = dynamic(() => import("@monaco-editor/react"), {
   ssr: false,
@@ -22,15 +23,24 @@ interface ExecutionResult {
 
 export default function EditorPane({
   problem,
-  onAnalyze,
 }: {
   problem: Problem | null;
-  onAnalyze?: (code: string) => void;
 }) {
   const [code, setCode] = useState("");
   const [input, setInput] = useState("");
   const [result, setResult] = useState<ExecutionResult | null>(null);
   const [isRunning, setIsRunning] = useState(false);
+
+  // AI Review state
+  const [aiReview, setAiReview] = useState<AIReviewResponse | null>(null);
+  const [isAnalyzing, setIsAnalyzing] = useState(false);
+  const [analyzeError, setAnalyzeError] = useState<string | null>(null);
+
+  // Save state
+  const [isSaving, setIsSaving] = useState(false);
+  const [saveSuccess, setSaveSuccess] = useState<{
+    nextRevisionDate: string;
+  } | null>(null);
 
   // Pre-populate code when problem changes
   useEffect(() => {
@@ -42,6 +52,10 @@ export default function EditorPane({
       setCode(snippet);
       setResult(null);
       setInput("");
+      setAiReview(null);
+      setIsAnalyzing(false);
+      setAnalyzeError(null);
+      setSaveSuccess(null);
     }
   }, [problem]);
 
@@ -65,6 +79,79 @@ export default function EditorPane({
       });
     } finally {
       setIsRunning(false);
+    }
+  };
+
+  const handleAnalyze = async () => {
+    if (!problem) return;
+    setIsAnalyzing(true);
+    setAnalyzeError(null);
+    setAiReview(null);
+    setSaveSuccess(null);
+
+    try {
+      const res = await fetch("/api/analyze", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          code,
+          problemTitle: problem.title,
+          problemDescription: problem.description,
+        }),
+      });
+
+      if (!res.ok) {
+        const errData = await res.json().catch(() => null);
+        throw new Error(
+          errData?.error || `Analysis failed (${res.status})`
+        );
+      }
+
+      const review: AIReviewResponse = await res.json();
+      setAiReview(review);
+    } catch (err) {
+      setAnalyzeError(
+        err instanceof Error ? err.message : "An unexpected error occurred"
+      );
+    } finally {
+      setIsAnalyzing(false);
+    }
+  };
+
+  const handleSave = async () => {
+    if (!problem || !aiReview) return;
+    setIsSaving(true);
+
+    try {
+      const res = await fetch("/api/submissions", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          problem_id: problem.slug,
+          code,
+          performance_score: aiReview.performance_score,
+          time_complexity: aiReview.time_complexity,
+          space_complexity: aiReview.space_complexity,
+          ai_review: aiReview,
+          is_self_reported: false,
+        }),
+      });
+
+      if (!res.ok) {
+        const errData = await res.json().catch(() => null);
+        throw new Error(errData?.error || `Save failed (${res.status})`);
+      }
+
+      const data = await res.json();
+      setSaveSuccess({
+        nextRevisionDate: data.next_revision_date,
+      });
+    } catch (err) {
+      setAnalyzeError(
+        err instanceof Error ? err.message : "Failed to save submission"
+      );
+    } finally {
+      setIsSaving(false);
     }
   };
 
@@ -160,23 +247,51 @@ export default function EditorPane({
             </button>
             {result && (
               <button
-                onClick={() => onAnalyze?.(code)}
-                className="inline-flex items-center gap-1.5 rounded-md bg-blue-600 px-3 py-1.5 text-xs font-medium text-white hover:bg-blue-700 transition-colors"
+                onClick={handleAnalyze}
+                disabled={isAnalyzing}
+                className="inline-flex items-center gap-1.5 rounded-md bg-blue-600 px-3 py-1.5 text-xs font-medium text-white hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
               >
-                <svg
-                  className="h-3 w-3"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"
-                  />
-                </svg>
-                Analyze &amp; Score
+                {isAnalyzing ? (
+                  <>
+                    <svg
+                      className="h-3 w-3 animate-spin"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                    >
+                      <circle
+                        className="opacity-25"
+                        cx="12"
+                        cy="12"
+                        r="10"
+                        stroke="currentColor"
+                        strokeWidth="4"
+                      />
+                      <path
+                        className="opacity-75"
+                        fill="currentColor"
+                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
+                      />
+                    </svg>
+                    Analyzing...
+                  </>
+                ) : (
+                  <>
+                    <svg
+                      className="h-3 w-3"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"
+                      />
+                    </svg>
+                    Analyze &amp; Score
+                  </>
+                )}
               </button>
             )}
           </div>
@@ -251,6 +366,20 @@ export default function EditorPane({
               )}
             </div>
           ) : null}
+        </div>
+      )}
+
+      {/* AI Review Panel */}
+      {(aiReview || isAnalyzing || analyzeError) && (
+        <div className="flex-shrink-0 border-t border-gray-700 bg-gray-900 max-h-80 overflow-y-auto">
+          <AIReview
+            review={aiReview}
+            isAnalyzing={isAnalyzing}
+            analyzeError={analyzeError}
+            isSaving={isSaving}
+            saveSuccess={saveSuccess}
+            onSave={handleSave}
+          />
         </div>
       )}
     </div>

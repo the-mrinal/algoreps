@@ -26,6 +26,11 @@
 - Monaco editor: lazy-load with `dynamic(() => import("@monaco-editor/react"), { ssr: false })` — must disable SSR
 - EditorPane receives `problem` and `onAnalyze` callback; pre-populates code from `problem.code_snippets["javascript"]`
 - Practice page 4-column layout: categories (w-48) | problem list (w-64) | description pane (flex-1) | editor pane (flex-1)
+- AI review: import `buildReviewPrompt` from `@/lib/ai-review`; POST /api/analyze accepts { code, problemTitle, problemDescription } and returns AIReviewResponse JSON
+- Gemini API: uses `responseMimeType: "application/json"` for structured output; response at `candidates[0].content.parts[0].text`
+- AIReview component: displays review results with score indicator, 4 review section cards, save button; rendered inside EditorPane below output panel
+- EditorPane manages analyze + save state internally (no onAnalyze callback needed from parent) — has access to `problem` prop and `code` state
+- Save flow: POST to /api/submissions with problem slug as problem_id, code, performance_score, complexities, ai_review JSON, is_self_reported=false
 
 ## 2026-03-03 14:56 - US-001
 - Initialized Next.js 14 project scaffolding with all required dependencies
@@ -189,4 +194,33 @@
   - The practice page now has 4 visible columns; category sidebar and problem list were compressed from w-52/w-80 to w-48/w-64 with smaller text (text-xs) to fit the editor pane
   - `onAnalyze` callback is a placeholder for US-014 AI review integration — currently logs to console
   - Output panel border uses green (success) / red (error) to provide instant visual feedback
+---
+
+## 2026-03-03 15:41 - US-013
+- Implemented Gemini AI review API and prompt builder
+- Files changed:
+  - src/lib/ai-review.ts (new — buildReviewPrompt function that constructs the structured review prompt)
+  - src/app/api/analyze/route.ts (new — POST endpoint that calls Gemini 2.5 Flash API and returns parsed review JSON)
+- **Learnings for future iterations:**
+  - Gemini API endpoint: `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=API_KEY`
+  - Use `generationConfig: { responseMimeType: "application/json" }` to force Gemini to return valid JSON
+  - Response structure: `data.candidates[0].content.parts[0].text` — always use optional chaining as the structure can vary on error
+  - Gemini returns 429 for rate limits (free tier: 500 req/day, 1M tokens/day)
+  - The analyze route does NOT require auth — it's a stateless prompt relay. Auth is enforced when saving submissions (POST /api/submissions)
+---
+
+## 2026-03-03 15:45 - US-014
+- Built AI review display component with save and SRS scheduling
+- Files changed:
+  - src/components/practice/AIReview.tsx (new — displays AI review results with score indicator, 4 review section cards in 2x2 grid, save button with success confirmation)
+  - src/components/practice/EditorPane.tsx (modified — removed onAnalyze prop, added internal analyze/save state management, renders AIReview below output panel)
+  - src/components/practice/ProblemBrowser.tsx (modified — removed handleAnalyze placeholder, simplified EditorPane usage without onAnalyze prop)
+  - prd.json (US-014 passes: true)
+- **Learnings for future iterations:**
+  - EditorPane already has `problem` prop and `code` state — no need to bubble analyze logic up to ProblemBrowser; keeps state management localized
+  - AIReview component is purely presentational (receives all state as props) — easy to test and reuse
+  - Save flow uses `problem.slug` as `problem_id` to match the submissions API (which stores it as TEXT)
+  - The AI review panel is rendered inside EditorPane's flex column with max-h-80 and overflow-y-auto to prevent it from pushing the editor off-screen
+  - Score indicator uses colored bars (red for 1-2, yellow for 3, green for 4-5) rather than stars for clearer visual feedback
+  - Save success shows next revision date formatted with weekday, month, day for readability
 ---

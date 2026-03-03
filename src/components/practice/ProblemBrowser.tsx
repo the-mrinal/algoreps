@@ -43,11 +43,6 @@ export default function ProblemBrowser({
     return result;
   }, [problems, selectedCategory, searchQuery]);
 
-  const handleAnalyze = (code: string) => {
-    // Placeholder for AI review integration (US-014)
-    console.log("Analyze & Score requested for code:", code.slice(0, 50));
-  };
-
   return (
     <div className="flex h-full gap-2">
       {/* Category Sidebar */}
@@ -161,7 +156,7 @@ export default function ProblemBrowser({
 
       {/* Editor + Output Pane */}
       <div className="flex-1 min-w-0 overflow-hidden rounded-lg border border-gray-200 dark:border-gray-700 bg-gray-900">
-        <EditorPane problem={selectedProblem} onAnalyze={handleAnalyze} />
+        <EditorPane problem={selectedProblem} />
       </div>
     </div>
   );

@@ -246,7 +246,7 @@
         "Typecheck passes"
       ],
       "priority": 13,
-      "passes": false,
+      "passes": true,
       "notes": "Gemini 2.5 Flash free tier: 500 req/day, 1M tokens/day. See IMPLEMENTATION_PLAN.md for full prompt template and scoring guide."
     },
     {
@@ -267,7 +267,7 @@
         "Verify AI review display and save flow in browser using dev-browser skill"
       ],
       "priority": 14,
-      "passes": false,
+      "passes": true,
       "notes": ""
     },
     {
