@@ -39,6 +39,7 @@
 - Practice page URL query param: `?problem=slug` pre-selects a problem via useSearchParams + useEffect; requires Suspense boundary
 - Use `type X = Y` instead of `interface X extends Y {}` to avoid @typescript-eslint/no-empty-object-type lint error
 - recharts Tooltip: use custom `content={<CustomTooltip />}` component instead of `formatter` prop to avoid complex TypeScript union types
+- HistoryTable: client-side sort/filter/pagination; data enriched server-side from problems.json; row expansion via fragment with two `<tr>` elements
 
 ## 2026-03-03 14:56 - US-001
 - Initialized Next.js 14 project scaffolding with all required dependencies
@@ -309,4 +310,20 @@
   - recharts `Cell` component inside `Bar` allows per-bar coloring (e.g., red for low scores, blue for high)
   - Category data is only in problems.json — must join submission `problem_id` (slug) with problems to get category; build a `Map<slug, category>` for O(1) lookup
   - recharts adds ~100kB to the progress page first load JS (from 90kB → 196kB); acceptable for a data visualization page
+---
+
+## 2026-03-03 16:06 - US-020
+- Built submission history table with sorting, filtering, pagination, and row expansion
+- Files changed:
+  - src/components/progress/HistoryTable.tsx (new — client component with sortable columns, category/difficulty/min-score filters, 20-row pagination, click-to-expand for approach/remarks/AI review)
+  - src/app/dashboard/progress/page.tsx (modified — fetches full submission fields, enriches with problems.json data for title/difficulty/category, passes to HistoryTable with categories list)
+  - prd.json (US-020 passes: true)
+- **Learnings for future iterations:**
+  - Progress page query now fetches all fields (id, approach, remarks, ai_review, etc.) for the history table — no separate API call needed
+  - HistoryRow type uses enriched fields (problemTitle, difficulty, category) resolved from problems.json slug→Problem map on the server
+  - Sorting by difficulty uses a DIFFICULTY_ORDER map (Easy=1, Medium=2, Hard=3) for numeric comparison
+  - Row expansion uses a RowWithExpansion sub-component that renders two `<tr>` elements (data row + expanded detail row) wrapped in a fragment
+  - The ai_review field from Supabase is JSONB — cast it via `as HistoryRow["ai_review"]` since the type system can't infer the nested shape
+  - HistoryTable adds ~5kB to the progress page first load JS (198kB → 203kB total including recharts)
+  - Client-side sorting/filtering/pagination means all data is loaded once — acceptable for individual user's submission history (typically <1000 rows)
 ---

@@ -1,9 +1,11 @@
 import { createClient } from "@/lib/supabase/server";
-import { getAllProblems } from "@/lib/problems";
+import { getAllProblems, getCategories } from "@/lib/problems";
 import StatsOverview from "@/components/progress/StatsOverview";
 import type { StatsData } from "@/components/progress/StatsOverview";
 import TopicChart from "@/components/progress/TopicChart";
 import type { TopicData } from "@/components/progress/TopicChart";
+import HistoryTable from "@/components/progress/HistoryTable";
+import type { HistoryRow } from "@/components/progress/HistoryTable";
 
 function formatDateStr(d: Date): string {
   const y = d.getFullYear();
@@ -50,10 +52,12 @@ export default async function ProgressPage() {
     return null;
   }
 
-  // Fetch all submissions for stats calculation
+  // Fetch all submissions (full fields for history table + stats calculation)
   const { data: submissions } = await supabase
     .from("user_progress")
-    .select("problem_id, performance_score, created_at, next_revision_date")
+    .select(
+      "id, problem_id, performance_score, created_at, next_revision_date, time_taken_mins, time_complexity, space_complexity, is_self_reported, approach, remarks, ai_review"
+    )
     .eq("user_id", user.id)
     .order("created_at", { ascending: false });
 
@@ -137,6 +141,31 @@ export default async function ProgressPage() {
     })
   );
 
+  // Build enriched history rows for HistoryTable
+  const slugToProb = new Map(problems.map((p) => [p.slug, p]));
+
+  const historyRows: HistoryRow[] = allSubmissions.map((s) => {
+    const prob = slugToProb.get(s.problem_id);
+    return {
+      id: s.id,
+      problem_id: s.problem_id,
+      created_at: s.created_at,
+      performance_score: s.performance_score,
+      time_taken_mins: s.time_taken_mins,
+      time_complexity: s.time_complexity,
+      space_complexity: s.space_complexity,
+      is_self_reported: s.is_self_reported,
+      approach: s.approach ?? null,
+      remarks: s.remarks ?? null,
+      ai_review: s.ai_review as HistoryRow["ai_review"],
+      problemTitle: prob?.title ?? s.problem_id,
+      difficulty: prob?.difficulty ?? "Medium",
+      category: prob?.category ?? "Unknown",
+    };
+  });
+
+  const allCategories = getCategories();
+
   return (
     <div>
       <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">
@@ -144,6 +173,7 @@ export default async function ProgressPage() {
       </h1>
       <StatsOverview stats={stats} />
       <TopicChart data={topicData} />
+      <HistoryTable rows={historyRows} categories={allCategories} />
     </div>
   );
 }

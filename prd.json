@@ -379,7 +379,7 @@
         "Verify table sorting, filtering, and expansion in browser using dev-browser skill"
       ],
       "priority": 20,
-      "passes": false,
+      "passes": true,
       "notes": ""
     },
     {
