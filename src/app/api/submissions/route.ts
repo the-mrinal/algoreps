@@ -102,7 +102,41 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 
-  return NextResponse.json(data, { status: 201 });
+  // Check if a daily plan exists for today and mark the item as completed
+  let plan_item_completed = false;
+  const today = new Date().toISOString().split("T")[0];
+
+  const { data: planRow } = await supabase
+    .from("daily_plans")
+    .select("id, plan_data")
+    .eq("user_id", user.id)
+    .eq("plan_date", today)
+    .single();
+
+  if (planRow?.plan_data) {
+    const planData = planRow.plan_data as Array<{
+      problem_id: string;
+      status: string;
+      [key: string]: unknown;
+    }>;
+    const itemIndex = planData.findIndex(
+      (item) => item.problem_id === problem_id && item.status === "pending"
+    );
+
+    if (itemIndex !== -1) {
+      planData[itemIndex].status = "completed";
+      await supabase
+        .from("daily_plans")
+        .update({
+          plan_data: planData,
+          updated_at: new Date().toISOString(),
+        })
+        .eq("id", planRow.id);
+      plan_item_completed = true;
+    }
+  }
+
+  return NextResponse.json({ ...data, plan_item_completed }, { status: 201 });
 }
 
 export async function GET(request: NextRequest) {
