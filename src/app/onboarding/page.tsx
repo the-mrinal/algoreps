@@ -176,6 +176,19 @@ function OnboardingContent() {
     loadProblemCounts();
   }, [currentStep]);
 
+  const initCodeForProblem = useCallback((problem: Problem) => {
+    const raw = problem.code_snippets["python3"] || "";
+    let snippet = raw;
+    if (raw) {
+      const methodMatch = raw.match(/def (\w+)\(self/);
+      const methodName = methodMatch ? methodMatch[1] : "solve";
+      snippet = `from typing import List, Optional\nfrom collections import defaultdict, deque\n\n${raw}\n\n# TODO: call your solution\n# print(Solution().${methodName}())`;
+    }
+    setCode(snippet);
+    setRunResult(null);
+    setShowScorePanel(false);
+  }, []);
+
   // Load diagnostic problems when step 3 is shown
   useEffect(() => {
     if (currentStep !== 3) return;
@@ -256,19 +269,6 @@ function OnboardingContent() {
 
     loadDiagnosticProblems();
   }, [currentStep, initCodeForProblem]);
-
-  const initCodeForProblem = useCallback((problem: Problem) => {
-    const raw = problem.code_snippets["python3"] || "";
-    let snippet = raw;
-    if (raw) {
-      const methodMatch = raw.match(/def (\w+)\(self/);
-      const methodName = methodMatch ? methodMatch[1] : "solve";
-      snippet = `from typing import List, Optional\nfrom collections import defaultdict, deque\n\n${raw}\n\n# TODO: call your solution\n# print(Solution().${methodName}())`;
-    }
-    setCode(snippet);
-    setRunResult(null);
-    setShowScorePanel(false);
-  }, []);
 
   async function handleNextStep1() {
     if (!proficiencyLevel) {
