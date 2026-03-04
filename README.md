@@ -52,6 +52,9 @@ Gemini 2.5 Flash integration that analyzes your solution for:
 - Alternative approaches
 - Interview readiness score
 
+### Live Attempt Timer
+Built-in stopwatch that starts when you begin a problem and tracks elapsed time throughout your attempt. Time spent is automatically logged with each submission, helping you build interview-pace awareness and identify problems that take longer than expected.
+
 ### Trust Mode Logger
 Solved a problem on LeetCode or in a notebook? Log it without submitting code. Add the source URL, your approach, and remarks -- it still gets scheduled for review.
 

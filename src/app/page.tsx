@@ -64,6 +64,18 @@ export default async function Home() {
           </div>
 
           <div className="rounded-lg border border-gray-800 bg-gray-900/50 p-6 space-y-3">
+            <div className="text-neon-cyan text-2xl">&#x23F1;</div>
+            <h3 className="text-lg font-medium text-foreground">
+              Built-in Timer
+            </h3>
+            <p className="text-sm text-gray-400 leading-relaxed">
+              Track how long each attempt takes with a live timer. Builds
+              interview-pace awareness and logs time spent per problem
+              automatically.
+            </p>
+          </div>
+
+          <div className="rounded-lg border border-gray-800 bg-gray-900/50 p-6 space-y-3">
             <div className="text-neon-cyan text-2xl">&#x1F4CA;</div>
             <h3 className="text-lg font-medium text-foreground">
               Progress Dashboard
@@ -72,17 +84,6 @@ export default async function Home() {
               Track your coverage across topics like trees, graphs, DP, and
               more. See what&apos;s due, what&apos;s overdue, and where your weak spots
               are.
-            </p>
-          </div>
-
-          <div className="rounded-lg border border-gray-800 bg-gray-900/50 p-6 space-y-3">
-            <div className="text-neon-cyan text-2xl">&#x1F4E7;</div>
-            <h3 className="text-lg font-medium text-foreground">
-              Daily Review Reminders
-            </h3>
-            <p className="text-sm text-gray-400 leading-relaxed">
-              Get a daily email with your review queue so you never lose
-              momentum. Consistency beats intensity.
             </p>
           </div>
         </div>
