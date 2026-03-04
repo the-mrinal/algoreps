@@ -188,3 +188,13 @@
   - Response now spreads `...data` with `plan_item_completed` boolean — clients can use this flag to trigger a plan view refresh
   - Today's date computed as `new Date().toISOString().split("T")[0]` for consistent YYYY-MM-DD format matching plan_date
 ---
+
+## 2026-03-04 - US-040
+- What was implemented: Built pattern completion and advancement flow. Created PatternCompleteModal component that shows when all problems in the current pattern are solved. Modal displays pattern name, problems solved count, and average score. Two action buttons: "Move to Next Pattern" (increments current_pattern_index via PATCH /api/onboarding/preferences and reloads) and "Stay & Reinforce" (dismisses modal). For last pattern (Bit Manipulation), shows "All Patterns Complete!" with "Focus on Weak Areas" button. Modal is dismissible via backdrop click or Escape key. Pattern exhaustion detected server-side in dashboard page by comparing solved problems count vs total problems in current pattern category.
+- Files changed: src/components/dashboard/PatternCompleteModal.tsx (new), src/components/dashboard/TodaysPlan.tsx (updated — added modal integration and new props), src/app/dashboard/page.tsx (updated — added pattern exhaustion detection logic)
+- **Learnings for future iterations:**
+  - Pattern completion detection queries problems table for current category slugs, then checks user_progress for solved count — if solved >= total, pattern is complete
+  - PatternCompleteModal uses window.location.reload() after advancing pattern to regenerate the daily plan with new pattern context
+  - Modal state (showPatternModal) initialized from server-provided patternComplete prop — shown once per page load when pattern is exhausted
+  - The PATCH /api/onboarding/preferences endpoint already supports current_pattern_index updates — no new API route needed
+---

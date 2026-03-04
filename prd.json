@@ -322,7 +322,7 @@
         "Verify in browser using dev-browser skill"
       ],
       "priority": 17,
-      "passes": false,
+      "passes": true,
       "notes": "The advancement flow is triggered from the dashboard page when plan generation detects pattern exhaustion. The modal is shown once per pattern completion."
     },
     {
