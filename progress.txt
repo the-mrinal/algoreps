@@ -146,3 +146,14 @@
   - useCallback declarations must appear before useEffect hooks that reference them in their dependency arrays (TS block-scoped variable error)
   - The onboarding completion has two paths: (1) handleFinishOnboarding after diagnostic step 3, (2) handleNextStep2 when all patterns rated 4-5 (no weak patterns)
 ---
+
+## 2026-03-04 - US-036
+- What was implemented: Created daily plan generation engine in src/lib/daily-plan.ts. Exports `generateDailyPlan(userId, supabase)` that builds a personalized mix of revision + new problems. Revision items: queries user_progress for due problems (next_revision_date <= today), ordered by score ASC, limited to 70% of quota. New items: fills remaining 30%+ quota with unsolved problems from current pattern onwards, respecting difficulty distribution targets per proficiency level. Weak pattern boost adds extra problems from patterns with avg confidence < 3.
+- Files changed: src/lib/daily-plan.ts (new)
+- **Learnings for future iterations:**
+  - `generateDailyPlan` accepts any SupabaseClient (server or admin) — works for both user-scoped and cron contexts
+  - CATEGORY_ORDER array is duplicated across daily-plan.ts, onboarding/page.tsx, and seed-pattern-order.ts — consider extracting to shared constants
+  - Difficulty distribution is a target ratio, fallback fills with any available difficulty if targets can't be met
+  - Revision items use problem slug as problem_id (matching user_progress.problem_id which stores slugs)
+  - sortCandidatesByPatternPriority wraps around CATEGORY_ORDER so exhausted patterns naturally fall through to next
+---

@@ -243,7 +243,7 @@
         "Typecheck passes"
       ],
       "priority": 13,
-      "passes": false,
+      "passes": true,
       "notes": "This is a pure server-side function. It queries multiple tables but should complete in <500ms. The difficulty distribution is a target ratio — if not enough Easy problems exist in current pattern, fill with Medium."
     },
     {
