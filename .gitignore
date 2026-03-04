@@ -47,3 +47,4 @@ prd.json.example
 tasks/
 scripts/
 supabase/
+.mcp.json
