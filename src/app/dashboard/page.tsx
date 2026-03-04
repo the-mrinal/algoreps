@@ -89,6 +89,45 @@ export default async function DashboardHome() {
   const currentPatternIndex = profile?.current_pattern_index ?? 0;
   const currentPattern = CATEGORY_ORDER[currentPatternIndex] ?? CATEGORY_ORDER[0];
 
+  // Detect pattern exhaustion: check if current pattern has unsolved problems
+  let patternComplete = false;
+  let patternStats = { problemsSolved: 0, averageScore: 0 };
+
+  // Count total problems in current pattern
+  const { data: patternProblems } = await supabase
+    .from("problems")
+    .select("slug")
+    .eq("category", currentPattern)
+    .not("pattern_order", "is", null);
+
+  if (patternProblems && patternProblems.length > 0) {
+    const patternSlugs = patternProblems.map((p: { slug: string }) => p.slug);
+
+    // Count solved problems in this pattern
+    const { data: solvedInPattern } = await supabase
+      .from("user_progress")
+      .select("problem_id, performance_score")
+      .eq("user_id", user.id)
+      .in("problem_id", patternSlugs);
+
+    const solvedCount = solvedInPattern?.length ?? 0;
+    if (solvedCount >= patternProblems.length) {
+      patternComplete = true;
+      const totalScore = (solvedInPattern || []).reduce(
+        (sum: number, r: { performance_score: number }) => sum + r.performance_score,
+        0
+      );
+      patternStats = {
+        problemsSolved: solvedCount,
+        averageScore: solvedCount > 0 ? totalScore / solvedCount : 0,
+      };
+    }
+  }
+
+  const nextPatternIndex = currentPatternIndex + 1;
+  const isLastPattern = currentPatternIndex >= CATEGORY_ORDER.length - 1;
+  const nextPatternName = isLastPattern ? null : CATEGORY_ORDER[nextPatternIndex];
+
   const dateLabel = now.toLocaleDateString("en-US", {
     weekday: "long",
     month: "long",
@@ -104,6 +143,11 @@ export default async function DashboardHome() {
         dateLabel={dateLabel}
         currentPattern={currentPattern}
         planDate={today}
+        patternComplete={patternComplete}
+        patternStats={patternStats}
+        currentPatternIndex={currentPatternIndex}
+        nextPatternName={nextPatternName}
+        isLastPattern={isLastPattern}
       />
     </div>
   );

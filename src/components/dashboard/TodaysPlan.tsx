@@ -2,6 +2,7 @@
 
 import { useState, useCallback } from "react";
 import type { PlanItem } from "@/types";
+import PatternCompleteModal from "./PatternCompleteModal";
 
 interface PlanItemWithTitle extends PlanItem {
   title: string;
@@ -13,6 +14,11 @@ interface TodaysPlanProps {
   dateLabel: string;
   currentPattern: string;
   planDate: string;
+  patternComplete: boolean;
+  patternStats: { problemsSolved: number; averageScore: number };
+  currentPatternIndex: number;
+  nextPatternName: string | null;
+  isLastPattern: boolean;
 }
 
 function DifficultyBadge({ difficulty }: { difficulty: string }) {
@@ -137,10 +143,16 @@ export default function TodaysPlan({
   dateLabel,
   currentPattern,
   planDate,
+  patternComplete,
+  patternStats,
+  currentPatternIndex,
+  nextPatternName,
+  isLastPattern,
 }: TodaysPlanProps) {
   const [planItems, setPlanItems] = useState<PlanItemWithTitle[]>(initialPlanItems);
   const [localChecked, setLocalChecked] = useState<Set<string>>(new Set());
   const [swappingId, setSwappingId] = useState<string | null>(null);
+  const [showPatternModal, setShowPatternModal] = useState(patternComplete);
 
   const revisionItems = planItems.filter((item) => item.type === "revision");
   const newItems = planItems.filter((item) => item.type === "new");
@@ -310,6 +322,19 @@ export default function TodaysPlan({
             to solve problems.
           </p>
         </div>
+      )}
+
+      {/* Pattern completion modal */}
+      {showPatternModal && (
+        <PatternCompleteModal
+          patternName={currentPattern}
+          nextPatternName={nextPatternName}
+          problemsSolved={patternStats.problemsSolved}
+          averageScore={patternStats.averageScore}
+          currentPatternIndex={currentPatternIndex}
+          isLastPattern={isLastPattern}
+          onDismiss={() => setShowPatternModal(false)}
+        />
       )}
     </div>
   );
