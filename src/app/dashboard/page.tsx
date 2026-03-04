@@ -103,6 +103,7 @@ export default async function DashboardHome() {
         dayNumber={dayNumber}
         dateLabel={dateLabel}
         currentPattern={currentPattern}
+        planDate={today}
       />
     </div>
   );

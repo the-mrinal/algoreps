@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import type { PlanItem } from "@/types";
 
 interface PlanItemWithTitle extends PlanItem {
@@ -12,6 +12,7 @@ interface TodaysPlanProps {
   dayNumber: number;
   dateLabel: string;
   currentPattern: string;
+  planDate: string;
 }
 
 function DifficultyBadge({ difficulty }: { difficulty: string }) {
@@ -33,13 +34,20 @@ function PlanItemCard({
   item,
   checked,
   onToggle,
+  onSwap,
+  onSkip,
+  isSwapping,
 }: {
   item: PlanItemWithTitle;
   checked: boolean;
   onToggle: () => void;
+  onSwap: () => void;
+  onSkip: () => void;
+  isSwapping: boolean;
 }) {
   const isCompleted = item.status === "completed" || checked;
   const isSkipped = item.status === "skipped";
+  const isActionable = !isCompleted && !isSkipped;
 
   return (
     <div
@@ -87,7 +95,33 @@ function PlanItemCard({
         </div>
       </div>
 
-      <div className="flex items-center gap-2 flex-shrink-0">
+      <div className="flex items-center gap-1.5 flex-shrink-0">
+        {isActionable && (
+          <>
+            {/* Swap button */}
+            <button
+              onClick={onSwap}
+              disabled={isSwapping}
+              title="Swap problem"
+              className="p-1.5 rounded text-gray-500 hover:text-neon-cyan hover:bg-gray-700/50 transition-colors disabled:opacity-50"
+            >
+              <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4" />
+              </svg>
+            </button>
+            {/* Skip button */}
+            <button
+              onClick={onSkip}
+              disabled={isSwapping}
+              title="Skip problem"
+              className="p-1.5 rounded text-gray-500 hover:text-yellow-400 hover:bg-gray-700/50 transition-colors disabled:opacity-50"
+            >
+              <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M13 5l7 7-7 7M5 5l7 7-7 7" />
+              </svg>
+            </button>
+          </>
+        )}
         <DifficultyBadge difficulty={item.difficulty} />
         {isSkipped && (
           <span className="text-xs text-gray-500">Skipped</span>
@@ -98,13 +132,15 @@ function PlanItemCard({
 }
 
 export default function TodaysPlan({
-  planItems,
+  planItems: initialPlanItems,
   dayNumber,
   dateLabel,
   currentPattern,
+  planDate,
 }: TodaysPlanProps) {
-  // Track local check state for optimistic toggling (server-side status takes precedence)
+  const [planItems, setPlanItems] = useState<PlanItemWithTitle[]>(initialPlanItems);
   const [localChecked, setLocalChecked] = useState<Set<string>>(new Set());
+  const [swappingId, setSwappingId] = useState<string | null>(null);
 
   const revisionItems = planItems.filter((item) => item.type === "revision");
   const newItems = planItems.filter((item) => item.type === "new");
@@ -133,9 +169,40 @@ export default function TodaysPlan({
     });
   };
 
+  const handleAction = useCallback(
+    async (problemId: string, action: "swap" | "skip") => {
+      setSwappingId(problemId);
+      try {
+        const res = await fetch("/api/daily-plan", {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ plan_date: planDate, action, problem_id: problemId }),
+        });
+
+        if (!res.ok) {
+          const err = await res.json();
+          alert(err.error || "Failed to update plan");
+          return;
+        }
+
+        const { plan_data } = await res.json();
+        // Merge new plan_data with titles — keep existing titles, fetch missing ones
+        setPlanItems((prev) => {
+          const titleMap = new Map(prev.map((i) => [i.problem_id, i.title]));
+          return (plan_data as PlanItem[]).map((item: PlanItem) => ({
+            ...item,
+            title: titleMap.get(item.problem_id) ?? item.problem_id,
+          }));
+        });
+      } finally {
+        setSwappingId(null);
+      }
+    },
+    [planDate],
+  );
+
   // Group revisions by score category for colored borders
   const getRevisionColor = (item: PlanItemWithTitle) => {
-    // We don't have score in PlanItem, so we use the order (hardest first from generateDailyPlan)
     const idx = revisionItems.indexOf(item);
     const ratio = revisionItems.length > 1 ? idx / (revisionItems.length - 1) : 0;
     if (ratio < 0.33) return "border-l-red-500";
@@ -196,6 +263,9 @@ export default function TodaysPlan({
                   item={item}
                   checked={localChecked.has(item.problem_id)}
                   onToggle={() => handleToggle(item.problem_id)}
+                  onSwap={() => handleAction(item.problem_id, "swap")}
+                  onSkip={() => handleAction(item.problem_id, "skip")}
+                  isSwapping={swappingId === item.problem_id}
                 />
               </div>
             ))}
@@ -219,6 +289,9 @@ export default function TodaysPlan({
                 item={item}
                 checked={localChecked.has(item.problem_id)}
                 onToggle={() => handleToggle(item.problem_id)}
+                onSwap={() => handleAction(item.problem_id, "swap")}
+                onSkip={() => handleAction(item.problem_id, "skip")}
+                isSwapping={swappingId === item.problem_id}
               />
             ))}
           </div>
