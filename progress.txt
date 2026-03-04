@@ -157,3 +157,14 @@
   - Revision items use problem slug as problem_id (matching user_progress.problem_id which stores slugs)
   - sortCandidatesByPatternPriority wraps around CATEGORY_ORDER so exhausted patterns naturally fall through to next
 ---
+
+## 2026-03-04 - US-037
+- What was implemented: Rewrote dashboard home page to show "Today's Plan" instead of revision-only queue. Server component checks for existing daily_plan for today's date — if none, calls generateDailyPlan() and persists to daily_plans table. Shows Day X header (days since profile creation), formatted date, completion stats, estimated time remaining, current pattern name. Progress bar with neon-cyan fill. Revisions section with colored left borders (red/yellow/green by position — hardest first). New Problems section with category tags and difficulty badges. Plan items are links to /dashboard/practice?problem=slug. Completed items show checked checkbox with line-through. Skipped items show greyed out. "All done for today!" celebration when complete.
+- Files changed: src/app/dashboard/page.tsx (rewritten), src/components/dashboard/TodaysPlan.tsx (new)
+- **Learnings for future iterations:**
+  - Dashboard page is a server component — generates/loads plan server-side and passes planItemsWithTitles (PlanItem + title) to TodaysPlan client component
+  - TodaysPlan uses local state (localChecked Set) for optimistic checkbox toggling — server status takes precedence
+  - RevisionQueue component (src/components/srs/RevisionQueue.tsx) is still present but no longer imported on dashboard home — kept for potential reuse
+  - Day number calculated as floor((now - profile.created_at) / 1 day) + 1
+  - CATEGORY_ORDER duplicated again in page.tsx — now in 4 files (daily-plan.ts, onboarding/page.tsx, seed-pattern-order.ts, dashboard/page.tsx)
+---

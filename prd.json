@@ -266,7 +266,7 @@
         "Verify in browser using dev-browser skill"
       ],
       "priority": 14,
-      "passes": false,
+      "passes": true,
       "notes": "The old RevisionQueue component (src/components/srs/RevisionQueue.tsx) is no longer used on the dashboard home but should not be deleted — it may be used elsewhere or in the future."
     },
     {
