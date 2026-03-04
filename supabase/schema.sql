@@ -138,6 +138,7 @@ CREATE TABLE problems (
   neetcode_video_id TEXT,
   neetcode_url TEXT,
   leetcode_url TEXT,
+  pattern_order INTEGER,
   created_at TIMESTAMPTZ DEFAULT NOW(),
   updated_at TIMESTAMPTZ DEFAULT NOW()
 );
