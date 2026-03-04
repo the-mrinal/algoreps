@@ -203,7 +203,7 @@
         "Verify in browser using dev-browser skill"
       ],
       "priority": 11,
-      "passes": false,
+      "passes": true,
       "notes": "Monaco editor must be lazy-loaded with dynamic(() => import('@monaco-editor/react'), { ssr: false }). Reuse the same pattern from src/components/practice/EditorPane.tsx."
     },
     {

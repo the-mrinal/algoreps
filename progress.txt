@@ -126,3 +126,14 @@
   - Supabase upsert with `onConflict: "user_id,pattern_name"` handles re-rating gracefully
   - Weak patterns (rated 1-3) determine whether step 3 (diagnostic solve) is needed
 ---
+
+## 2026-03-04 - US-034
+- What was implemented: Built onboarding wizard Step 3 — diagnostic solve step. For each weak pattern (rated 1-3), presents one Easy problem with Monaco editor, code execution via /api/run-code, Skip Problem button, and self-rating 1-5. Each completion updates user_pattern_confidence (diagnostic_problem_id + diagnostic_score) via PATCH /api/onboarding/diagnostic and creates a user_progress submission via POST /api/submissions. Shows progress indicator (Problem X of Y) and finish screen with "Start Studying" button after all problems.
+- Files changed: src/app/onboarding/page.tsx (updated with Step 3 logic, Monaco editor, diagnostic flow)
+- **Learnings for future iterations:**
+  - Step 3 loads weak patterns from user_pattern_confidence table (not component state) since step navigation via URL params can lose in-memory state on refresh
+  - Problem data from Supabase `problems` table needs manual mapping to Problem interface (fields like leetcode_id, is_neetcode150 etc need fallback defaults)
+  - Monaco editor in onboarding uses same dynamic import pattern as EditorPane: `dynamic(() => import("@monaco-editor/react"), { ssr: false })`
+  - useCallback for initCodeForProblem is needed to satisfy react-hooks/exhaustive-deps when used in useEffect dependency array
+  - Container width expands to max-w-4xl for step 3 to accommodate the editor
+---
