@@ -16,6 +16,22 @@
 
 ---
 
+## Screenshots
+
+<p align="center">
+  <img src="docs/screenshots/landing-hero.png" alt="Landing Page" width="600" />
+</p>
+
+<p align="center">
+  <img src="docs/screenshots/landing-features.png" alt="Features & How It Works" width="600" />
+</p>
+
+<p align="center">
+  <img src="docs/screenshots/progress-dashboard.png" alt="Progress Dashboard" width="600" />
+</p>
+
+---
+
 ## The Problem
 
 You solve 200+ LeetCode problems. Two weeks later, you blank on a medium-difficulty question in an interview. Sound familiar?
