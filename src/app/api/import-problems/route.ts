@@ -1,16 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
+import { parseUrl } from "@/lib/url-parser";
 
 interface ImportResult {
   imported: number;
   updated: number;
   errors: string[];
-}
-
-function extractSlugFromUrl(url: string): string | null {
-  // Extract slug from URLs like https://leetcode.com/problems/two-sum/
-  const match = url.match(/\/problems\/([a-z0-9-]+)/);
-  return match ? match[1] : null;
 }
 
 function parseCSV(text: string): Record<string, string>[] {
@@ -87,13 +82,15 @@ export async function POST(request: NextRequest) {
     const row = rows[i];
     const lineNum = i + 2; // 1-indexed, +1 for header
 
-    // Determine slug
+    // Determine slug — accept problem_url or leetcode_url columns
     let slug = row.slug?.trim();
-    if (!slug && row.leetcode_url) {
-      slug = extractSlugFromUrl(row.leetcode_url) ?? "";
+    const rowUrl = (row.problem_url || row.leetcode_url || "").trim();
+    if (!slug && rowUrl) {
+      const parsed = parseUrl(rowUrl);
+      slug = parsed?.slug ?? "";
     }
     if (!slug) {
-      result.errors.push(`Row ${lineNum}: missing slug and leetcode_url`);
+      result.errors.push(`Row ${lineNum}: missing slug and problem URL`);
       continue;
     }
 
@@ -113,7 +110,7 @@ export async function POST(request: NextRequest) {
       ? row.topics.split(";").map((t: string) => t.trim()).filter(Boolean)
       : [];
     const category = row.category?.trim() || "";
-    const leetcodeUrl = row.leetcode_url?.trim() || "";
+    const leetcodeUrl = rowUrl || row.leetcode_url?.trim() || "";
 
     // Check if problem exists
     const { data: existing } = await supabase

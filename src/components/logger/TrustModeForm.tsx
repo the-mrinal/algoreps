@@ -2,6 +2,7 @@
 
 import { useState, useMemo, useRef, useEffect } from "react";
 import type { Problem } from "@/types";
+import { parseUrl, slugToTitle } from "@/lib/url-parser";
 
 const COMPLEXITY_OPTIONS = [
   "O(1)",
@@ -100,34 +101,24 @@ export default function TrustModeForm({
     return () => document.removeEventListener("mousedown", handleClick);
   }, []);
 
-  // Helper: extract slug from LeetCode URL
-  const extractSlugFromUrl = (url: string): string | null => {
-    const match = url.match(/\/problems\/([a-z0-9-]+)/);
-    return match ? match[1] : null;
-  };
-
-  // Helper: slug to title
-  const slugToTitle = (slug: string): string =>
-    slug
-      .split("-")
-      .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
-      .join(" ");
-
   // Auto-fill title when URL is pasted
   const handleCustomUrlChange = (url: string) => {
     setCustomUrl(url);
-    const slug = extractSlugFromUrl(url);
-    if (slug) {
-      setCustomTitle(slugToTitle(slug));
+    const parsed = parseUrl(url);
+    if (parsed) {
+      setCustomTitle(slugToTitle(parsed.slug));
     }
   };
+
+  // Detect platform from current custom URL
+  const detectedPlatform = customUrl ? parseUrl(customUrl)?.platform : null;
 
   // Add custom problem via API
   const handleAddCustomProblem = async () => {
     setCustomError("");
 
     if (!customTitle.trim() && !customUrl.trim()) {
-      setCustomError("Please enter a title or LeetCode URL");
+      setCustomError("Please enter a title or problem URL");
       return;
     }
     if (!customDifficulty) {
@@ -139,7 +130,7 @@ export default function TrustModeForm({
     try {
       const payload: Record<string, unknown> = { difficulty: customDifficulty };
       if (customUrl.trim()) {
-        payload.leetcode_url = customUrl.trim();
+        payload.problem_url = customUrl.trim();
       }
       if (customTitle.trim()) {
         payload.title = customTitle.trim();
@@ -412,15 +403,20 @@ export default function TrustModeForm({
 
               <div>
                 <label className="block text-xs text-gray-400 mb-1">
-                  LeetCode URL
+                  Problem URL
                 </label>
                 <input
                   type="text"
                   value={customUrl}
                   onChange={(e) => handleCustomUrlChange(e.target.value)}
-                  placeholder="https://leetcode.com/problems/..."
+                  placeholder="e.g. leetcode.com, codechef.com, codeforces.com, ..."
                   className="w-full rounded-md border border-gray-600 bg-gray-800 px-3 py-2 text-sm text-gray-200 placeholder-gray-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
                 />
+                {detectedPlatform && (
+                  <span className="mt-1 inline-block rounded-full bg-blue-900/50 px-2 py-0.5 text-xs text-blue-300">
+                    {detectedPlatform}
+                  </span>
+                )}
               </div>
 
               <div>
@@ -482,16 +478,16 @@ export default function TrustModeForm({
         </div>
       )}
 
-      {/* LeetCode URL */}
+      {/* Problem URL */}
       <div>
         <label className="block text-sm font-medium text-gray-300 mb-1">
-          LeetCode URL
+          Problem URL
         </label>
         <input
           type="text"
           value={sourceUrl}
           onChange={(e) => setSourceUrl(e.target.value)}
-          placeholder="https://leetcode.com/problems/..."
+          placeholder="e.g. leetcode.com, codechef.com, codeforces.com, ..."
           className="w-full rounded-md border border-gray-600 bg-gray-800 px-3 py-2 text-sm text-gray-200 placeholder-gray-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
         />
       </div>

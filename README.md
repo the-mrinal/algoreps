@@ -72,7 +72,7 @@ Gemini 2.5 Flash integration that analyzes your solution for:
 Built-in stopwatch that starts when you begin a problem and tracks elapsed time throughout your attempt. Time spent is automatically logged with each submission, helping you build interview-pace awareness and identify problems that take longer than expected.
 
 ### Trust Mode Logger
-Solved a problem on LeetCode or in a notebook? Log it without submitting code. Add the source URL, your approach, and remarks -- it still gets scheduled for review.
+Solved a problem on LeetCode, CodeChef, Codeforces, HackerRank, GeeksforGeeks, or in a notebook? Log it without submitting code. Add the problem URL, your approach, and remarks -- it still gets scheduled for review.
 
 ### Progress Dashboard
 - Total problems solved, current streak, average score
@@ -91,8 +91,11 @@ Solved a problem on LeetCode or in a notebook? Log it without submitting code. A
 - **Morning briefing** (8:00 AM): Lists all due revisions grouped by difficulty
 - **Evening wrap-up** (9:00 PM): Daily stats, streak, and weak topics
 
+### Multi-Platform Support
+Add problems from any major competitive programming site -- LeetCode, CodeChef, Codeforces, HackerRank, and GeeksforGeeks. The platform is auto-detected from the URL, and problem titles are auto-filled from the slug.
+
 ### CSV Import
-Bulk import problems from Google Sheets exports with automatic deduplication by slug.
+Bulk import problems from Google Sheets exports with automatic deduplication by slug. Supports both `problem_url` and `leetcode_url` columns.
 
 ### Theme System
 Dark, light, and system modes with a neon hacker aesthetic (cyan/green/purple glow effects).
@@ -222,6 +225,7 @@ src/
 ├── lib/
 │   ├── supabase/                    # Browser, server, and admin clients
 │   ├── srs.ts                       # SM-2 variant algorithm
+│   ├── url-parser.ts                # Multi-platform URL parser
 │   ├── ai-review.ts                 # Gemini prompt builder
 │   ├── discord.ts                   # Discord webhook sender
 │   └── problems.ts                  # Problem query helpers
