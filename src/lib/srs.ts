@@ -23,5 +23,6 @@ export function calculateNextRevisionDate(score: number): SRSResult {
   return {
     next_revision_date: nextDate,
     days_to_add: daysToAdd,
+    interval_step: 0,
   };
 }

@@ -23,6 +23,7 @@ export interface Problem {
   neetcode_video_id: string | null;
   neetcode_url: string;
   leetcode_url: string;
+  pattern_order: number | null;
 }
 
 // User progress matching user_progress Supabase table
@@ -46,6 +47,7 @@ export interface UserProgress {
   space_complexity: string | null;
   ai_review: AIReviewResponse | null;
   next_revision_date: string | null;
+  interval_step: number;
   created_at: string;
   updated_at: string;
 }
@@ -69,10 +71,49 @@ export interface UserProfile {
   email: string;
   display_name: string | null;
   is_premium: boolean;
+  questions_per_day: number;
+  hours_per_day: number;
+  proficiency_level: "beginner" | "rusty" | "intermediate" | "advanced";
+  interview_date: string | null;
+  problem_set: string;
+  onboarding_completed: boolean;
+  current_pattern_index: number;
 }
 
 // SRS calculation result
 export interface SRSResult {
   next_revision_date: Date;
   days_to_add: number;
+  interval_step: number;
+}
+
+// User pattern confidence from diagnostic assessment
+export interface UserPatternConfidence {
+  id: string;
+  user_id: string;
+  pattern_name: string;
+  confidence_rating: number;
+  diagnostic_problem_id: string | null;
+  diagnostic_score: number | null;
+  created_at: string;
+}
+
+// Daily plan item
+export interface PlanItem {
+  problem_id: string;
+  type: "revision" | "new";
+  status: "pending" | "completed" | "skipped";
+  difficulty: string;
+  category: string;
+  estimated_minutes: number;
+}
+
+// Daily plan persisted to daily_plans table
+export interface DailyPlan {
+  id: string;
+  user_id: string;
+  plan_date: string;
+  plan_data: PlanItem[];
+  created_at: string;
+  updated_at: string;
 }
