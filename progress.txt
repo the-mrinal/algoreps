@@ -137,3 +137,12 @@
   - useCallback for initCodeForProblem is needed to satisfy react-hooks/exhaustive-deps when used in useEffect dependency array
   - Container width expands to max-w-4xl for step 3 to accommodate the editor
 ---
+
+## 2026-03-04 - US-035
+- What was implemented: Added blocking onboarding redirect in dashboard layout — queries profiles.onboarding_completed after auth check and redirects to /onboarding if false. Onboarding page already had the reverse check (redirect to /dashboard if completed) and both completion paths (handleFinishOnboarding + handleNextStep2 with no weak patterns) already set onboarding_completed=true. Also fixed a pre-existing TS error where initCodeForProblem useCallback was declared after the useEffect that referenced it.
+- Files changed: src/app/dashboard/layout.tsx (updated — added onboarding check), src/app/onboarding/page.tsx (fixed useCallback ordering)
+- **Learnings for future iterations:**
+  - Dashboard layout is a server component — can query Supabase directly and use `redirect()` from next/navigation for server-side redirects
+  - useCallback declarations must appear before useEffect hooks that reference them in their dependency arrays (TS block-scoped variable error)
+  - The onboarding completion has two paths: (1) handleFinishOnboarding after diagnostic step 3, (2) handleNextStep2 when all patterns rated 4-5 (no weak patterns)
+---
