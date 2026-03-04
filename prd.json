@@ -1,0 +1,345 @@
+{
+  "project": "dsa-dashboard",
+  "branchName": "ralph/smart-daily-plan-onboarding",
+  "description": "Smart Daily Plan & Onboarding — blocking onboarding wizard with diagnostic assessment, daily plan engine mixing revision + new problems, adaptive SRS doubling intervals, and pattern-based progression",
+  "userStories": [
+    {
+      "id": "US-024",
+      "title": "Add onboarding preference columns to profiles table",
+      "description": "As a developer, I need to store user onboarding preferences in the profiles table so the daily plan engine can generate personalized plans.",
+      "acceptanceCriteria": [
+        "New Supabase migration file supabase/migrations/005_add_onboarding_fields.sql created",
+        "ALTER TABLE profiles ADD COLUMN questions_per_day INTEGER DEFAULT 5",
+        "ALTER TABLE profiles ADD COLUMN hours_per_day DECIMAL DEFAULT 1.5",
+        "ALTER TABLE profiles ADD COLUMN proficiency_level TEXT DEFAULT 'rusty' CHECK (proficiency_level IN ('beginner','rusty','intermediate','advanced'))",
+        "ALTER TABLE profiles ADD COLUMN interview_date DATE",
+        "ALTER TABLE profiles ADD COLUMN problem_set TEXT DEFAULT 'neetcode-150'",
+        "ALTER TABLE profiles ADD COLUMN onboarding_completed BOOLEAN DEFAULT FALSE",
+        "ALTER TABLE profiles ADD COLUMN current_pattern_index INTEGER DEFAULT 0",
+        "supabase/schema.sql updated with the same columns for reference",
+        "Typecheck passes"
+      ],
+      "priority": 1,
+      "passes": true,
+      "notes": "Existing users will get onboarding_completed=false by default, triggering the wizard on next login."
+    },
+    {
+      "id": "US-025",
+      "title": "Add interval_step column to user_progress table",
+      "description": "As a developer, I need to track the SRS interval step per submission so the adaptive doubling algorithm knows where the user is in the interval sequence.",
+      "acceptanceCriteria": [
+        "New Supabase migration file supabase/migrations/006_add_interval_step.sql created",
+        "ALTER TABLE user_progress ADD COLUMN interval_step INTEGER DEFAULT 0",
+        "supabase/schema.sql updated with the same column for reference",
+        "Typecheck passes"
+      ],
+      "priority": 2,
+      "passes": true,
+      "notes": "Existing submissions will have interval_step=0, which is backward compatible with the new SRS algorithm."
+    },
+    {
+      "id": "US-026",
+      "title": "Add pattern_order column to problems table and seed ordering data",
+      "description": "As a developer, I need each problem to have its position in the NeetCode roadmap order so the plan engine can assign problems in the correct sequence.",
+      "acceptanceCriteria": [
+        "New Supabase migration file supabase/migrations/007_add_pattern_order.sql created",
+        "ALTER TABLE problems ADD COLUMN pattern_order INTEGER",
+        "New script scripts/seed-pattern-order.ts created",
+        "Script reads NeetCode-150 category order from data/sources/Anki-NeetCode/neetcode-150-list.json",
+        "Assigns pattern_order 1-150 following NeetCode roadmap: Arrays & Hashing first, then Two Pointers, then Sliding Window, Stack, Binary Search, Linked List, Trees, Tries, Heap / Priority Queue, Backtracking, Graphs, Advanced Graphs, 1-D Dynamic Programming, 2-D Dynamic Programming, Greedy, Intervals, Math & Geometry, Bit Manipulation",
+        "Within each category, Easy problems ordered first, then Medium, then Hard",
+        "Custom/user-added problems (not in NeetCode-150) get pattern_order = NULL",
+        "Script is idempotent (can be re-run safely)",
+        "Typecheck passes"
+      ],
+      "priority": 3,
+      "passes": true,
+      "notes": "Run with: npx tsx scripts/seed-pattern-order.ts. The neetcode-150-list.json file has categories as top-level keys with problems as nested keys — this defines the canonical order."
+    },
+    {
+      "id": "US-027",
+      "title": "Create user_pattern_confidence table",
+      "description": "As a developer, I need a table to store diagnostic assessment results per pattern so the plan engine knows where the user is strong/weak.",
+      "acceptanceCriteria": [
+        "New Supabase migration file supabase/migrations/008_create_pattern_confidence.sql created",
+        "CREATE TABLE user_pattern_confidence with columns: id (UUID PK DEFAULT gen_random_uuid()), user_id (UUID NOT NULL FK to profiles ON DELETE CASCADE), pattern_name (TEXT NOT NULL), confidence_rating (INTEGER CHECK 1-5), diagnostic_problem_id (TEXT nullable), diagnostic_score (INTEGER nullable), created_at (TIMESTAMPTZ DEFAULT NOW())",
+        "UNIQUE constraint on (user_id, pattern_name)",
+        "RLS enabled with policies: users can SELECT/INSERT/UPDATE only their own rows",
+        "supabase/schema.sql updated with the table definition for reference",
+        "Typecheck passes"
+      ],
+      "priority": 4,
+      "passes": true,
+      "notes": "pattern_name is one of the 18 NeetCode categories: Arrays & Hashing, Two Pointers, Sliding Window, Stack, Binary Search, Linked List, Trees, Tries, Heap / Priority Queue, Backtracking, Graphs, Advanced Graphs, 1-D Dynamic Programming, 2-D Dynamic Programming, Greedy, Intervals, Math & Geometry, Bit Manipulation"
+    },
+    {
+      "id": "US-028",
+      "title": "Create daily_plans table for persisting today's plan",
+      "description": "As a developer, I need to persist the daily plan so users can close their browser and resume where they left off within the same day.",
+      "acceptanceCriteria": [
+        "New Supabase migration file supabase/migrations/009_create_daily_plans.sql created",
+        "CREATE TABLE daily_plans with columns: id (UUID PK DEFAULT gen_random_uuid()), user_id (UUID NOT NULL FK to profiles ON DELETE CASCADE), plan_date (DATE NOT NULL), plan_data (JSONB NOT NULL), created_at (TIMESTAMPTZ DEFAULT NOW()), updated_at (TIMESTAMPTZ DEFAULT NOW())",
+        "UNIQUE constraint on (user_id, plan_date)",
+        "Index on (user_id, plan_date) for fast daily lookups",
+        "RLS enabled with policies: users can SELECT/INSERT/UPDATE only their own plans",
+        "supabase/schema.sql updated with the table definition for reference",
+        "Typecheck passes"
+      ],
+      "priority": 5,
+      "passes": true,
+      "notes": "plan_data JSONB stores array of plan items: [{problem_id, type: 'revision'|'new', status: 'pending'|'completed'|'skipped', difficulty, category, estimated_minutes}]"
+    },
+    {
+      "id": "US-029",
+      "title": "Update TypeScript types for new schema fields",
+      "description": "As a developer, I need TypeScript interfaces updated to reflect the new database columns and tables so all components have type safety.",
+      "acceptanceCriteria": [
+        "src/types/index.ts updated: UserProfile interface gets new fields: questions_per_day (number), hours_per_day (number), proficiency_level ('beginner'|'rusty'|'intermediate'|'advanced'), interview_date (string|null), problem_set (string), onboarding_completed (boolean), current_pattern_index (number)",
+        "src/types/index.ts updated: UserProgress interface gets new field: interval_step (number)",
+        "src/types/index.ts updated: Problem interface gets new field: pattern_order (number|null)",
+        "src/types/index.ts adds new interface: UserPatternConfidence with fields: id (string), user_id (string), pattern_name (string), confidence_rating (number), diagnostic_problem_id (string|null), diagnostic_score (number|null), created_at (string)",
+        "src/types/index.ts adds new interface: DailyPlan with fields: id (string), user_id (string), plan_date (string), plan_data (PlanItem[]), created_at (string), updated_at (string)",
+        "src/types/index.ts adds new interface: PlanItem with fields: problem_id (string), type ('revision'|'new'), status ('pending'|'completed'|'skipped'), difficulty (string), category (string), estimated_minutes (number)",
+        "SRSResult interface updated to include interval_step (number)",
+        "Typecheck passes"
+      ],
+      "priority": 6,
+      "passes": true,
+      "notes": ""
+    },
+    {
+      "id": "US-030",
+      "title": "Upgrade SRS algorithm to adaptive doubling intervals",
+      "description": "As a developer, I need to replace the fixed 3-bucket SRS (1/4/14 days) with adaptive doubling intervals so revision scheduling better matches the forgetting curve.",
+      "acceptanceCriteria": [
+        "src/lib/srs.ts: calculateNextRevisionDate function signature updated to accept (score: number, currentIntervalStep: number) with currentIntervalStep defaulting to 0 for backward compatibility",
+        "Interval sequence defined as constant array: [1, 2, 4, 8, 16, 32, 64, 128, 256]",
+        "Score 1-2 (struggled): reset interval_step to 0, schedule +1 day",
+        "Score 3 (acceptable): keep same interval_step, schedule same interval from sequence",
+        "Score 4-5 (strong): advance interval_step by 1 (capped at max index 8), schedule next interval from sequence",
+        "Returns updated SRSResult including interval_step field",
+        "Existing callers still work with single argument (backward compatible due to default parameter)",
+        "Typecheck passes"
+      ],
+      "priority": 7,
+      "passes": true,
+      "notes": "The adaptive doubling is research-backed. Sequence: 1→2→4→8→16→32→64→128→256 days."
+    },
+    {
+      "id": "US-031",
+      "title": "Update submissions API to use adaptive SRS and interval_step",
+      "description": "As a developer, I need the submissions API to read/write interval_step so the adaptive SRS algorithm persists across submissions.",
+      "acceptanceCriteria": [
+        "POST /api/submissions: before calculating SRS, queries the latest previous submission for this user+problem to get current interval_step (defaults to 0 if no previous submission)",
+        "POST /api/submissions: passes interval_step to calculateNextRevisionDate, saves returned interval_step to the new submission record",
+        "POST /api/submissions: includes interval_step in the INSERT fields to user_progress",
+        "PATCH /api/submissions: reads the submission's current interval_step, passes it to calculateNextRevisionDate with the new score, updates both performance_score, next_revision_date, and interval_step",
+        "GET /api/submissions: includes interval_step in the SELECT fields",
+        "Typecheck passes"
+      ],
+      "priority": 8,
+      "passes": true,
+      "notes": "Backward compatible: existing submissions with interval_step=0 (the default) will work correctly with the new algorithm."
+    },
+    {
+      "id": "US-032",
+      "title": "Build onboarding wizard — preferences step UI",
+      "description": "As a new user, I want to tell the system about my goals and constraints so it can create a personalized study plan.",
+      "acceptanceCriteria": [
+        "src/app/onboarding/page.tsx created as a client component with multi-step wizard",
+        "Step 1 visible by default with title 'Your Goals'",
+        "Questions per day: slider input, range 1-10, default 5, shows current value",
+        "Hours per day: slider input, range 0.5-4 in 0.5 increments, default 1.5, shows current value",
+        "Proficiency level: 4 radio cards (Beginner: 'New to DSA or never practiced', Rusty: 'Knew DSA but haven't practiced in months', Intermediate: 'Can solve most Easy and some Medium', Advanced: 'Comfortable with Medium, working on Hard')",
+        "Interview date: date picker input, optional, with label 'When is your interview? (optional)'",
+        "Problem set: radio group (NeetCode 150 / Blind 75 / Both), default NeetCode 150",
+        "'Next' button saves preferences to profiles table via fetch POST/PATCH to /api/onboarding/preferences",
+        "New API route src/app/api/onboarding/preferences/route.ts: PATCH handler that updates profiles with the preference fields, scoped to authenticated user",
+        "Validation: proficiency_level is required before proceeding",
+        "Typecheck passes",
+        "Verify in browser using dev-browser skill"
+      ],
+      "priority": 9,
+      "passes": true,
+      "notes": "Uses the existing neon color palette (cyan, green, purple). Wizard state managed with useState for current step."
+    },
+    {
+      "id": "US-033",
+      "title": "Build onboarding wizard — pattern confidence rating step",
+      "description": "As a new user, I want to rate my confidence in each DSA pattern so the system knows where I need the most help.",
+      "acceptanceCriteria": [
+        "Step 2 'Pattern Assessment' shows all 18 NeetCode categories in roadmap order (Arrays & Hashing first through Bit Manipulation last)",
+        "Each pattern displayed as a card with: pattern name, brief 1-line description, count of problems in that pattern from problems table",
+        "User rates each pattern 1-5 via clickable number buttons (1=Never seen, 2=Vaguely remember, 3=Can solve Easy, 4=Can solve Medium, 5=Confident with Hard)",
+        "Rated patterns show colored badge: red for 1-2, yellow for 3, green for 4-5",
+        "All 18 patterns must be rated before 'Next' button is enabled",
+        "'Next' button saves all 18 ratings to user_pattern_confidence table via fetch POST to /api/onboarding/diagnostic",
+        "New API route src/app/api/onboarding/diagnostic/route.ts: POST handler that upserts 18 rows into user_pattern_confidence for the authenticated user",
+        "Patterns rated 1-3 are flagged internally (stored in component state) for the diagnostic solve step",
+        "Typecheck passes",
+        "Verify in browser using dev-browser skill"
+      ],
+      "priority": 10,
+      "passes": false,
+      "notes": "Pattern descriptions: Arrays & Hashing — 'Manipulating arrays using hash maps for O(1) lookups', Two Pointers — 'Using two indices to traverse arrays efficiently', Sliding Window — 'Fixed or variable-size window over sequential data', Stack — 'LIFO operations for nested/balanced problems', Binary Search — 'Divide and conquer on sorted data', Linked List — 'Pointer manipulation for node-based structures', Trees — 'Recursive traversal and tree properties', Tries — 'Prefix trees for string operations', Heap / Priority Queue — 'Efficient min/max extraction', Backtracking — 'Explore all possibilities with pruning', Graphs — 'BFS/DFS traversal and connectivity', Advanced Graphs — 'Shortest paths, MST, Union Find', 1-D Dynamic Programming — 'Optimal substructure in sequences', 2-D Dynamic Programming — 'Grid and dual-sequence optimization', Greedy — 'Locally optimal choices for global optimum', Intervals — 'Merging and scheduling overlapping ranges', Math & Geometry — 'Number theory and geometric reasoning', Bit Manipulation — 'Binary operations for efficient computation'"
+    },
+    {
+      "id": "US-034",
+      "title": "Build onboarding wizard — diagnostic solve step for weak patterns",
+      "description": "As a new user, for patterns I rated 1-3, I want to solve one Easy problem per weak pattern inside the wizard so the system can accurately calibrate my level.",
+      "acceptanceCriteria": [
+        "Step 3 'Quick Assessment' shows only patterns the user rated 1-3 in previous step",
+        "For each weak pattern, presents one Easy problem from that category (first Easy problem by pattern_order for that category)",
+        "Problem displayed with: title, full description, examples, constraints",
+        "Embedded Monaco editor with Python3 code snippet pre-loaded (reuse dynamic import pattern from EditorPane with ssr: false)",
+        "Run button executes code via existing POST /api/run-code endpoint, shows stdout/stderr output",
+        "'Skip Problem' button available for each diagnostic problem",
+        "After attempting or skipping, user self-rates 1-5 with score buttons (reuse score styling from RevisionCard)",
+        "Each completion updates user_pattern_confidence row: sets diagnostic_problem_id and diagnostic_score via PATCH /api/onboarding/diagnostic",
+        "Also creates a user_progress submission entry via POST /api/submissions so the problem enters SRS",
+        "Progress indicator shows 'Problem X of Y' where Y is count of weak patterns",
+        "'Finish' button appears after last problem or if all skipped",
+        "Typecheck passes",
+        "Verify in browser using dev-browser skill"
+      ],
+      "priority": 11,
+      "passes": false,
+      "notes": "Monaco editor must be lazy-loaded with dynamic(() => import('@monaco-editor/react'), { ssr: false }). Reuse the same pattern from src/components/practice/EditorPane.tsx."
+    },
+    {
+      "id": "US-035",
+      "title": "Build onboarding completion and blocking redirect logic",
+      "description": "As a developer, I need the onboarding wizard to be blocking — new users cannot access the dashboard until onboarding is complete.",
+      "acceptanceCriteria": [
+        "src/app/dashboard/layout.tsx modified: after auth check, also queries profiles.onboarding_completed for the current user",
+        "If onboarding_completed is false, redirect to /onboarding using next/navigation redirect()",
+        "src/app/onboarding/page.tsx checks if already completed — if onboarding_completed is true, redirect to /dashboard",
+        "Final step of wizard (after diagnostic or after confidence rating if no weak patterns) sets onboarding_completed=true via PATCH to /api/onboarding/preferences",
+        "After completion, redirects to /dashboard using router.push('/dashboard')",
+        "Typecheck passes"
+      ],
+      "priority": 12,
+      "passes": false,
+      "notes": "The dashboard layout is a server component so it can query Supabase directly. The redirect to /onboarding happens before any dashboard content renders."
+    },
+    {
+      "id": "US-036",
+      "title": "Build daily plan generation engine",
+      "description": "As a developer, I need a plan generation function that creates a personalized daily mix of revision + new problems based on user preferences, pattern progression, and weakness data.",
+      "acceptanceCriteria": [
+        "New file src/lib/daily-plan.ts created",
+        "Exports async function generateDailyPlan(userId: string, supabase: SupabaseClient): Promise<PlanItem[]>",
+        "Reads user preferences from profiles table: questions_per_day, proficiency_level, problem_set, current_pattern_index",
+        "Revision items: queries user_progress for problems where next_revision_date <= now(), ordered by performance_score ASC (hardest first), limited to floor(questions_per_day * 0.7) items",
+        "New items: fills remaining quota (minimum ceil(questions_per_day * 0.3)) with unsolved problems",
+        "New problems selected from problems table using pattern_order column, starting from the user's current pattern category",
+        "Within current pattern: Easy problems first, then Medium, then Hard",
+        "Difficulty distribution target based on proficiency_level: beginner (50E/40M/10H), rusty (40E/45M/15H), intermediate (20E/60M/20H), advanced (10E/40M/50H)",
+        "Skips problems user has already solved (exists in user_progress for this user)",
+        "Weak pattern boost: if a pattern has avg score < 3 in user_pattern_confidence or user_progress, insert 1 extra problem from that pattern if quota allows",
+        "Estimated minutes per item: Easy=15, Medium=25, Hard=40",
+        "If current pattern exhausted (no more unsolved problems), picks from next pattern",
+        "Returns empty new items array only if ALL problems in selected problem_set are solved",
+        "Typecheck passes"
+      ],
+      "priority": 13,
+      "passes": false,
+      "notes": "This is a pure server-side function. It queries multiple tables but should complete in <500ms. The difficulty distribution is a target ratio — if not enough Easy problems exist in current pattern, fill with Medium."
+    },
+    {
+      "id": "US-037",
+      "title": "Build Today's Plan dashboard view",
+      "description": "As a user, I want to see my daily plan on the dashboard home so I know exactly what to practice today.",
+      "acceptanceCriteria": [
+        "src/app/dashboard/page.tsx rewritten to show 'Today's Plan' instead of the current revision-only queue",
+        "Server component checks if a daily_plan row exists for (user_id, today's date) — if yes, loads it; if no, calls generateDailyPlan() and saves to daily_plans table",
+        "Header shows: 'Day X' (days since profile created_at), today's date formatted nicely, and stats (completed/total items, estimated time remaining in minutes)",
+        "Progress bar at top showing completion percentage (completed / non-skipped items) using neon-cyan fill",
+        "Section 'Revisions' with colored left border: red for score 1-2, yellow for score 3, green for score 4-5",
+        "Section 'New Problems' with problems from pattern progression showing category tag and difficulty badge",
+        "Each plan item card shows: problem title (as link to /dashboard/practice?problem=slug), difficulty badge (Easy green, Medium yellow, Hard red), category name, estimated time in minutes",
+        "Completed items show a checked checkbox with line-through text styling",
+        "Skipped items show greyed out with 'Skipped' label",
+        "When all non-skipped items are completed, show celebration message 'All done for today!'",
+        "Passes the plan data to a new client component src/components/dashboard/TodaysPlan.tsx for interactivity",
+        "Typecheck passes",
+        "Verify in browser using dev-browser skill"
+      ],
+      "priority": 14,
+      "passes": false,
+      "notes": "The old RevisionQueue component (src/components/srs/RevisionQueue.tsx) is no longer used on the dashboard home but should not be deleted — it may be used elsewhere or in the future."
+    },
+    {
+      "id": "US-038",
+      "title": "Add swap and skip functionality to daily plan",
+      "description": "As a user, I want to swap out a problem I don't want to do today or skip it entirely, so I have some control over my plan.",
+      "acceptanceCriteria": [
+        "Each plan item card in TodaysPlan.tsx has a swap icon button and a skip icon button (small, subtle, icon-only)",
+        "New API route src/app/api/daily-plan/route.ts with PATCH handler",
+        "PATCH accepts: { plan_date, action: 'swap'|'skip', problem_id, replacement_problem_id? }",
+        "Skip action: updates the item's status to 'skipped' in the plan_data JSONB array, returns updated plan",
+        "Swap action for revision: finds next due revision not already in today's plan, replaces the item",
+        "Swap action for new: finds next problem by pattern_order not already solved or in the plan, same difficulty preferred",
+        "If no swap candidate available, return 400 with error 'No alternative problems available'",
+        "Skipped items visually grey out and don't count toward completion percentage",
+        "Swapped items immediately update in the UI without page refresh (optimistic update or refetch)",
+        "Typecheck passes",
+        "Verify in browser using dev-browser skill"
+      ],
+      "priority": 15,
+      "passes": false,
+      "notes": "PATCH endpoint must verify the plan belongs to the authenticated user. plan_data is JSONB so updates require reading, modifying, and writing back the full array."
+    },
+    {
+      "id": "US-039",
+      "title": "Auto-mark plan items complete on submission",
+      "description": "As a user, when I submit a problem through practice or trust mode, the corresponding item in today's plan should automatically be marked complete.",
+      "acceptanceCriteria": [
+        "src/app/api/submissions/route.ts POST handler: after successful insert, checks if a daily_plan exists for today for this user",
+        "If plan exists and contains the submitted problem_id with status 'pending', updates that item's status to 'completed' in the plan_data JSONB",
+        "Updates daily_plans.updated_at timestamp",
+        "Response includes a flag plan_item_completed: true/false so the client knows to refresh the plan view",
+        "Typecheck passes"
+      ],
+      "priority": 16,
+      "passes": false,
+      "notes": "This connects the existing submission flow to the new daily plan system. The submission API already works — this just adds plan awareness."
+    },
+    {
+      "id": "US-040",
+      "title": "Build pattern completion and advancement flow",
+      "description": "As a user, when I complete all problems in a pattern, I want to see a celebration and choose whether to advance to the next pattern or stay and reinforce.",
+      "acceptanceCriteria": [
+        "After generating a daily plan where the current pattern has no more unsolved problems, trigger the pattern completion flow",
+        "New client component src/components/dashboard/PatternCompleteModal.tsx renders as a modal overlay",
+        "Modal shows: 'Pattern Complete: [Category Name]!' with stats (problems solved, average score across that category's submissions)",
+        "Two action buttons: 'Move to Next Pattern: [Next Category Name]' and 'Stay & Reinforce [Current Category Name]'",
+        "'Move to Next' calls PATCH /api/onboarding/preferences to increment current_pattern_index by 1, then refreshes dashboard",
+        "'Stay & Reinforce' dismisses modal without changing current_pattern_index — daily plan continues with revision-only from this pattern",
+        "If user is on last pattern (index 17, Bit Manipulation), show 'All Patterns Complete!' with option 'Focus on Weak Areas' which keeps current_pattern_index at 17",
+        "Modal does not block the page — user can dismiss by clicking outside or pressing Escape",
+        "Typecheck passes",
+        "Verify in browser using dev-browser skill"
+      ],
+      "priority": 17,
+      "passes": false,
+      "notes": "The advancement flow is triggered from the dashboard page when plan generation detects pattern exhaustion. The modal is shown once per pattern completion."
+    },
+    {
+      "id": "US-041",
+      "title": "Update morning cron to include daily plan summary",
+      "description": "As a user, I want my morning Discord notification to include my daily plan summary so I know what's ahead before opening the app.",
+      "acceptanceCriteria": [
+        "src/app/api/cron/morning/route.ts updated: for each user, generates or loads today's daily plan using generateDailyPlan()",
+        "Discord embed includes: total problems for today (X revisions + Y new), estimated total time, current pattern name",
+        "Lists problem titles grouped by type (Revisions section and New Problems section)",
+        "Revision problems still grouped by score difficulty (Hard/Medium/Easy) as before",
+        "If plan generation fails for a user, falls back to the existing revision-only notification",
+        "Typecheck passes"
+      ],
+      "priority": 18,
+      "passes": false,
+      "notes": "The cron uses admin client (bypasses RLS) so it can generate plans for all users. Plans generated here are also persisted to daily_plans table."
+    }
+  ]
+}
