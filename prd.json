@@ -180,7 +180,7 @@
         "Verify in browser using dev-browser skill"
       ],
       "priority": 10,
-      "passes": false,
+      "passes": true,
       "notes": "Pattern descriptions: Arrays & Hashing — 'Manipulating arrays using hash maps for O(1) lookups', Two Pointers — 'Using two indices to traverse arrays efficiently', Sliding Window — 'Fixed or variable-size window over sequential data', Stack — 'LIFO operations for nested/balanced problems', Binary Search — 'Divide and conquer on sorted data', Linked List — 'Pointer manipulation for node-based structures', Trees — 'Recursive traversal and tree properties', Tries — 'Prefix trees for string operations', Heap / Priority Queue — 'Efficient min/max extraction', Backtracking — 'Explore all possibilities with pruning', Graphs — 'BFS/DFS traversal and connectivity', Advanced Graphs — 'Shortest paths, MST, Union Find', 1-D Dynamic Programming — 'Optimal substructure in sequences', 2-D Dynamic Programming — 'Grid and dual-sequence optimization', Greedy — 'Locally optimal choices for global optimum', Intervals — 'Merging and scheduling overlapping ranges', Math & Geometry — 'Number theory and geometric reasoning', Bit Manipulation — 'Binary operations for efficient computation'"
     },
     {
