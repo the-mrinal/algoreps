@@ -168,3 +168,14 @@
   - Day number calculated as floor((now - profile.created_at) / 1 day) + 1
   - CATEGORY_ORDER duplicated again in page.tsx — now in 4 files (daily-plan.ts, onboarding/page.tsx, seed-pattern-order.ts, dashboard/page.tsx)
 ---
+
+## 2026-03-04 - US-038
+- What was implemented: Added swap and skip functionality to daily plan. Each plan item card now has swap (arrows) and skip (chevrons) icon buttons. Created PATCH /api/daily-plan endpoint that handles both actions. Skip updates item status to 'skipped'. Swap for revisions finds next due revision not in plan; swap for new problems finds next unsolved problem by pattern_order (preferring same difficulty). TodaysPlan component now manages plan state locally and updates optimistically after API calls. Skipped items are greyed out and don't count toward completion.
+- Files changed: src/app/api/daily-plan/route.ts (new), src/components/dashboard/TodaysPlan.tsx (updated — added swap/skip buttons, local state management, API integration), src/app/dashboard/page.tsx (updated — passes planDate prop)
+- **Learnings for future iterations:**
+  - TodaysPlan now manages its own planItems state (initialized from server props) for optimistic updates after swap/skip
+  - PATCH /api/daily-plan reads full plan_data JSONB, modifies in memory, writes back — standard pattern for JSONB array updates
+  - Swap for revision: queries user_progress for due revisions not already in plan; swap for new: queries problems table by pattern_order
+  - Swapped items get titles from existing titleMap — new swap replacements show problem_id as fallback title until page refresh
+  - planDate prop (YYYY-MM-DD string) passed from server component to client for API calls
+---

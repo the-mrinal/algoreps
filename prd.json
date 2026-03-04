@@ -287,7 +287,7 @@
         "Verify in browser using dev-browser skill"
       ],
       "priority": 15,
-      "passes": false,
+      "passes": true,
       "notes": "PATCH endpoint must verify the plan belongs to the authenticated user. plan_data is JSONB so updates require reading, modifying, and writing back the full array."
     },
     {
