@@ -302,7 +302,7 @@
         "Typecheck passes"
       ],
       "priority": 16,
-      "passes": false,
+      "passes": true,
       "notes": "This connects the existing submission flow to the new daily plan system. The submission API already works — this just adds plan awareness."
     },
     {

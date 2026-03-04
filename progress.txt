@@ -179,3 +179,12 @@
   - Swapped items get titles from existing titleMap — new swap replacements show problem_id as fallback title until page refresh
   - planDate prop (YYYY-MM-DD string) passed from server component to client for API calls
 ---
+
+## 2026-03-04 - US-039
+- What was implemented: After a successful POST /api/submissions insert, the handler now checks if a daily_plan exists for today for the authenticated user. If the plan contains the submitted problem_id with status 'pending', it updates that item's status to 'completed' in the plan_data JSONB and updates the updated_at timestamp. The response includes a `plan_item_completed: true/false` flag so the client can refresh the plan view.
+- Files changed: src/app/api/submissions/route.ts (updated — added daily plan completion logic after insert)
+- **Learnings for future iterations:**
+  - plan_data JSONB array items are read-modify-written: find item by problem_id + status 'pending', update status to 'completed', write back full array
+  - Response now spreads `...data` with `plan_item_completed` boolean — clients can use this flag to trigger a plan view refresh
+  - Today's date computed as `new Date().toISOString().split("T")[0]` for consistent YYYY-MM-DD format matching plan_date
+---
