@@ -198,3 +198,14 @@
   - Modal state (showPatternModal) initialized from server-provided patternComplete prop — shown once per page load when pattern is exhausted
   - The PATCH /api/onboarding/preferences endpoint already supports current_pattern_index updates — no new API route needed
 ---
+
+## 2026-03-04 - US-041
+- What was implemented: Updated morning cron to include daily plan summary in Discord notification. For onboarded users, generates or loads today's daily plan using generateDailyPlan(), persists it to daily_plans table, and sends a rich Discord embed with total problems (revisions + new), estimated time, current pattern name, and problem titles grouped by type with difficulty badges. Non-onboarded users and plan generation failures fall back to the original revision-only notification format.
+- Files changed: src/app/api/cron/morning/route.ts (rewritten)
+- **Learnings for future iterations:**
+  - Morning cron iterates all profiles (not just those with due revisions) since daily plans include new problems too
+  - generateOrLoadPlan checks daily_plans table first before generating — prevents duplicate plan generation if cron runs multiple times
+  - persistPlan uses upsert with onConflict: "user_id,plan_date" for idempotent plan storage
+  - Fallback to revision-only notification uses the same grouped score format (hard/medium/easy) as the original cron
+  - CATEGORY_ORDER is now duplicated in 5 files — strong candidate for extraction to shared constants
+---

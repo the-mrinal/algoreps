@@ -338,7 +338,7 @@
         "Typecheck passes"
       ],
       "priority": 18,
-      "passes": false,
+      "passes": true,
       "notes": "The cron uses admin client (bypasses RLS) so it can generate plans for all users. Plans generated here are also persisted to daily_plans table."
     }
   ]
