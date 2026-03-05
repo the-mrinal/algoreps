@@ -299,6 +299,7 @@ function OnboardingContent() {
         return;
       }
 
+      setSaving(false);
       router.push("/onboarding?step=2");
     } catch {
       setError("Failed to save preferences");
@@ -339,6 +340,7 @@ function OnboardingContent() {
       const weakPatterns = PATTERN_ORDER.filter((p) => ratings[p.name] <= 3);
 
       if (weakPatterns.length > 0) {
+        setSaving(false);
         router.push("/onboarding?step=3");
       } else {
         // No weak patterns — complete onboarding
@@ -354,6 +356,7 @@ function OnboardingContent() {
           return;
         }
 
+        setSaving(false);
         router.push("/dashboard");
       }
     } catch {
