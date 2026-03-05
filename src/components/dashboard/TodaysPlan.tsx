@@ -1,0 +1,341 @@
+"use client";
+
+import { useState, useCallback } from "react";
+import type { PlanItem } from "@/types";
+import PatternCompleteModal from "./PatternCompleteModal";
+
+interface PlanItemWithTitle extends PlanItem {
+  title: string;
+}
+
+interface TodaysPlanProps {
+  planItems: PlanItemWithTitle[];
+  dayNumber: number;
+  dateLabel: string;
+  currentPattern: string;
+  planDate: string;
+  patternComplete: boolean;
+  patternStats: { problemsSolved: number; averageScore: number };
+  currentPatternIndex: number;
+  nextPatternName: string | null;
+  isLastPattern: boolean;
+}
+
+function DifficultyBadge({ difficulty }: { difficulty: string }) {
+  const colors: Record<string, string> = {
+    Easy: "bg-green-500/20 text-green-400 border-green-500/30",
+    Medium: "bg-yellow-500/20 text-yellow-400 border-yellow-500/30",
+    Hard: "bg-red-500/20 text-red-400 border-red-500/30",
+  };
+  return (
+    <span
+      className={`text-xs px-2 py-0.5 rounded border ${colors[difficulty] ?? colors.Medium}`}
+    >
+      {difficulty}
+    </span>
+  );
+}
+
+function PlanItemCard({
+  item,
+  checked,
+  onToggle,
+  onSwap,
+  onSkip,
+  isSwapping,
+}: {
+  item: PlanItemWithTitle;
+  checked: boolean;
+  onToggle: () => void;
+  onSwap: () => void;
+  onSkip: () => void;
+  isSwapping: boolean;
+}) {
+  const isCompleted = item.status === "completed" || checked;
+  const isSkipped = item.status === "skipped";
+  const isActionable = !isCompleted && !isSkipped;
+
+  return (
+    <div
+      className={`flex items-center gap-3 p-3 rounded-lg border transition-colors ${
+        isSkipped
+          ? "border-gray-700 bg-gray-800/30 opacity-50"
+          : isCompleted
+            ? "border-neon-green/30 bg-neon-green/5"
+            : "border-gray-700 bg-gray-800/50 hover:border-gray-600"
+      }`}
+    >
+      <button
+        onClick={onToggle}
+        disabled={isSkipped}
+        className={`flex-shrink-0 w-5 h-5 rounded border-2 flex items-center justify-center transition-colors ${
+          isCompleted
+            ? "border-neon-green bg-neon-green/20 text-neon-green"
+            : "border-gray-500 hover:border-neon-cyan"
+        }`}
+      >
+        {isCompleted && (
+          <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
+            <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+          </svg>
+        )}
+      </button>
+
+      <div className="flex-1 min-w-0">
+        <div className="flex items-center gap-2">
+          <a
+            href={`/dashboard/practice?problem=${item.problem_id}`}
+            className={`text-sm font-medium hover:text-neon-cyan transition-colors truncate ${
+              isCompleted || isSkipped
+                ? "line-through text-gray-500"
+                : "text-foreground"
+            }`}
+          >
+            {item.title}
+          </a>
+        </div>
+        <div className="flex items-center gap-2 mt-1">
+          <span className="text-xs text-gray-500">{item.category}</span>
+          <span className="text-xs text-gray-600">·</span>
+          <span className="text-xs text-gray-500">{item.estimated_minutes}m</span>
+        </div>
+      </div>
+
+      <div className="flex items-center gap-1.5 flex-shrink-0">
+        {isActionable && (
+          <>
+            {/* Swap button */}
+            <button
+              onClick={onSwap}
+              disabled={isSwapping}
+              title="Swap problem"
+              className="p-1.5 rounded text-gray-500 hover:text-neon-cyan hover:bg-gray-700/50 transition-colors disabled:opacity-50"
+            >
+              <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4" />
+              </svg>
+            </button>
+            {/* Skip button */}
+            <button
+              onClick={onSkip}
+              disabled={isSwapping}
+              title="Skip problem"
+              className="p-1.5 rounded text-gray-500 hover:text-yellow-400 hover:bg-gray-700/50 transition-colors disabled:opacity-50"
+            >
+              <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M13 5l7 7-7 7M5 5l7 7-7 7" />
+              </svg>
+            </button>
+          </>
+        )}
+        <DifficultyBadge difficulty={item.difficulty} />
+        {isSkipped && (
+          <span className="text-xs text-gray-500">Skipped</span>
+        )}
+      </div>
+    </div>
+  );
+}
+
+export default function TodaysPlan({
+  planItems: initialPlanItems,
+  dayNumber,
+  dateLabel,
+  currentPattern,
+  planDate,
+  patternComplete,
+  patternStats,
+  currentPatternIndex,
+  nextPatternName,
+  isLastPattern,
+}: TodaysPlanProps) {
+  const [planItems, setPlanItems] = useState<PlanItemWithTitle[]>(initialPlanItems);
+  const [localChecked, setLocalChecked] = useState<Set<string>>(new Set());
+  const [swappingId, setSwappingId] = useState<string | null>(null);
+  const [showPatternModal, setShowPatternModal] = useState(patternComplete);
+
+  const revisionItems = planItems.filter((item) => item.type === "revision");
+  const newItems = planItems.filter((item) => item.type === "new");
+
+  const nonSkipped = planItems.filter((item) => item.status !== "skipped");
+  const completedCount = nonSkipped.filter(
+    (item) => item.status === "completed" || localChecked.has(item.problem_id)
+  ).length;
+  const totalNonSkipped = nonSkipped.length;
+  const completionPct = totalNonSkipped > 0 ? Math.round((completedCount / totalNonSkipped) * 100) : 0;
+  const allDone = totalNonSkipped > 0 && completedCount === totalNonSkipped;
+
+  const estimatedRemaining = nonSkipped
+    .filter((item) => item.status !== "completed" && !localChecked.has(item.problem_id))
+    .reduce((sum, item) => sum + item.estimated_minutes, 0);
+
+  const handleToggle = (problemId: string) => {
+    setLocalChecked((prev) => {
+      const next = new Set(prev);
+      if (next.has(problemId)) {
+        next.delete(problemId);
+      } else {
+        next.add(problemId);
+      }
+      return next;
+    });
+  };
+
+  const handleAction = useCallback(
+    async (problemId: string, action: "swap" | "skip") => {
+      setSwappingId(problemId);
+      try {
+        const res = await fetch("/api/daily-plan", {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ plan_date: planDate, action, problem_id: problemId }),
+        });
+
+        if (!res.ok) {
+          const err = await res.json();
+          alert(err.error || "Failed to update plan");
+          return;
+        }
+
+        const { plan_data } = await res.json();
+        // Merge new plan_data with titles — keep existing titles, fetch missing ones
+        setPlanItems((prev) => {
+          const titleMap = new Map(prev.map((i) => [i.problem_id, i.title]));
+          return (plan_data as PlanItem[]).map((item: PlanItem) => ({
+            ...item,
+            title: titleMap.get(item.problem_id) ?? item.problem_id,
+          }));
+        });
+      } finally {
+        setSwappingId(null);
+      }
+    },
+    [planDate],
+  );
+
+  // Group revisions by score category for colored borders
+  const getRevisionColor = (item: PlanItemWithTitle) => {
+    const idx = revisionItems.indexOf(item);
+    const ratio = revisionItems.length > 1 ? idx / (revisionItems.length - 1) : 0;
+    if (ratio < 0.33) return "border-l-red-500";
+    if (ratio < 0.66) return "border-l-yellow-500";
+    return "border-l-neon-green";
+  };
+
+  return (
+    <div>
+      {/* Header */}
+      <div className="mb-6">
+        <div className="flex items-baseline gap-3 mb-1">
+          <h1 className="text-2xl font-bold text-foreground">Today&apos;s Plan</h1>
+          <span className="text-sm text-neon-cyan font-medium">Day {dayNumber}</span>
+        </div>
+        <p className="text-sm text-gray-500">{dateLabel}</p>
+        <div className="flex items-center gap-4 mt-2 text-sm text-gray-400">
+          <span>{completedCount}/{totalNonSkipped} completed</span>
+          <span>·</span>
+          <span>{estimatedRemaining}m remaining</span>
+          <span>·</span>
+          <span className="text-neon-purple">{currentPattern}</span>
+        </div>
+      </div>
+
+      {/* Progress bar */}
+      <div className="w-full h-2 bg-gray-800 rounded-full mb-8 overflow-hidden">
+        <div
+          className="h-full bg-neon-cyan rounded-full transition-all duration-500"
+          style={{ width: `${completionPct}%` }}
+        />
+      </div>
+
+      {/* Celebration */}
+      {allDone && (
+        <div className="text-center py-8 mb-8 rounded-lg border border-neon-green/30 bg-neon-green/5">
+          <div className="text-4xl mb-3">&#10003;</div>
+          <h2 className="text-xl font-semibold text-neon-green mb-2">All done for today!</h2>
+          <p className="text-gray-400 text-sm">
+            Great work. Come back tomorrow for your next plan.
+          </p>
+        </div>
+      )}
+
+      {/* Revisions section */}
+      {revisionItems.length > 0 && (
+        <div className="mb-8">
+          <h2 className="text-lg font-semibold text-foreground mb-3">
+            Revisions
+            <span className="text-sm font-normal text-gray-500 ml-2">
+              ({revisionItems.length})
+            </span>
+          </h2>
+          <div className="space-y-2">
+            {revisionItems.map((item) => (
+              <div key={item.problem_id} className={`border-l-4 ${getRevisionColor(item)} pl-3`}>
+                <PlanItemCard
+                  item={item}
+                  checked={localChecked.has(item.problem_id)}
+                  onToggle={() => handleToggle(item.problem_id)}
+                  onSwap={() => handleAction(item.problem_id, "swap")}
+                  onSkip={() => handleAction(item.problem_id, "skip")}
+                  isSwapping={swappingId === item.problem_id}
+                />
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* New Problems section */}
+      {newItems.length > 0 && (
+        <div>
+          <h2 className="text-lg font-semibold text-foreground mb-3">
+            New Problems
+            <span className="text-sm font-normal text-gray-500 ml-2">
+              ({newItems.length})
+            </span>
+          </h2>
+          <div className="space-y-2">
+            {newItems.map((item) => (
+              <PlanItemCard
+                key={item.problem_id}
+                item={item}
+                checked={localChecked.has(item.problem_id)}
+                onToggle={() => handleToggle(item.problem_id)}
+                onSwap={() => handleAction(item.problem_id, "swap")}
+                onSkip={() => handleAction(item.problem_id, "skip")}
+                isSwapping={swappingId === item.problem_id}
+              />
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Empty state */}
+      {planItems.length === 0 && (
+        <div className="text-center py-12">
+          <h2 className="text-xl font-semibold text-foreground mb-2">No problems for today</h2>
+          <p className="text-gray-500">
+            Head to{" "}
+            <a href="/dashboard/practice" className="text-neon-cyan hover:underline">
+              Practice
+            </a>{" "}
+            to solve problems.
+          </p>
+        </div>
+      )}
+
+      {/* Pattern completion modal */}
+      {showPatternModal && (
+        <PatternCompleteModal
+          patternName={currentPattern}
+          nextPatternName={nextPatternName}
+          problemsSolved={patternStats.problemsSolved}
+          averageScore={patternStats.averageScore}
+          currentPatternIndex={currentPatternIndex}
+          isLastPattern={isLastPattern}
+          onDismiss={() => setShowPatternModal(false)}
+        />
+      )}
+    </div>
+  );
+}

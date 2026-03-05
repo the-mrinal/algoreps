@@ -1,0 +1,211 @@
+## Codebase Patterns
+- Next.js 14 with App Router, TypeScript, Tailwind CSS, src/ directory structure
+- Path alias: `@/*` maps to `./src/*` in tsconfig
+- ESLint config extends `next/core-web-vitals` and `next/typescript`
+- Quality checks: `npm run lint`, `npx tsc --noEmit`, `npm run build`
+- Dependencies: @supabase/supabase-js, @supabase/ssr, @monaco-editor/react, node-cron, recharts
+- `data/sources/` is excluded from tsconfig to prevent cloned repo TS files from breaking typecheck
+- Use `Array.from()` instead of spread on iterables (Map, Set) to avoid downlevelIteration errors
+- Run scripts with `npx tsx scripts/foo.ts` (tsx installed as devDependency)
+- Problem data: 150 problems in data/problems.json; 143 from neenza (clean), 7 premium from krmanik (basic metadata only)
+- Join key across repos: LeetCode slug extracted from URL
+- Types: import from `@/types` — Problem, UserProgress, AIReviewResponse, SRSResult
+- Problem loader: import from `@/lib/problems` — server-side only (uses fs); cached in-process
+- Supabase browser client: import `createClient` from `@/lib/supabase/client` (for client components)
+- Supabase server client: import `createClient` from `@/lib/supabase/server` (async, for server components/API routes)
+- Supabase admin client: import `createAdminClient` from `@/lib/supabase/admin` (service role key, bypasses RLS — for cron jobs only)
+- Middleware refreshes auth session on every request; matcher excludes static files
+- Dashboard layout: server component checks auth in layout.tsx, client Sidebar component handles navigation/logout/mobile menu
+- Dashboard routes: /dashboard, /dashboard/practice, /dashboard/log, /dashboard/progress
+- API route auth pattern: `const supabase = await createClient(); const { data: { user } } = await supabase.auth.getUser();` — return 401 if !user
+- SRS scheduling: import `calculateNextRevisionDate(score)` from `@/lib/srs` — returns `{ next_revision_date, days_to_add }`
+- Submissions API: POST /api/submissions (create), GET /api/submissions (list with ?limit, ?offset, ?problem_id, ?is_self_reported), PATCH /api/submissions (re-score)
+- Problem data must be loaded server-side and passed as props to client components (fs-based loader)
+- Practice page pattern: server component loads data → client component handles interactivity (state, filtering, search)
+- Monaco editor: lazy-load with `dynamic(() => import("@monaco-editor/react"), { ssr: false })` — must disable SSR
+- Use `type X = Y` instead of `interface X extends Y {}` to avoid @typescript-eslint/no-empty-object-type lint error
+- recharts Tooltip: use custom `content={<CustomTooltip />}` component instead of `formatter` prop to avoid complex TypeScript union types
+- Discord webhook: import `sendDiscordEmbed(title, fields, color)` from `@/lib/discord` — handles errors gracefully (logs, never throws)
+- Cron auth pattern: check `request.headers.get("authorization") !== process.env.CRON_SECRET` → return 401
+- Supabase migrations: SQL files in supabase/migrations/ numbered 001-009 so far (schema.sql has full reference)
+- Neon color palette: cyan (#00e5ff), green (#39ff14), purple (#bf5af2) — used across theme
+- Problem data now loaded from Supabase `problems` table (not fs) via src/lib/problems.ts using server client
+- getAllProblems() orders by leetcode_id; getProblemBySlug() uses .eq("slug", slug).single()
+- `supabase/` directory is in .gitignore — use `git add -f` to add supabase files
+
+## 2026-03-04 - US-024
+- What was implemented: Added 7 onboarding preference columns to profiles table (questions_per_day, hours_per_day, proficiency_level, interview_date, problem_set, onboarding_completed, current_pattern_index)
+- Files changed: supabase/migrations/005_add_onboarding_fields.sql (new), supabase/schema.sql (updated)
+- **Learnings for future iterations:**
+  - supabase/ directory is gitignored — must use `git add -f` for supabase files
+  - Migration files follow sequential numbering: 001, 002, ... currently at 005
+  - schema.sql serves as a reference copy of the full schema — keep it in sync with migrations
+---
+
+## 2026-03-04 - US-025
+- What was implemented: Added interval_step INTEGER DEFAULT 0 column to user_progress table for adaptive SRS doubling algorithm
+- Files changed: supabase/migrations/006_add_interval_step.sql (new), supabase/schema.sql (updated)
+- **Learnings for future iterations:**
+  - Use `IF NOT EXISTS` in ALTER TABLE ADD COLUMN for idempotent migrations
+  - Migration numbering now at 006
+---
+
+## 2026-03-04 - US-026
+- What was implemented: Added pattern_order INTEGER column to problems table and created seed script that assigns 1-150 ordering based on NeetCode roadmap (Easy→Medium→Hard within each category)
+- Files changed: supabase/migrations/007_add_pattern_order.sql (new), supabase/schema.sql (updated), scripts/seed-pattern-order.ts (new)
+- **Learnings for future iterations:**
+  - NeetCode-150 list JSON uses LeetCode URLs — extract slug with `/problems/([^/]+)/` regex
+  - Seed scripts follow same pattern as seed-problems.ts: env vars for Supabase, createClient with service role key
+  - Migration numbering now at 007
+  - The neetcode-150-list.json has exactly 150 problems across 18 categories (no Tries "Easy" problems — all start at Medium)
+---
+
+## 2026-03-04 - US-027
+- What was implemented: Created user_pattern_confidence table with UUID PK, user_id FK, pattern_name, confidence_rating (1-5), diagnostic_problem_id, diagnostic_score, created_at. UNIQUE on (user_id, pattern_name). RLS with SELECT/INSERT/UPDATE policies.
+- Files changed: supabase/migrations/008_create_pattern_confidence.sql (new), supabase/schema.sql (updated)
+- **Learnings for future iterations:**
+  - Use `CREATE TABLE IF NOT EXISTS` for idempotent table creation in migrations
+  - RLS pattern for user-scoped tables: enable RLS + 3 policies (SELECT/INSERT/UPDATE) using auth.uid() = user_id
+  - Migration numbering now at 008
+---
+
+## 2026-03-04 - US-028
+- What was implemented: Created daily_plans table with UUID PK, user_id FK, plan_date DATE, plan_data JSONB, timestamps. UNIQUE on (user_id, plan_date). Index on (user_id, plan_date). RLS with SELECT/INSERT/UPDATE policies.
+- Files changed: supabase/migrations/009_create_daily_plans.sql (new), supabase/schema.sql (updated)
+- **Learnings for future iterations:**
+  - Migration numbering now at 009
+  - daily_plans uses same RLS pattern as user_pattern_confidence (auth.uid() = user_id)
+  - JSONB column plan_data stores array of plan items — updates require read-modify-write of full array
+---
+
+## 2026-03-04 - US-029
+- What was implemented: Updated TypeScript interfaces for all new schema fields — Problem gains pattern_order, UserProgress gains interval_step, UserProfile gains 7 onboarding fields, SRSResult gains interval_step. Added new interfaces: UserPatternConfidence, PlanItem, DailyPlan.
+- Files changed: src/types/index.ts (updated), src/lib/srs.ts (added interval_step: 0 to return), src/lib/problems.ts (added pattern_order mapping), src/components/logger/TrustModeForm.tsx (added pattern_order: null)
+- **Learnings for future iterations:**
+  - When adding a field to an interface, search for all places that construct that type — mapRow in problems.ts and inline object literals in components
+  - SRSResult now requires interval_step — existing calculateNextRevisionDate returns 0 as placeholder until US-030 upgrades the algorithm
+---
+
+## 2026-03-04 - US-030
+- What was implemented: Replaced fixed 3-bucket SRS (1/4/14 days) with adaptive doubling intervals using sequence [1, 2, 4, 8, 16, 32, 64, 128, 256]. Score 1-2 resets to step 0, score 3 keeps same step, score 4-5 advances one step (capped at index 8).
+- Files changed: src/lib/srs.ts (rewritten)
+- **Learnings for future iterations:**
+  - calculateNextRevisionDate now accepts optional second param `currentIntervalStep` (defaults to 0) — backward compatible with existing single-arg callers
+  - INTERVAL_SEQUENCE is a const array — max step index is 8 (256 days)
+  - Existing callers in submissions/route.ts still work unchanged — US-031 will update them to pass interval_step
+---
+
+## 2026-03-04 - US-031
+- What was implemented: Updated submissions API (POST, PATCH, GET) to use adaptive SRS with interval_step. POST queries latest previous submission for the user+problem to get current interval_step, passes it to calculateNextRevisionDate, and saves the returned interval_step. PATCH reads the existing submission's interval_step before recalculating. GET already uses select("*") which includes interval_step.
+- Files changed: src/app/api/submissions/route.ts (updated)
+- **Learnings for future iterations:**
+  - Supabase `.single()` returns null data (not error) when no rows match — use `?? 0` for safe defaults
+  - POST handler queries previous submissions with `.order("created_at", { ascending: false }).limit(1).single()` to get the latest interval_step
+  - PATCH handler reads the specific submission's interval_step before recalculating SRS
+  - GET handler uses `select("*")` so new columns are automatically included without code changes
+---
+
+## 2026-03-04 - US-032
+- What was implemented: Built onboarding wizard preferences step (Step 1) with slider inputs for questions_per_day (1-10) and hours_per_day (0.5-4), radio cards for proficiency level (4 options), optional date picker for interview date, and radio group for problem set (NeetCode 150 / Blind 75 / Both). Created PATCH API route at /api/onboarding/preferences that updates the profiles table. Page checks onboarding_completed on load and redirects to /dashboard if already done.
+- Files changed: src/app/onboarding/page.tsx (new), src/app/api/onboarding/preferences/route.ts (new)
+- **Learnings for future iterations:**
+  - Onboarding page is a client component ("use client") outside the dashboard layout — no sidebar/providers wrapper
+  - API route validates proficiency_level against allowed enum values and uses allowedFields whitelist
+  - Uses same neon-cyan styling patterns as login page: border-neon-cyan/50, bg-neon-cyan/10, shadow-glow-cyan
+  - Step indicator uses simple colored divs (filled = current/completed, border-only = future)
+  - The wizard navigates to /onboarding?step=2 after saving — future stories will read this param
+---
+
+## 2026-03-04 - US-033
+- What was implemented: Built onboarding wizard Step 2 — pattern confidence rating. Shows all 18 NeetCode categories with descriptions and problem counts from DB. Users rate each pattern 1-5 with colored buttons (red 1-2, yellow 3, green 4-5). Badges show current rating. All 18 must be rated to proceed. Saves via POST /api/onboarding/diagnostic which upserts to user_pattern_confidence. PATCH endpoint also added for updating individual pattern diagnostic data. If no weak patterns (all rated 4-5), completes onboarding directly; otherwise navigates to step 3 for diagnostic.
+- Files changed: src/app/onboarding/page.tsx (rewritten with multi-step support), src/app/api/onboarding/diagnostic/route.ts (new — POST for bulk upsert, PATCH for individual update)
+- **Learnings for future iterations:**
+  - Onboarding page now uses useSearchParams for step navigation (?step=2, ?step=3) — wrapped in Suspense for Next.js SSR compatibility
+  - Pattern order and descriptions are defined as constants in the page (PATTERN_ORDER array) matching seed-pattern-order.ts CATEGORY_ORDER
+  - Problem counts per category fetched from problems table with a simple GROUP BY via client-side counting
+  - Supabase upsert with `onConflict: "user_id,pattern_name"` handles re-rating gracefully
+  - Weak patterns (rated 1-3) determine whether step 3 (diagnostic solve) is needed
+---
+
+## 2026-03-04 - US-034
+- What was implemented: Built onboarding wizard Step 3 — diagnostic solve step. For each weak pattern (rated 1-3), presents one Easy problem with Monaco editor, code execution via /api/run-code, Skip Problem button, and self-rating 1-5. Each completion updates user_pattern_confidence (diagnostic_problem_id + diagnostic_score) via PATCH /api/onboarding/diagnostic and creates a user_progress submission via POST /api/submissions. Shows progress indicator (Problem X of Y) and finish screen with "Start Studying" button after all problems.
+- Files changed: src/app/onboarding/page.tsx (updated with Step 3 logic, Monaco editor, diagnostic flow)
+- **Learnings for future iterations:**
+  - Step 3 loads weak patterns from user_pattern_confidence table (not component state) since step navigation via URL params can lose in-memory state on refresh
+  - Problem data from Supabase `problems` table needs manual mapping to Problem interface (fields like leetcode_id, is_neetcode150 etc need fallback defaults)
+  - Monaco editor in onboarding uses same dynamic import pattern as EditorPane: `dynamic(() => import("@monaco-editor/react"), { ssr: false })`
+  - useCallback for initCodeForProblem is needed to satisfy react-hooks/exhaustive-deps when used in useEffect dependency array
+  - Container width expands to max-w-4xl for step 3 to accommodate the editor
+---
+
+## 2026-03-04 - US-035
+- What was implemented: Added blocking onboarding redirect in dashboard layout — queries profiles.onboarding_completed after auth check and redirects to /onboarding if false. Onboarding page already had the reverse check (redirect to /dashboard if completed) and both completion paths (handleFinishOnboarding + handleNextStep2 with no weak patterns) already set onboarding_completed=true. Also fixed a pre-existing TS error where initCodeForProblem useCallback was declared after the useEffect that referenced it.
+- Files changed: src/app/dashboard/layout.tsx (updated — added onboarding check), src/app/onboarding/page.tsx (fixed useCallback ordering)
+- **Learnings for future iterations:**
+  - Dashboard layout is a server component — can query Supabase directly and use `redirect()` from next/navigation for server-side redirects
+  - useCallback declarations must appear before useEffect hooks that reference them in their dependency arrays (TS block-scoped variable error)
+  - The onboarding completion has two paths: (1) handleFinishOnboarding after diagnostic step 3, (2) handleNextStep2 when all patterns rated 4-5 (no weak patterns)
+---
+
+## 2026-03-04 - US-036
+- What was implemented: Created daily plan generation engine in src/lib/daily-plan.ts. Exports `generateDailyPlan(userId, supabase)` that builds a personalized mix of revision + new problems. Revision items: queries user_progress for due problems (next_revision_date <= today), ordered by score ASC, limited to 70% of quota. New items: fills remaining 30%+ quota with unsolved problems from current pattern onwards, respecting difficulty distribution targets per proficiency level. Weak pattern boost adds extra problems from patterns with avg confidence < 3.
+- Files changed: src/lib/daily-plan.ts (new)
+- **Learnings for future iterations:**
+  - `generateDailyPlan` accepts any SupabaseClient (server or admin) — works for both user-scoped and cron contexts
+  - CATEGORY_ORDER array is duplicated across daily-plan.ts, onboarding/page.tsx, and seed-pattern-order.ts — consider extracting to shared constants
+  - Difficulty distribution is a target ratio, fallback fills with any available difficulty if targets can't be met
+  - Revision items use problem slug as problem_id (matching user_progress.problem_id which stores slugs)
+  - sortCandidatesByPatternPriority wraps around CATEGORY_ORDER so exhausted patterns naturally fall through to next
+---
+
+## 2026-03-04 - US-037
+- What was implemented: Rewrote dashboard home page to show "Today's Plan" instead of revision-only queue. Server component checks for existing daily_plan for today's date — if none, calls generateDailyPlan() and persists to daily_plans table. Shows Day X header (days since profile creation), formatted date, completion stats, estimated time remaining, current pattern name. Progress bar with neon-cyan fill. Revisions section with colored left borders (red/yellow/green by position — hardest first). New Problems section with category tags and difficulty badges. Plan items are links to /dashboard/practice?problem=slug. Completed items show checked checkbox with line-through. Skipped items show greyed out. "All done for today!" celebration when complete.
+- Files changed: src/app/dashboard/page.tsx (rewritten), src/components/dashboard/TodaysPlan.tsx (new)
+- **Learnings for future iterations:**
+  - Dashboard page is a server component — generates/loads plan server-side and passes planItemsWithTitles (PlanItem + title) to TodaysPlan client component
+  - TodaysPlan uses local state (localChecked Set) for optimistic checkbox toggling — server status takes precedence
+  - RevisionQueue component (src/components/srs/RevisionQueue.tsx) is still present but no longer imported on dashboard home — kept for potential reuse
+  - Day number calculated as floor((now - profile.created_at) / 1 day) + 1
+  - CATEGORY_ORDER duplicated again in page.tsx — now in 4 files (daily-plan.ts, onboarding/page.tsx, seed-pattern-order.ts, dashboard/page.tsx)
+---
+
+## 2026-03-04 - US-038
+- What was implemented: Added swap and skip functionality to daily plan. Each plan item card now has swap (arrows) and skip (chevrons) icon buttons. Created PATCH /api/daily-plan endpoint that handles both actions. Skip updates item status to 'skipped'. Swap for revisions finds next due revision not in plan; swap for new problems finds next unsolved problem by pattern_order (preferring same difficulty). TodaysPlan component now manages plan state locally and updates optimistically after API calls. Skipped items are greyed out and don't count toward completion.
+- Files changed: src/app/api/daily-plan/route.ts (new), src/components/dashboard/TodaysPlan.tsx (updated — added swap/skip buttons, local state management, API integration), src/app/dashboard/page.tsx (updated — passes planDate prop)
+- **Learnings for future iterations:**
+  - TodaysPlan now manages its own planItems state (initialized from server props) for optimistic updates after swap/skip
+  - PATCH /api/daily-plan reads full plan_data JSONB, modifies in memory, writes back — standard pattern for JSONB array updates
+  - Swap for revision: queries user_progress for due revisions not already in plan; swap for new: queries problems table by pattern_order
+  - Swapped items get titles from existing titleMap — new swap replacements show problem_id as fallback title until page refresh
+  - planDate prop (YYYY-MM-DD string) passed from server component to client for API calls
+---
+
+## 2026-03-04 - US-039
+- What was implemented: After a successful POST /api/submissions insert, the handler now checks if a daily_plan exists for today for the authenticated user. If the plan contains the submitted problem_id with status 'pending', it updates that item's status to 'completed' in the plan_data JSONB and updates the updated_at timestamp. The response includes a `plan_item_completed: true/false` flag so the client can refresh the plan view.
+- Files changed: src/app/api/submissions/route.ts (updated — added daily plan completion logic after insert)
+- **Learnings for future iterations:**
+  - plan_data JSONB array items are read-modify-written: find item by problem_id + status 'pending', update status to 'completed', write back full array
+  - Response now spreads `...data` with `plan_item_completed` boolean — clients can use this flag to trigger a plan view refresh
+  - Today's date computed as `new Date().toISOString().split("T")[0]` for consistent YYYY-MM-DD format matching plan_date
+---
+
+## 2026-03-04 - US-040
+- What was implemented: Built pattern completion and advancement flow. Created PatternCompleteModal component that shows when all problems in the current pattern are solved. Modal displays pattern name, problems solved count, and average score. Two action buttons: "Move to Next Pattern" (increments current_pattern_index via PATCH /api/onboarding/preferences and reloads) and "Stay & Reinforce" (dismisses modal). For last pattern (Bit Manipulation), shows "All Patterns Complete!" with "Focus on Weak Areas" button. Modal is dismissible via backdrop click or Escape key. Pattern exhaustion detected server-side in dashboard page by comparing solved problems count vs total problems in current pattern category.
+- Files changed: src/components/dashboard/PatternCompleteModal.tsx (new), src/components/dashboard/TodaysPlan.tsx (updated — added modal integration and new props), src/app/dashboard/page.tsx (updated — added pattern exhaustion detection logic)
+- **Learnings for future iterations:**
+  - Pattern completion detection queries problems table for current category slugs, then checks user_progress for solved count — if solved >= total, pattern is complete
+  - PatternCompleteModal uses window.location.reload() after advancing pattern to regenerate the daily plan with new pattern context
+  - Modal state (showPatternModal) initialized from server-provided patternComplete prop — shown once per page load when pattern is exhausted
+  - The PATCH /api/onboarding/preferences endpoint already supports current_pattern_index updates — no new API route needed
+---
+
+## 2026-03-04 - US-041
+- What was implemented: Updated morning cron to include daily plan summary in Discord notification. For onboarded users, generates or loads today's daily plan using generateDailyPlan(), persists it to daily_plans table, and sends a rich Discord embed with total problems (revisions + new), estimated time, current pattern name, and problem titles grouped by type with difficulty badges. Non-onboarded users and plan generation failures fall back to the original revision-only notification format.
+- Files changed: src/app/api/cron/morning/route.ts (rewritten)
+- **Learnings for future iterations:**
+  - Morning cron iterates all profiles (not just those with due revisions) since daily plans include new problems too
+  - generateOrLoadPlan checks daily_plans table first before generating — prevents duplicate plan generation if cron runs multiple times
+  - persistPlan uses upsert with onConflict: "user_id,plan_date" for idempotent plan storage
+  - Fallback to revision-only notification uses the same grouped score format (hard/medium/easy) as the original cron
+  - CATEGORY_ORDER is now duplicated in 5 files — strong candidate for extraction to shared constants
+---

@@ -44,13 +44,28 @@ export async function POST(request: NextRequest) {
     );
   }
 
-  const { next_revision_date } = calculateNextRevisionDate(performance_score);
+  // Look up the latest previous submission for this user+problem to get current interval_step
+  const { data: previousSubmission } = await supabase
+    .from("user_progress")
+    .select("interval_step")
+    .eq("user_id", user.id)
+    .eq("problem_id", problem_id)
+    .order("created_at", { ascending: false })
+    .limit(1)
+    .single();
+
+  const currentIntervalStep = previousSubmission?.interval_step ?? 0;
+  const { next_revision_date, interval_step } = calculateNextRevisionDate(
+    performance_score,
+    currentIntervalStep,
+  );
 
   const insertData: Record<string, unknown> = {
     user_id: user.id,
     problem_id,
     performance_score,
     next_revision_date: next_revision_date.toISOString(),
+    interval_step,
   };
 
   // Optional fields
@@ -87,7 +102,41 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 
-  return NextResponse.json(data, { status: 201 });
+  // Check if a daily plan exists for today and mark the item as completed
+  let plan_item_completed = false;
+  const today = new Date().toISOString().split("T")[0];
+
+  const { data: planRow } = await supabase
+    .from("daily_plans")
+    .select("id, plan_data")
+    .eq("user_id", user.id)
+    .eq("plan_date", today)
+    .single();
+
+  if (planRow?.plan_data) {
+    const planData = planRow.plan_data as Array<{
+      problem_id: string;
+      status: string;
+      [key: string]: unknown;
+    }>;
+    const itemIndex = planData.findIndex(
+      (item) => item.problem_id === problem_id && item.status === "pending"
+    );
+
+    if (itemIndex !== -1) {
+      planData[itemIndex].status = "completed";
+      await supabase
+        .from("daily_plans")
+        .update({
+          plan_data: planData,
+          updated_at: new Date().toISOString(),
+        })
+        .eq("id", planRow.id);
+      plan_item_completed = true;
+    }
+  }
+
+  return NextResponse.json({ ...data, plan_item_completed }, { status: 201 });
 }
 
 export async function GET(request: NextRequest) {
@@ -182,13 +231,26 @@ export async function PATCH(request: NextRequest) {
     );
   }
 
-  const { next_revision_date } = calculateNextRevisionDate(performance_score);
+  // Read the submission's current interval_step
+  const { data: existingSubmission } = await supabase
+    .from("user_progress")
+    .select("interval_step")
+    .eq("id", id)
+    .eq("user_id", user.id)
+    .single();
+
+  const currentIntervalStep = existingSubmission?.interval_step ?? 0;
+  const { next_revision_date, interval_step } = calculateNextRevisionDate(
+    performance_score,
+    currentIntervalStep,
+  );
 
   const { data, error } = await supabase
     .from("user_progress")
     .update({
       performance_score,
       next_revision_date: next_revision_date.toISOString(),
+      interval_step,
       updated_at: new Date().toISOString(),
     })
     .eq("id", id)

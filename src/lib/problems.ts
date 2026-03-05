@@ -26,6 +26,7 @@ function mapRow(row: Record<string, unknown>): Problem {
     neetcode_video_id: (row.neetcode_video_id as string) || null,
     neetcode_url: (row.neetcode_url as string) || "",
     leetcode_url: (row.leetcode_url as string) || "",
+    pattern_order: (row.pattern_order as number) ?? null,
   };
 }
 

@@ -19,6 +19,17 @@ export default async function DashboardLayout({
     redirect("/login");
   }
 
+  // Check if onboarding is completed — block access to dashboard until done
+  const { data: profile } = await supabase
+    .from("profiles")
+    .select("onboarding_completed")
+    .eq("id", user.id)
+    .single();
+
+  if (!profile?.onboarding_completed) {
+    redirect("/onboarding");
+  }
+
   return (
     <ThemeProvider userId={user.id}>
       <UserProvider userId={user.id}>

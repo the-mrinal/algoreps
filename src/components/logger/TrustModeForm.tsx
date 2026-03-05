@@ -179,6 +179,7 @@ export default function TrustModeForm({
         neetcode_video_id: null,
         neetcode_url: "",
         leetcode_url: data.leetcode_url || "",
+        pattern_order: null,
       };
 
       setSelectedProblem(problem);
